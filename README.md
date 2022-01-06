@@ -1,7 +1,11 @@
 # TSE Moneta
 ## Development environment
 
+<<<<<<< HEAD
 Before starting development, be sure to run ```npm install``` in the root, frontend, and backend directories. This will install all necessary dependencies. 
+=======
+Before starting development, be sure to run "npm install" in the root, frontend, and backend directories. This will install all necessary dependencies. 
+>>>>>>> e9b2809d15c6b1f4b56a0bd88c1095f420648e0e
 
 ### Frontend
 
