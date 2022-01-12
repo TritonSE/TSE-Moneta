@@ -6,10 +6,11 @@ const SideNavigation = (props) => {
             <button style={{top: '6vh'}}>
                 Moneta<image src=""></image>
             </button>
-            <button style={{top: '21vh'}}>
+
+            <button style={{top: '20vh'}}>
                 <image src=""></image>
             </button>
-            <button style={{top: '27vh'}}>
+            <button style={{top: '26vh'}}>
                 Database
             </button>
 
@@ -23,8 +24,8 @@ const SideNavigation = (props) => {
             <button style={{top: '50vh'}}>
                 <image src=""></image>
             </button>
-            <button style={{top: '55vh'}}>
-                Database
+            <button style={{top: '56vh'}}>
+                Settings
             </button>
             <button style={{top: '93vh'}}>
                 Log Out<image src=""></image>
