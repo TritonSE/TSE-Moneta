@@ -1,4 +1,3 @@
 {
-  "mongoURI":
-    "mongodb+srv://tse:moneta@tse-moneta.mqxyi.mongodb.net/tse-moneta?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://tse:moneta@tse-moneta.mqxyi.mongodb.net/tse-moneta?retryWrites=true&w=majority"
 }
