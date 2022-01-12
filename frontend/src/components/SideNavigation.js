@@ -3,19 +3,30 @@ import React from 'react';
 const SideNavigation = (props) => {
     return (
         <div className="SideNavigation">
-            <button style={{top: 50}}>
+            <button style={{top: '6vh'}}>
                 Moneta<image src=""></image>
             </button>
-            <button style={{top: 187}}>
-                Database<image src=""></image>
+            <button style={{top: '21vh'}}>
+                <image src=""></image>
             </button>
-            <button style={{top: 316}}>
-                Admin<image src=""></image>
+            <button style={{top: '27vh'}}>
+                Database
             </button>
-            <button style={{top: 444}}>
-                Settings<image src=""></image>
+
+            <button style={{top: '35vh'}}>
+                <image src=""></image>
             </button>
-            <button style={{top: 833}}>
+            <button style={{top: '41vh'}}>
+                Admin
+            </button>
+
+            <button style={{top: '50vh'}}>
+                <image src=""></image>
+            </button>
+            <button style={{top: '55vh'}}>
+                Database
+            </button>
+            <button style={{top: '93vh'}}>
                 Log Out<image src=""></image>
             </button>
         </div>
