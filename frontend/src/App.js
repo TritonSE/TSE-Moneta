@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-import Admin from "./components/admin";
+import Admin from "./admin";
 
 function App() {
   return <Admin />;
