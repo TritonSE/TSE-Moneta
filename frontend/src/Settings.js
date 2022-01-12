@@ -1,5 +1,18 @@
+/**
+ * The Settings page allows users to change their password and includes three text input boxes: current password,
+ * new password, and confirm new password. A save button is also included to save the user's changes.
+ * 
+ * @summary Settings page that allows users to change their password.
+ * @author Elias Fang
+ */
+
 import React from "react";
 
+/**
+ * renders the settings page
+ * 
+ * @returns page contents
+ */
 function Settings() {
     return (
         <div className="Settings">
