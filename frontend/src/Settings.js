@@ -24,13 +24,13 @@ function Settings() {
         <br />
         <input type="text" id="current-password" name="current-password" />
         <br />
-        <label for="new-password1">New Password</label>
+        <label for="new-password">New Password</label>
         <br />
-        <input type="text" id="new-password1" name="new-password1" />
+        <input type="text" id="new-password" name="new-password" />
         <br />
-        <label for="new-password2">New Password</label>
+        <label for="confirm-password">Confirm New Password</label>
         <br />
-        <input type="text" id="new-password2" name="new-password2" />
+        <input type="text" id="confirm-password" name="confirm-password" />
         <br />
         <br />
         <input type="submit" value="Save"></input>
