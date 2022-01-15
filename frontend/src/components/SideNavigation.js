@@ -6,7 +6,7 @@
  * @author Kevin Fu
  */
 import React from "react";
-import "./SideNavigation.css"
+import "./SideNavigation.css";
 /**
  * Renders the side navigation bar
  * @returns side navigation content
