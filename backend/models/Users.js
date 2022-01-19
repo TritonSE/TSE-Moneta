@@ -1,3 +1,17 @@
+/**
+ * Schema for Groups with the properties
+ * fullName (string)
+ * email (string)
+ * companyID (string)
+ * password (string)
+ * Timestamps
+ * 
+ * The password is hashed
+ * 
+ * @summary Users schema with hashed password
+ * @author Pratyush Chand
+ */
+
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 SALT_WORK_FACTOR = 10;
