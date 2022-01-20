@@ -5,6 +5,7 @@
  * @summary schema for table data
  * @author Kevin Fu
  */
+
 const mongoose = require("mongoose");
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -13,7 +14,7 @@ const tableDataSchema = mongoose.Schema(
   {
     group: {
       type: ObjectId,
-      ref: "users",
+      ref: "Group",
       required: true,
     },
     data: {
