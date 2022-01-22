@@ -20,20 +20,20 @@ function Settings() {
         <h1>Change Password</h1>
       </header>
       <form className="Settings-form">
-        <label for="current-password">Current Password</label>
+        <label htmlFor="current-password">Current Password</label>
         <br />
         <input type="text" id="current-password" name="current-password" />
         <br />
-        <label for="new-password">New Password</label>
+        <label htmlFor="new-password">New Password</label>
         <br />
         <input type="text" id="new-password" name="new-password" />
         <br />
-        <label for="confirm-password">Confirm New Password</label>
+        <label htmlFor="confirm-password">Confirm New Password</label>
         <br />
         <input type="text" id="confirm-password" name="confirm-password" />
         <br />
         <br />
-        <input type="submit" value="Save"></input>
+        <input type="submit" value="Save" />
       </form>
     </div>
   );
