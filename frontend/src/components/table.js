@@ -9,14 +9,25 @@
 import React from "react";
 import "./table.css";
 
+/** Dummy data used to display the table. */
+/** Only the fields specified in the schema will be columns in the table */
 const _schema = ["name", "age", "gender", "email", "alternateEmail"];
 const _table = [
   {
-    name: "First",
+    id: 1,
+    name: "First Last",
     age: 20,
     gender: "Female",
     email: "firstlast@email.com",
     alternateEmail: "firstlast@hotmail.com",
+  },
+  {
+    id: 2,
+    name: "John Doe",
+    age: 25,
+    gender: "Male",
+    email: "johndoe@gmail.com",
+    alternateEmail: "john@email.com",
   },
 ];
 
