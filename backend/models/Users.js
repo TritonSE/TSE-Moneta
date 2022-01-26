@@ -27,8 +27,9 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.pre("save", (next) => {
+UserSchema.pre("save", function (next) {
   const user = this;
+
   // hashes password only if modified or new
   if (!user.isModified("password")) {
     return next();
