@@ -1,9 +1,9 @@
 import React from "react";
 import "./App.css";
-import SideNavigation from "./components/SideNavigation";
+import Dashboard from "./pages/dashboard";
 
 function App() {
-  return <SideNavigation />;
+  return <Dashboard />;
 }
 
 export default App;
