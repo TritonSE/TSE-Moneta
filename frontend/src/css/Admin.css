@@ -1,3 +1,94 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+* {
+  font-family: 'Poppins';
+  font-style: normal;
+  left: 320px;
+}
+
+.table-div {
+  position: absolute;
+  top: 184px;
+}
+
+h1 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+  color: #000000;
+  margin-bottom: 18px
+}
+
 table {
-  width: 50%;
+  top: 238px;
+  border-collapse: collapse;
+}
+
+tr {
+  width: 670px;
+  height: 55px;
+  box-sizing: border-box;
+}
+
+tr:nth-child(odd) {
+  background-color: #FAFAFA;
+}
+
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  color: #353535;
+  padding-top: 16px;
+  padding-bottom: 15px;
+  padding-left: 17px;
+}
+
+td:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+td:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.name {
+  max-width: 268px;
+}
+
+.email {
+  max-width: 262px;
+}
+
+.remove {
+  padding-top: 13px;
+  padding-bottom: 12px;
+  padding-right: 14px;
+}
+
+.remove-button {
+  width: 109px;
+  height: 30px;
+  border: 1px solid #05204A;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+}
+
+.add {
+  margin-top: 26px;
+  width: 119px;
+  height: 40px;
+  background: #05204A;
+  border-radius: 5px;
+
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #FFFFFF; 
 }
