@@ -55,6 +55,6 @@ UserSchema.methods.verifyPassword = (enteredPassword) =>
     console.log(matchBool);
   });
 
-const Users = mongoose.model("users", UserSchema);
+const User = mongoose.model("users", UserSchema);
 
-module.exports = Users;
+module.exports = User;
