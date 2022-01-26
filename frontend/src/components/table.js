@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import "./table.css";
+import "../css/Table.css";
 
 /** Dummy data used to display the table. */
 /** Only the fields specified in the schema will be columns in the table */

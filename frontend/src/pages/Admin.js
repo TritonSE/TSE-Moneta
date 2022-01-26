@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import "./admin.css";
+import "../css/Admin.css";
 
 const entries = [
   {
