@@ -28,13 +28,13 @@ const entries = [
   {
     firstName: "Bartholemew",
     lastName: "Jingleheimer Jameson Jimothy",
-    email: "bartholemewjingleheimerjamesonjimothy@gmail.com"
+    email: "bartholemewjingleheimerjamesonjimothy@gmail.com",
   },
   {
     firstName: "Alex",
     lastName: "Zhang",
-    email: "alexzhang1618@gmail.com"
-  }
+    email: "alexzhang1618@gmail.com",
+  },
 ];
 
 /**
@@ -55,13 +55,17 @@ function Admin() {
               </td>
               <td className="email">{entry.email}</td>
               <td className="remove">
-                <button className="remove-button" type="button">Remove</button>
+                <button className="remove-button" type="button">
+                  Remove
+                </button>
               </td>
             </tr>
           ))}
         </table>
         <div className="add-div">
-          <button className="add" type="button">Add</button>
+          <button className="add" type="button">
+            Add
+          </button>
         </div>
       </div>
     </div>

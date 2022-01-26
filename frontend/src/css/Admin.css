@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url("https://fonts.googleapis.com/css?family=Poppins");
 
 * {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-style: normal;
   left: 320px;
 }
@@ -16,7 +16,7 @@ h1 {
   font-size: 24px;
   line-height: 36px;
   color: #000000;
-  margin-bottom: 18px
+  margin-bottom: 18px;
 }
 
 table {
@@ -31,7 +31,7 @@ tr {
 }
 
 tr:nth-child(odd) {
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 
 td {
@@ -74,21 +74,21 @@ td:last-child {
 .remove-button {
   width: 109px;
   height: 30px;
-  border: 1px solid #05204A;
+  border: 1px solid #05204a;
   box-sizing: border-box;
   border-radius: 5px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .add {
   margin-top: 26px;
   width: 119px;
   height: 40px;
-  background: #05204A;
+  background: #05204a;
   border-radius: 5px;
 
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  color: #FFFFFF; 
+  color: #ffffff;
 }
