@@ -2,7 +2,6 @@
 
 * {
   font-family: "Poppins";
-  font-style: normal;
   left: 320px;
 }
 
@@ -12,16 +11,19 @@
 }
 
 h1 {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 24px;
   line-height: 36px;
-  color: #000000;
   margin-bottom: 18px;
 }
 
 table {
-  top: 238px;
+  position: relative;
+  left: 0px;
   border-collapse: collapse;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 300;
 }
 
 tr {
@@ -38,9 +40,6 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 24px;
   color: #353535;
   padding-top: 16px;
   padding-bottom: 15px;
@@ -72,23 +71,38 @@ td:last-child {
 }
 
 .remove-button {
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  font-weight: 400;
   width: 109px;
   height: 30px;
   border: 1px solid #05204a;
-  box-sizing: border-box;
-  border-radius: 5px;
   background-color: #ffffff;
 }
 
 .add {
-  margin-top: 26px;
-  width: 119px;
-  height: 40px;
-  background: #05204a;
-  border-radius: 5px;
-
+  display: inline-flex;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 26px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 25px;
+  padding-right: 31px;
+  width: 119px;
+  height: 40px;
+  background: #05204a;
   color: #ffffff;
+}
+
+.add-icon-svg {
+  margin-right: 10.58px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 19px;
+  height: 19px;
 }

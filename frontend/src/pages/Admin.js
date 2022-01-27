@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import AddIcon from "../images/AddIcon.svg";
 import "../css/Admin.css";
 
 const entries = [
@@ -64,6 +65,7 @@ function Admin() {
         </table>
         <div className="add-div">
           <button className="add" type="button">
+            <img src={AddIcon} className="add-icon-svg" />
             Add
           </button>
         </div>
