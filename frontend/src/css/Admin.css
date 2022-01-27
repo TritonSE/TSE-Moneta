@@ -27,7 +27,7 @@ table {
 }
 
 tr {
-  width: 670px;
+  max-width: 670px;
   height: 55px;
   box-sizing: border-box;
 }
