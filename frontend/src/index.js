@@ -1,12 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
-
-import reportWebVitals from "./reportWebVitals";
 
 export default function App() {
   return (
