@@ -1,24 +1,7 @@
 /**
- * "/addRow" - inserts new TableData
- * Duplicate data is if all columns are equivalent and they are in the same group return 409
- * If required values are missing return 500
- * If neither of the above is true return 200
- * Return 500 in a catch if something else goes wrong
- *
- * "/editRow:id" - edits TableData
- * If edit results in duplicate data return 409
- * If id does not exist return 500
- * If neither of the above is true return 200
- * Return 500 in a catch if something else goes wrong
- *
- * "/getRow/:id" - gets TableData by id
- * If id does not exist return 500
- * If it does return 200
- * Return 500 in a catch if something else goes wrong
- *
- * "/getAllRows" - gets all TableDatas
- * Return 200
- * @summary Routes for TableData
+ * Implements routes for TableDatas. Routes will do basic validation such as
+ * checking for duplicates and if all the required fields are present.
+ * @summary Routes for posting, putting, and getting TableDatas
  * @author Kevin Fu
  */
 const express = require("express");
@@ -28,7 +11,12 @@ const { body, validationResult } = require("express-validator");
 const TableData = require("../models/TableData");
 const Group = require("../models/Groups");
 
-// checks if Group ref exists
+/**
+ * Helper func that checks if provided id is an actual group in the database
+ * @param id - ObjectId to check
+ * @param res - response object to use for sending error
+ * @returns True if id exists, else False
+ */
 async function isValidGroup(id, res) {
   const result = await Group.find({ _id: id });
   if (!result.length) {
@@ -38,6 +26,13 @@ async function isValidGroup(id, res) {
   return true;
 }
 
+/**
+ * "/addRow" - inserts new TableData
+ * Duplicate data is if all columns are equivalent and they are in the same group return 409
+ * If required values are missing return 500
+ * If neither of the above is true return 200
+ * Return 500 in a catch if something else goes wrong
+ */
 router.post("/addRow", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
     // check if all required fields are present
@@ -74,6 +69,13 @@ router.post("/addRow", [body("group").exists(), body("data").exists()], async (r
   }
 });
 
+/**
+ * "/editRow:id" - edits TableData
+ * If edit results in duplicate data return 409
+ * If id does not exist return 500
+ * If neither of the above is true return 200
+ * Return 500 in a catch if something else goes wrong
+ */
 router.put("/editRow/:id", async (req, res) => {
   try {
     if (!(await isValidGroup(req.body.group, res))) {
@@ -97,6 +99,12 @@ router.put("/editRow/:id", async (req, res) => {
   }
 });
 
+/**
+ * "/getRow/:id" - gets TableData by id
+ * If id does not exist return 500
+ * If it does return 200
+ * Return 500 in a catch if something else goes wrong
+ */
 router.get("/getAllRows/:id", (req, res) => {
   try {
     TableData.find({ _id: req.params.id })
@@ -116,6 +124,10 @@ router.get("/getAllRows/:id", (req, res) => {
   }
 });
 
+/**
+ * "/getAllRows" - gets all TableDatas
+ * Return 200
+ */
 router.get("/getAllRows", (req, res) => {
   TableData.find({}).then((data) => res.json(data));
 });
