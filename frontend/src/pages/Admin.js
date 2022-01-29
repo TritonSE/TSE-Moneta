@@ -8,7 +8,7 @@
 
 import React from "react";
 import AddIcon from "../images/AddIcon.svg";
-import "../css/Admin.css";
+import styles from "../css/Admin.css";
 
 const entries = [
   {
@@ -48,7 +48,7 @@ function Admin() {
     <div>
       <div className="table-div">
         <h1>Employees with Access</h1>
-        <table>
+        <table className="admin-table">
           {entries.map((entry) => (
             <tr key={entry.email}>
               <td className="name">

@@ -18,12 +18,15 @@ h1 {
 }
 
 table {
-  position: relative;
-  left: 0px;
   border-collapse: collapse;
   font-size: 16px;
   line-height: 24px;
   font-weight: 300;
+}
+
+.admin-table {
+  position: relative;
+  left: 0px;
 }
 
 tr {
