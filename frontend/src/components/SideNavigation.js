@@ -6,7 +6,8 @@
  * @author Kevin Fu
  */
 import React from "react";
-import "./SideNavigation.css";
+import { Link } from "react-router-dom";
+import "../css/SideNavigation.css";
 /**
  * Renders the side navigation bar
  * @returns side navigation content
@@ -14,18 +15,24 @@ import "./SideNavigation.css";
 function SideNavigation() {
   return (
     <div className="side-navigation">
-      <button type="button" className="home">
-        Moneta
-      </button>
+      <Link to="/">
+        <button type="button" className="home">
+          Moneta
+        </button>
+      </Link>
       <button type="button" className="database">
         Database
       </button>
-      <button type="button" className="admin">
-        Admin
-      </button>
-      <button type="button" className="settings">
-        Settings
-      </button>
+      <Link to="/admin">
+        <button type="button" className="admin">
+          Admin
+        </button>
+      </Link>
+      <Link to="/settings">
+        <button type="button" className="settings">
+          Settings
+        </button>
+      </Link>
       <button type="button" className="log-out">
         Log Out
       </button>
