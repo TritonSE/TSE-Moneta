@@ -30,11 +30,6 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", function (next) {
   const user = this;
 
-  // hashes password only if modified or new
-  if (!user.isModified("password")) {
-    return next();
-  }
-
   // generate a salt
   return bcrypt.genSalt(SALT_WORK_FACTOR, (salt_err, salt) => {
     if (salt_err) return next(salt_err);
@@ -48,6 +43,16 @@ UserSchema.pre("save", function (next) {
       return next();
     });
   });
+});
+
+UserSchema.pre("findOneAndUpdate", async function (next) {
+  const update = { ...this.getUpdate() };
+
+  if (update.password) {
+    const salt = bcrypt.genSaltSync();
+    update.password = await bcrypt.hash(update.password, salt);
+    this.setUpdate(update);
+  }
 });
 
 UserSchema.methods.verifyPassword = (enteredPassword) =>
