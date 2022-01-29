@@ -7,13 +7,14 @@
  */
 
 import React from "react";
-import "../css/Admin.css";
+import AddIcon from "../images/AddIcon.svg";
+import styles from "../css/Admin.css";
 
 const entries = [
   {
-    firstName: "Alex",
-    lastName: "Zhang",
-    email: "alexzhang1618@gmail.com",
+    firstName: "First name,",
+    lastName: "last name",
+    email: "abc@email.com",
   },
   {
     firstName: "John",
@@ -25,6 +26,16 @@ const entries = [
     lastName: "Last",
     email: "emailaddress@organization.com",
   },
+  {
+    firstName: "Bartholemew",
+    lastName: "Jingleheimer Jameson Jimothy",
+    email: "bartholemewjingleheimerjamesonjimothy@gmail.com",
+  },
+  {
+    firstName: "Alex",
+    lastName: "Zhang",
+    email: "alexzhang1618@gmail.com",
+  },
 ];
 
 /**
@@ -34,20 +45,31 @@ const entries = [
  */
 function Admin() {
   return (
-    <div className="header">
-      <h1>Employees with Access</h1>
-      <table>
-        {entries.map((entry) => (
-          <tr key={entry.email}>
-            <td className="name">
-              {entry.firstName} {entry.lastName}
-            </td>
-            <td className="email">{entry.email}</td>
-            <button type="button">Remove</button>
-          </tr>
-        ))}
-      </table>
-      <button type="button">Add</button>
+    <div>
+      <div className="table-div">
+        <h1>Employees with Access</h1>
+        <table className="admin-table">
+          {entries.map((entry) => (
+            <tr key={entry.email}>
+              <td className="name">
+                {entry.firstName} {entry.lastName}
+              </td>
+              <td className="email">{entry.email}</td>
+              <td className="remove">
+                <button className="remove-button" type="button">
+                  Remove
+                </button>
+              </td>
+            </tr>
+          ))}
+        </table>
+        <div className="add-div">
+          <button className="add" type="button">
+            <img src={AddIcon} className="add-icon-svg" />
+            Add
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
