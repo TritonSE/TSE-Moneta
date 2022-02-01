@@ -7,6 +7,7 @@
 import React from "react";
 import SideNavigation from "../components/SideNavigation";
 import Table from "../components/Table";
+import CSVParser from "../components/CSVParser";
 
 /**
  * Renders the dashboard page
@@ -18,6 +19,7 @@ function Dashboard() {
     <>
       <SideNavigation />
       <Table />
+      <CSVParser />
     </>
   );
 }

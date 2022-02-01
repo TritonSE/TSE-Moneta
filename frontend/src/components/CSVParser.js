@@ -7,16 +7,44 @@
  */
 
 import React from 'react';
-import { usePapaParse } from 'react-papaparse';
+import { useCSVReader, useCSVDownloader } from 'react-papaparse';
+import { AiOutlineCloudUpload, AiOutlineDownload } from 'react-icons/ai'
 
-// TODO: import css
+import "../css/CSVParser.css";
 
 /**
  * Renders the CSV parser
  * @returns CSV parser content
  */
 function CSVParser() {
+    const { CSVReader } = useCSVReader();
+    const { CSVDownloader, Type } = useCSVDownloader();
 
+    return (
+        <div className='csv-parser'>
+            <CSVReader onUploadAccepted={(results) => {
+                console.log(results);
+            }}>
+                {({
+                    getRootProps,
+                }) => (
+                    <>
+                        <div>
+                            <button type='button' {...getRootProps()} className='csv-button'>
+                                <AiOutlineCloudUpload /> Upload CSV
+                            </button>
+                        </div>
+                    </>
+                )}
+            </CSVReader>
+
+            <CSVDownloader
+                type={TypeError.Button}
+            >
+
+            </CSVDownloader>
+        </div>
+    );
 }
 
 export default CSVParser;
