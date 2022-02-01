@@ -6,9 +6,9 @@
  * @author Elias Fang
  */
 
-import React from 'react';
-import { useCSVReader, useCSVDownloader } from 'react-papaparse';
-import { AiOutlineCloudUpload, AiOutlineDownload } from 'react-icons/ai'
+import React from "react";
+import { useCSVReader, useCSVDownloader } from "react-papaparse";
+import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 
 import "../css/CSVParser.css";
 
@@ -17,57 +17,57 @@ import "../css/CSVParser.css";
  * @returns CSV parser content
  */
 function CSVParser() {
-    const { CSVReader } = useCSVReader();
-    const { CSVDownloader, Type } = useCSVDownloader();
+  const { CSVReader } = useCSVReader();
+  const { CSVDownloader, Type } = useCSVDownloader();
 
-    return (
-        <div className='csv-parser'>
-            <CSVReader onUploadAccepted={(results) => {
-                console.log(results);
-            }}>
-                {({
-                    getRootProps,
-                }) => (
-                    <>
-                        <div>
-                            <button type='button' {...getRootProps()} className='csv-button'>
-                                <AiOutlineCloudUpload /> Upload CSV
-                            </button>
-                        </div>
-                    </>
-                )}
-            </CSVReader>
+  return (
+    <div className="csv-parser">
+      <CSVReader
+        onUploadAccepted={(results) => {
+          console.log(results);
+        }}
+      >
+        {({ getRootProps }) => (
+          <>
+            <div>
+              <button type="button" {...getRootProps()} className="csv-button">
+                <AiOutlineCloudUpload /> Upload CSV
+              </button>
+            </div>
+          </>
+        )}
+      </CSVReader>
 
-            <CSVDownloader
-                type={Type.Button}
-                filename={'data'}
-                bom={true}
-                config={{
-                    delimiter: ';',
-                }}
-                data={[
-                    {
-                      id: 1,
-                      name: "First Last",
-                      age: 20,
-                      gender: "Female",
-                      email: "firstlast@email.com",
-                      alternateEmail: "firstlast@hotmail.com",
-                    },
-                    {
-                      id: 2,
-                      name: "John Doe",
-                      age: 25,
-                      gender: "Male",
-                      email: "johndoe@gmail.com",
-                      alternateEmail: "john@email.com",
-                    },
-                  ]}
-            >
-                <AiOutlineDownload /> Download
-            </CSVDownloader>
-        </div>
-    );
+      <CSVDownloader
+        type={Type.Button}
+        filename={"data"}
+        bom={true}
+        config={{
+          delimiter: ";",
+        }}
+        data={[
+          {
+            id: 1,
+            name: "First Last",
+            age: 20,
+            gender: "Female",
+            email: "firstlast@email.com",
+            alternateEmail: "firstlast@hotmail.com",
+          },
+          {
+            id: 2,
+            name: "John Doe",
+            age: 25,
+            gender: "Male",
+            email: "johndoe@gmail.com",
+            alternateEmail: "john@email.com",
+          },
+        ]}
+      >
+        <AiOutlineDownload /> Download
+      </CSVDownloader>
+    </div>
+  );
 }
 
 export default CSVParser;
