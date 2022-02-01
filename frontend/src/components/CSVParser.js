@@ -39,9 +39,32 @@ function CSVParser() {
             </CSVReader>
 
             <CSVDownloader
-                type={TypeError.Button}
+                type={Type.Button}
+                filename={'data'}
+                bom={true}
+                config={{
+                    delimiter: ';',
+                }}
+                data={[
+                    {
+                      id: 1,
+                      name: "First Last",
+                      age: 20,
+                      gender: "Female",
+                      email: "firstlast@email.com",
+                      alternateEmail: "firstlast@hotmail.com",
+                    },
+                    {
+                      id: 2,
+                      name: "John Doe",
+                      age: 25,
+                      gender: "Male",
+                      email: "johndoe@gmail.com",
+                      alternateEmail: "john@email.com",
+                    },
+                  ]}
             >
-
+                <AiOutlineDownload /> Download
             </CSVDownloader>
         </div>
     );
