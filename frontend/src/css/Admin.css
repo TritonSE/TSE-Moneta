@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+
+* {
+  font-family: "Poppins";
+  left: 320px;
+}
+
+.table-div {
+  position: absolute;
+  top: 184px;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  margin-bottom: 18px;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 300;
+}
+
+.admin-table {
+  position: relative;
+  left: 0px;
+}
+
+tr {
+  max-width: 670px;
+  height: 55px;
+  box-sizing: border-box;
+}
+
+tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #353535;
+  padding-top: 16px;
+  padding-bottom: 15px;
+  padding-left: 17px;
+}
+
+td:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+td:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.name {
+  max-width: 268px;
+}
+
+.email {
+  max-width: 262px;
+}
+
+.remove {
+  padding-top: 13px;
+  padding-bottom: 12px;
+  padding-right: 14px;
+}
+
+.remove-button {
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  font-weight: 400;
+  width: 109px;
+  height: 30px;
+  border: 1px solid #05204a;
+  background-color: #ffffff;
+}
+
+.add {
+  display: inline-flex;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 26px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 25px;
+  padding-right: 31px;
+  width: 119px;
+  height: 40px;
+  background: #05204a;
+  color: #ffffff;
+}
+
+.add-icon-svg {
+  margin-right: 10.58px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width: 19px;
+  height: 19px;
+}
