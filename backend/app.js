@@ -1,7 +1,9 @@
 const express = require("express");
 const connectDB = require("./config/db");
+const TableDataRoutes = require("./routes/TableDataRoutes");
 
 const app = express();
+app.use("/", TableDataRoutes);
 
 connectDB();
 
