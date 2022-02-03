@@ -6,6 +6,8 @@
  * @author Elias Fang
  */
 
+/* eslint-disable react/jsx-props-no-spreading */
+
 import React from "react";
 import { useCSVReader, useCSVDownloader } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
@@ -28,20 +30,18 @@ function CSVParser() {
         }}
       >
         {({ getRootProps }) => (
-          <>
-            <div>
-              <button type="button" {...getRootProps()} className="csv-button">
-                <AiOutlineCloudUpload /> Upload CSV
-              </button>
-            </div>
-          </>
+          <div>
+            <button type="button" {...getRootProps()} className="csv-button">
+              <AiOutlineCloudUpload /> Upload CSV
+            </button>
+          </div>
         )}
       </CSVReader>
 
       <CSVDownloader
         type={Type.Button}
-        filename={"data"}
-        bom={true}
+        filename="data"
+        bom
         config={{
           delimiter: ";",
         }}
