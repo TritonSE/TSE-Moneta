@@ -1,7 +1,21 @@
+/**
+ * Create group module that appears when the user wants to add a new group type.
+ * Prompts user for name of group and its fields. Allows user to add more fields
+ * if needed.
+ *
+ * @summary Module that displays form for adding group
+ * @author Kevin Fu
+ */
+
 import "../css/CreateGroup.css";
 import React from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 
+/**
+ * Renders create group module
+ *
+ * @return jsx for create group module
+ */
 function CreateGroup() {
   return (
     <div id="newGroupModal" className="modal">
