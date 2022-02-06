@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
+import CreateGroup from "./components/CreateGroup";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/createGroup" element={<CreateGroup />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,163 @@
+.modal {
+    display: block; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.2); /* Black w/ opacity */
+    padding: 10% 0px;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 27px 37px;
+    border-radius: 5px;
+    //width: 36vh;
+    //width: 25em;
+    width: 491px;
+    //height: 55vh;
+    //height: 24em;
+    height: 505px;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 24px;
+    margin: 0;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 16px;
+    margin: 0;
+}
+
+h3 {
+    font-weight: 300;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 2px;
+    margin-bottom: 11px;
+}
+
+.name-form {
+    margin: 20px 0 35px;
+}
+
+.name-field {
+    width: 95%;
+    margin-top: 12px;
+    margin-bottom: 35px;
+    padding: 0px 10px;
+    display: block;
+    height: 40px;
+    border-style: solid;
+    border-color: #C4C4C4;
+    border-radius: 5px;
+    border-width: 1px;
+    font-size: 16px;
+}
+
+.add {
+    padding: 0;
+    background: white;
+    color: #05204a;
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 13px;
+}
+
+.add-svg {
+    margin-right: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 19px;
+    height: 19px;
+}
+
+.fields-form-div {
+    display: block;
+}
+
+.field {
+    display: flex;
+    width: 60%;
+    float: left;
+    height: 40px;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 0px 10px;
+    border-style: solid;
+    border-color: #C4C4C4;
+    margin-bottom: 15px;
+    font-size: 16px;
+
+}
+
+select {
+    display: block;
+    width: 30%;
+    margin-left: 14px;
+    padding-left: 15px;
+    float: left;
+    height: 43px;
+    border-width: 1px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #C4C4C4;
+    margin-bottom: 15px;
+    color: #C4C4C4;
+    font-size: 16px;
+}
+
+select option{
+    background: #F3F3F3;
+}
+
+::-webkit-scrollbar {
+    border-radius: 2px;
+    background-color: #E5E5E5;
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 3px solid #E5E5E5; /* adds border around thumb to make it look smaller */
+    background-color: #ffffff;
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.submit-div {
+    margin: auto auto;
+    text-align: center;
+    margin-top: 24px;
+}
+
+.submit {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 5px;
+    border: none;
+    margin-top: 0px;
+    width: 119px;
+    height: 40px;
+    background: #05204a;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+
+#field-form {
+    display: block;
+    height: 160px;
+    overflow-y:auto;
+}
