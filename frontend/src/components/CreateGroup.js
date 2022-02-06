@@ -31,7 +31,7 @@ function CreateGroup() {
           <h2>Fields</h2>
           <h3>List the fields you want associated with this group.....</h3>
           <button className="add" type="button">
-            <img src={AddFieldIcon} className="add-svg" />
+            <img src={AddFieldIcon} className="add-svg" alt="add group button icon" />
             Add new field
           </button>
           <form id="field-form">
