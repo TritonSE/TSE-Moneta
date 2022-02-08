@@ -65,7 +65,7 @@ function Admin() {
         </table>
         <div className="add-div">
           <button className="add" type="button">
-            <img src={AddIcon} className="add-icon-svg" alt="plus icon on add button" />
+            <img src={AddIcon} className="admin add-icon-svg" alt="plus icon on add button" />
             Add
           </button>
         </div>

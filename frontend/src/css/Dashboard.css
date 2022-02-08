@@ -1,0 +1,38 @@
+.dashboard-div {
+  position: absolute;
+  left: 320px;
+}
+
+.dashboard-header {
+  position: absolute;
+  top: 116px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.add-row {
+  position: relative;
+  left: 216px;
+  top: 189px;
+  width: 120px;
+  height: 40px;
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  border: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  width: 119px;
+  height: 40px;
+  background: #05204a;
+  color: #ffffff;
+}
+
+.dashboard.add-icon-svg {
+  margin-right: 8px;
+}

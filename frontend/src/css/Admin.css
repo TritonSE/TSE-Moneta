@@ -102,9 +102,12 @@
 }
 
 .add-icon-svg {
-  margin-right: 10.58px;
   padding-top: 2px;
   padding-bottom: 2px;
   width: 19px;
   height: 19px;
+}
+
+.admin.add-icon-svg {
+  margin-right: 10.58px;
 }
