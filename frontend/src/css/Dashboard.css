@@ -11,8 +11,15 @@
   line-height: 36px;
 }
 
+.group-select {
+  position: absolute;
+  width: 200px;
+  height: 40px;
+  top: 189px;
+}
+
 .add-row {
-  position: relative;
+  position: absolute;
   left: 216px;
   top: 189px;
   width: 120px;
