@@ -32,7 +32,7 @@ function CSVParser() {
         {({ getRootProps }) => (
           <div>
             <button type="button" {...getRootProps()} className="csv-button">
-              <AiOutlineCloudUpload /> Upload CSV
+              <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
             </button>
           </div>
         )}
@@ -40,6 +40,7 @@ function CSVParser() {
 
       <CSVDownloader
         type={Type.Button}
+        className="csv-button download"
         filename="data"
         bom
         config={{
@@ -64,7 +65,7 @@ function CSVParser() {
           },
         ]}
       >
-        <AiOutlineDownload /> Download
+        <AiOutlineDownload className="csv-icon download" /> Download
       </CSVDownloader>
     </div>
   );

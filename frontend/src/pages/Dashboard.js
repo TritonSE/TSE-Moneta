@@ -4,13 +4,14 @@
  * @summary Dashboard page.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import Select, { components } from "react-select";
 import SideNavigation from "../components/SideNavigation";
 import Table from "../components/Table";
 import AddIcon from "../images/AddIcon.svg";
 import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
+import MenuToggle from "../images/MenuToggle.svg";
 import "../css/Dashboard.css";
 import CSVParser from "../components/CSVParser";
 
@@ -86,6 +87,7 @@ const selectStyles = {
  * @returns Contents of the dashboard page
  */
 function Dashboard() {
+  const [visible, setVisibility] = useState(false);
   return (
     <>
       <SideNavigation />
@@ -104,7 +106,16 @@ function Dashboard() {
           Add row
         </button>
         <Table />
-        <CSVParser />
+        <button
+          type="button"
+          className="toggle-csv-menu"
+          onClick={() => {
+            setVisibility(!visible);
+          }}
+        >
+          <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
+        </button>
+        {visible ? <CSVParser /> : null}
       </div>
     </>
   );
