@@ -43,3 +43,14 @@
 .dashboard.add-icon-svg {
   margin-right: 8px;
 }
+
+.Pencil {
+  float: right;
+  margin-right: 14px;
+}
+
+.Plus {
+  float: right;
+  padding-top: 4px;
+  margin-right: 14px;
+}

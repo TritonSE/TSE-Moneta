@@ -9,21 +9,38 @@ import Select, { components } from "react-select";
 import SideNavigation from "../components/SideNavigation";
 import Table from "../components/Table";
 import AddIcon from "../images/AddIcon.svg";
-import Plus from "../images/Plus.svg";
+import Plus from "../images/Plus";
+import Pencil from "../images/Pencil";
 import "../css/Dashboard.css";
 
 const options = [
-  { value: "create-row", label: "Create Row", icon: Plus },
-  { value: "group1", label: "Group 1" },
-  { value: "group2", label: "Group 2" },
-  { value: "group3", label: "Group 3" },
-  { value: "group4", label: "Group 4" },
-  { value: "group5", label: "Group 5" },
-  { value: "group6", label: "Group 6" },
-  { value: "group7", label: "Group 7" },
-  { value: "group8", label: "Group 8" },
+  { value: "create-row", label: "Create Row", isCreate: true },
+  { value: "group1", label: "Group 1", isCreate: false },
+  { value: "group2", label: "Group 2", isCreate: false },
+  { value: "group3", label: "Group 3", isCreate: false },
+  { value: "group4", label: "Group 4", isCreate: false },
+  { value: "group5", label: "Group 5", isCreate: false },
+  { value: "group6", label: "Group 6", isCreate: false },
+  { value: "group7", label: "Group 7", isCreate: false },
+  { value: "group8", label: "Group 8", isCreate: false },
 ];
 
+const iconOption = (props) => {
+  if (props.data.isCreate) {
+    return (
+      <components.Option {...props}>
+        {props.data.label}
+        <Plus className="Plus" />
+      </components.Option>
+    );
+  }
+  return (
+    <components.Option {...props}>
+      {props.data.label}
+      <Pencil className="Pencil" />
+    </components.Option>
+  );
+};
 const selectStyles = {
   control: (base, state) => ({
     ...base,
@@ -46,6 +63,8 @@ const selectStyles = {
     paddingTop: 9,
     color: state.isFocused ? "#4B6A9B" : "#949494",
     background: state.isFocused ? "#F3F3F3" : "#F3F3F3",
+    stroke: state.isFocused ? "#4B6A9B" : "#949494",
+    fill: state.isFocused ? "#4B6A9B" : "#949494",
   }),
   menuList: (base) => ({
     ...base,
@@ -58,7 +77,7 @@ const selectStyles = {
     },
   }),
   indicatorSeparator: () => null,
-  closeMenuOnSelect: true,
+  closeMenuOnSelect: false,
 };
 /**
  * Renders the dashboard page
@@ -77,6 +96,7 @@ function Dashboard() {
           options={options}
           placeholder="Select Group"
           styles={selectStyles}
+          components={{ Option: iconOption }}
         />
         <button className="add-row" type="button">
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
