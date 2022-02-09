@@ -12,6 +12,7 @@ import AddIcon from "../images/AddIcon.svg";
 import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import "../css/Dashboard.css";
+import CSVParser from "../components/CSVParser";
 
 const options = [
   { value: "create-row", label: "Create Row", isCreate: true },
@@ -103,6 +104,7 @@ function Dashboard() {
           Add row
         </button>
         <Table />
+        <CSVParser />
       </div>
     </>
   );

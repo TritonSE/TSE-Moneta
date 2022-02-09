@@ -27,12 +27,8 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.pre("save", (next) => {
+UserSchema.pre("save", function (next) {
   const user = this;
-  // hashes password only if modified or new
-  if (!user.isModified("password")) {
-    return next();
-  }
 
   // generate a salt
   return bcrypt.genSalt(SALT_WORK_FACTOR, (salt_err, salt) => {
@@ -49,12 +45,22 @@ UserSchema.pre("save", (next) => {
   });
 });
 
+UserSchema.pre("findOneAndUpdate", async function (next) {
+  const update = { ...this.getUpdate() };
+
+  if (update.password) {
+    const salt = bcrypt.genSaltSync();
+    update.password = await bcrypt.hash(update.password, salt);
+    this.setUpdate(update);
+  }
+});
+
 UserSchema.methods.verifyPassword = (enteredPassword) =>
   bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
     if (err) throw err;
     console.log(matchBool);
   });
 
-const Users = mongoose.model("users", UserSchema);
+const User = mongoose.model("users", UserSchema);
 
-module.exports = Users;
+module.exports = User;
