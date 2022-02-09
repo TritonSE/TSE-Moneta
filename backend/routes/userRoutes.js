@@ -19,7 +19,7 @@ const Users = require("../models/Users");
 
 /** adds new user to database.
  * @params fullName, email, companyID, and password
- * @return returns new user object if successfully created. Else, returns 409 or 500 errors. 
+ * @return returns new user object if successfully created. Else, returns 409 or 500 errors.
  */
 
 router.post("/addUser", async (req, res) => {
@@ -58,7 +58,7 @@ router.post("/addUser", async (req, res) => {
 
 /** deletes user by ID from database.
  * @params mongoose id
- * @return returns success message. Else, returns 500 errors. 
+ * @return returns success message. Else, returns 500 errors.
  */
 router.delete("/deleteUser/:id", async (req, res) => {
   try {
@@ -88,8 +88,8 @@ router.delete("/deleteUser/:id", async (req, res) => {
 });
 
 /** edits user by ID from database.
- * @params mongoose id and fullname/email/companyId/password 
- * @return returns success message. Else, returns 500 errors. 
+ * @params mongoose id and fullname/email/companyId/password
+ * @return returns success message. Else, returns 500 errors.
  */
 router.put("/editUser/:id", async (req, res) => {
   try {
@@ -129,7 +129,7 @@ router.put("/editUser/:id", async (req, res) => {
 
 /** gets user by ID from database.
  * @params mongoose id
- * @return returns user object. Else, returns 400 or 500 errors. 
+ * @return returns user object. Else, returns 400 or 500 errors.
  */
 router.get("/getUser/:id", async (req, res) => {
   try {
@@ -159,7 +159,7 @@ router.get("/getUser/:id", async (req, res) => {
 });
 
 /** gets all users from data base
- * @return list of users. Else, returns 500 errors. 
+ * @return list of users. Else, returns 500 errors.
  */
 router.get("/getAllUsers", async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 /**
- * Schema for Groups with the properties
+ * Schema for Users with the properties
  * fullName (string)
  * email (string)
  * companyID (string)
