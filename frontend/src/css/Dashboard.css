@@ -5,7 +5,7 @@
 
 .dashboard-header {
   position: absolute;
-  top: 116px;
+  top: 40px;
   font-weight: 500;
   font-size: 24px;
   line-height: 36px;
@@ -15,13 +15,13 @@
   position: absolute;
   width: 200px;
   height: 40px;
-  top: 189px;
+  top: 110px;
 }
 
 .add-row {
   position: absolute;
   left: 216px;
-  top: 189px;
+  top: 110px;
   width: 120px;
   height: 40px;
   display: inline-flex;
@@ -57,8 +57,8 @@
 
 .toggle-csv-menu {
   position: absolute;
-  left: 1040px;
-  top: 158.5px;
+  left: 1000px;
+  top: 123px;
   border: 0px;
   background: transparent;
 }

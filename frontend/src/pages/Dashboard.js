@@ -2,6 +2,7 @@
  * Dashboard page with table and sidenav.
  *
  * @summary Dashboard page.
+ * @author Alex Zhang
  */
 
 import React, { useState } from "react";
@@ -15,8 +16,9 @@ import MenuToggle from "../images/MenuToggle.svg";
 import "../css/Dashboard.css";
 import CSVParser from "../components/CSVParser";
 
+/** Dropdown options for the Select Group dropdown menu */
 const options = [
-  { value: "create-row", label: "Create Row", isCreate: true },
+  { value: "create-new", label: "Create New", isCreate: true },
   { value: "group1", label: "Group 1", isCreate: false },
   { value: "group2", label: "Group 2", isCreate: false },
   { value: "group3", label: "Group 3", isCreate: false },
@@ -27,6 +29,10 @@ const options = [
   { value: "group8", label: "Group 8", isCreate: false },
 ];
 
+/**
+ * Custom option component for the Select Group dropdown menu
+ * Includes an icon alongside the labeled dropdown row.
+ */
 const iconOption = (props) => {
   if (props.data.isCreate) {
     return (
@@ -43,6 +49,8 @@ const iconOption = (props) => {
     </components.Option>
   );
 };
+
+/** Styling for the react-select Select Group dropdown menu. */
 const selectStyles = {
   control: (base, state) => ({
     ...base,
@@ -87,6 +95,10 @@ const selectStyles = {
  * @returns Contents of the dashboard page
  */
 function Dashboard() {
+  /**
+   * State stores if the csv menu options should be displayed or not
+   * Toggles if the three dots in the top left is clicked.
+   */
   const [visible, setVisibility] = useState(false);
   return (
     <>

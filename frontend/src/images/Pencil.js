@@ -1,5 +1,9 @@
 import * as React from "react";
 
+/**
+ * Generates a Pencil image component.
+ * Needed so the .svg can be recolored on hover/interaction.
+ */
 function Pencil(props) {
   return (
     <svg

@@ -10,8 +10,10 @@ import React from "react";
 import Pencil from "../images/Pencil.svg";
 import "../css/Table.css";
 
-/** Dummy data used to display the table. */
-/** Only the fields specified in the schema will be columns in the table */
+/**
+ * Dummy data used to display the table.
+ * Only the fields specified in the schema will be columns in the table
+ */
 const _schema = ["name", "age", "gender", "email", "alternateEmail", "role"];
 const _table = [
   {

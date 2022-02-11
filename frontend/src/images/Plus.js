@@ -1,5 +1,9 @@
 import * as React from "react";
 
+/**
+ * Generates a Plus image component.
+ * Needed so the .svg can be recolored on hover/interaction.
+ */
 function Plus(props) {
   return (
     <svg
