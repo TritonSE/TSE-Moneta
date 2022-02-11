@@ -15,6 +15,7 @@ import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
 import "../css/Dashboard.css";
 import CSVParser from "../components/CSVParser";
+import CreateGroup from "../components/CreateGroup";
 
 /** Dropdown options for the Select Group dropdown menu */
 const options = [
@@ -129,6 +130,7 @@ function Dashboard() {
         </button>
         {visible ? <CSVParser /> : null}
       </div>
+      <CreateGroup></CreateGroup>
     </>
   );
 }

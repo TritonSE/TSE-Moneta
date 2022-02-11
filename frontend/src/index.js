@@ -13,7 +13,6 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/createGroup" element={<CreateGroup />} />
       </Routes>
     </BrowserRouter>
   );
