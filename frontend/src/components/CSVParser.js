@@ -14,6 +14,26 @@ import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 
 import "../css/CSVParser.css";
 
+async function importToDB(values) {
+  const data = {
+    group: "61f0898e595b30b05a64ee2f", // temporary dummy data
+    data: values.data,
+  };
+  console.log(JSON.stringify(data));
+
+  await fetch("http://localhost:8082/addRow", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    mode: "cors",
+  }).catch((error) => {
+    window.alert(error);
+    return;
+  });
+}
+
 /**
  * Renders the CSV parser
  * @returns CSV parser content
@@ -25,7 +45,12 @@ function CSVParser() {
   return (
     <div className="csv-parser">
       <CSVReader
+        // assumes csv comes with header row
+        config={{
+          header: true,
+        }}
         onUploadAccepted={(results) => {
+          importToDB(results).then((r) => {});
           console.log(results);
         }}
       >
