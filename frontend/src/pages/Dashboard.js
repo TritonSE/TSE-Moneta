@@ -130,7 +130,7 @@ function Dashboard() {
         </button>
         {visible ? <CSVParser /> : null}
       </div>
-      <CreateGroup></CreateGroup>
+      <CreateGroup />
     </>
   );
 }

@@ -7,10 +7,9 @@
  * @author Kevin Fu
  */
 
-import "../css/CreateGroup.css";
 import React from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
-
+import "../css/CreateGroup.css";
 /**
  * Renders create group module
  *
@@ -18,53 +17,56 @@ import AddFieldIcon from "../images/AddFieldIcon.svg";
  */
 function CreateGroup() {
   return (
-    <div id="newGroupModal" className="modal">
+    <div className="modal">
       <div className="modal-content">
-        <h1>Create New Group</h1>
-        <div className="name-form">
-          <h2>Group Name</h2>
+        <span className="group-first-header">Create New Group</span>
+        <div className="group-name-form">
+          <span className="group-second-header">Group Name</span>
           <form>
-            <input className="name-field" />
+            <input className="group-name-field" />
           </form>
         </div>
         <div className="fields-form-div">
-          <h2>Fields</h2>
-          <h3>List the fields you want associated with this group.....</h3>
+          <span className="group-second-header">Fields</span>
+          <br />
+          <span className="group-third-header">
+            List the fields you want associated with this group.....
+          </span>
           <button className="add-group-button" type="button">
-            <img src={AddFieldIcon} className="add-svg" alt="add group button icon" />
+            <img src={AddFieldIcon} className="add-field-svg" alt="add group button icon" />
             Add new field
           </button>
           <form id="field-form">
-            <input className="field" />
-            <select>
+            <input className="create-group-field" />
+            <select className="field-select">
               <option value="Email">Email</option>
               <option value="Text">Text</option>
               <option value="Number">Number</option>
             </select>
             <br />
-            <input className="field" />
-            <select>
+            <input className="create-group-field" />
+            <select className="field-select">
               <option value="Email">Email</option>
               <option value="Text">Text</option>
               <option value="Number">Number</option>
             </select>
             <br />
-            <input className="field" />
-            <select>
+            <input className="create-group-field" />
+            <select className="field-select">
               <option value="Email">Email</option>
               <option value="Text">Text</option>
               <option value="Number">Number</option>
             </select>
             <br />
-            <input className="field" />
-            <select>
+            <input className="create-group-field" />
+            <select className="field-select">
               <option value="Email">Email</option>
               <option value="Text">Text</option>
               <option value="Number">Number</option>
             </select>
           </form>
-          <div className="submit-div">
-            <button className="submit" type="button">
+          <div className="group-submit-div">
+            <button className="group-modal-submit" type="button">
               Create
             </button>
           </div>

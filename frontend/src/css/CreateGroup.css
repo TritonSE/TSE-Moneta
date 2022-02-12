@@ -21,18 +21,19 @@
   height: 505px;
 }
 
-h1 {
+.group-first-header {
+  font-size: 25px;
   font-weight: bold;
   margin: 0;
 }
 
-h2 {
+.group-second-header {
   font-weight: 400;
   font-size: 16px;
   margin: 0;
 }
 
-h3 {
+.group-third-header {
   font-weight: 300;
   font-size: 12px;
   font-style: italic;
@@ -40,11 +41,11 @@ h3 {
   margin-bottom: 11px;
 }
 
-.name-form {
+.group-name-form {
   margin: 20px 0 35px;
 }
 
-.name-field {
+.group-name-field {
   display: block;
   width: 95%;
   height: 40px;
@@ -73,7 +74,7 @@ h3 {
   align-items: center;
 }
 
-.add-svg {
+.add-field-svg {
   margin-right: 6px;
   padding: 2px 0;
   width: 19px;
@@ -86,7 +87,7 @@ h3 {
   overflow-y: auto;
 }
 
-.field {
+.create-group-field {
   width: 60%;
   height: 40px;
   float: left;
@@ -99,7 +100,7 @@ h3 {
   font-size: 16px;
 }
 
-select {
+.field-select {
   display: block;
   width: 30%;
   height: 43px;
@@ -115,25 +116,25 @@ select {
   font-size: 16px;
 }
 
-::-webkit-scrollbar {
+#field-form::-webkit-scrollbar {
   border-radius: 2px;
   background-color: #e5e5e5;
   width: 12px;
 }
 
-::-webkit-scrollbar-thumb {
+#field-form::-webkit-scrollbar-thumb {
   border-radius: 5px;
   border: 3px solid #e5e5e5; /* adds border around thumb to make it look smaller */
   background-color: #ffffff;
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
-.submit-div {
+.group-submit-div {
   text-align: center;
   margin-top: 24px;
 }
 
-.submit {
+.group-modal-submit {
   font-weight: 500;
   font-size: 16px;
   border-radius: 5px;
