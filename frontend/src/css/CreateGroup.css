@@ -58,7 +58,7 @@ h3 {
   font-size: 16px;
 }
 
-.add {
+.add-group-button {
   padding: 0;
   background: white;
   color: #05204a;
@@ -68,6 +68,9 @@ h3 {
   font-size: 16px;
   margin-top: 0;
   margin-bottom: 13px;
+  border: 0px;
+  display: flex;
+  align-items: center;
 }
 
 .add-svg {
