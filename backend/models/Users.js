@@ -55,11 +55,14 @@ UserSchema.pre("findOneAndUpdate", async function (next) {
   }
 });
 
-UserSchema.methods.verifyPassword = (enteredPassword) =>
+UserSchema.methods.verifyPassword = function (enteredPassword) {
+  console.log(enteredPassword);
+  console.log(this.password);
   bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
-    if (err) throw err;
-    console.log(matchBool);
+    if (err) return err;
+    return matchBool;
   });
+};
 
 const User = mongoose.model("users", UserSchema);
 
