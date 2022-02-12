@@ -1,10 +1,10 @@
 .dashboard-div {
   position: absolute;
-  left: 320px;
 }
 
 .dashboard-header {
   position: absolute;
+  left: 320px;
   top: 40px;
   font-weight: 500;
   font-size: 24px;
@@ -13,6 +13,7 @@
 
 .group-select {
   position: absolute;
+  left: 320px;
   width: 200px;
   height: 40px;
   top: 110px;
@@ -20,7 +21,7 @@
 
 .add-row {
   position: absolute;
-  left: 216px;
+  left: 536px;
   top: 110px;
   width: 120px;
   height: 40px;
@@ -57,7 +58,7 @@
 
 .toggle-csv-menu {
   position: absolute;
-  left: 1000px;
+  left: 1320px;
   top: 123px;
   border: 0px;
   background: transparent;
