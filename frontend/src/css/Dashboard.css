@@ -1,0 +1,65 @@
+.dashboard-div {
+  position: absolute;
+}
+
+.dashboard-header {
+  position: absolute;
+  left: 320px;
+  top: 40px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.group-select {
+  position: absolute;
+  left: 320px;
+  width: 200px;
+  height: 40px;
+  top: 110px;
+}
+
+.add-row {
+  position: absolute;
+  left: 536px;
+  top: 110px;
+  width: 120px;
+  height: 40px;
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  border: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  width: 119px;
+  height: 40px;
+  background: #05204a;
+  color: #ffffff;
+}
+
+.dashboard.add-icon-svg {
+  margin-right: 8px;
+}
+
+.Pencil {
+  float: right;
+  margin-right: 14px;
+}
+
+.Plus {
+  float: right;
+  padding-top: 4px;
+  margin-right: 14px;
+}
+
+.toggle-csv-menu {
+  position: absolute;
+  left: 1320px;
+  top: 123px;
+  border: 0px;
+  background: transparent;
+}

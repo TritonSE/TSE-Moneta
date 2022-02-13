@@ -8,7 +8,7 @@
 
 import React from "react";
 import AddIcon from "../images/AddIcon.svg";
-import styles from "../css/Admin.css";
+import "../css/Admin.css";
 
 const entries = [
   {
@@ -46,11 +46,11 @@ const entries = [
 function Admin() {
   return (
     <div>
-      <div className="table-div">
-        <h1>Employees with Access</h1>
+      <div className="admin-div">
+        <h1 className="admin-header">Employees with Access</h1>
         <table className="admin-table">
           {entries.map((entry) => (
-            <tr key={entry.email}>
+            <tr className="admin-row" key={entry.email}>
               <td className="name">
                 {entry.firstName} {entry.lastName}
               </td>
@@ -65,7 +65,7 @@ function Admin() {
         </table>
         <div className="add-div">
           <button className="add" type="button">
-            <img src={AddIcon} className="add-icon-svg" />
+            <img src={AddIcon} className="admin add-icon-svg" alt="plus icon on add button" />
             Add
           </button>
         </div>
