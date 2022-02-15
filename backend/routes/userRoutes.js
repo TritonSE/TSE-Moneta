@@ -1,11 +1,11 @@
 /**
  * API Routes for Users Schema
- * POST (/addUser)
- * DELETE (/deleteUser/:id)
- * PUT (/editUser/:id)
- * GET (/getUser/:id)
- * GET (/getAllUsers)
- * *
+ * POST /users
+ * DELETE /users/:id
+ * PUT /users/:id
+ * GET /users/:id
+ * GET /users
+ * 
  * @summary Users routes for add, edit, delete, and get
  * @author Pratyush Chand
  */
@@ -22,7 +22,7 @@ const Users = require("../models/Users");
  * @return returns new user object if successfully created. Else, returns 409 or 500 errors.
  */
 
-router.post("/addUser", async (req, res) => {
+router.post("/users", async (req, res) => {
   try {
     const { fullName, email, companyID, password } = req.body;
 
@@ -60,7 +60,7 @@ router.post("/addUser", async (req, res) => {
  * @params mongoose id
  * @return returns success message. Else, returns 500 errors.
  */
-router.delete("/deleteUser/:id", async (req, res) => {
+router.delete("/users/:id", async (req, res) => {
   try {
     const userExists = await User.exists({ _id: req.params.id });
 
@@ -91,7 +91,7 @@ router.delete("/deleteUser/:id", async (req, res) => {
  * @params mongoose id and fullname/email/companyId/password
  * @return returns success message. Else, returns 500 errors.
  */
-router.put("/editUser/:id", async (req, res) => {
+router.put("/users/:id", async (req, res) => {
   try {
     const userExists = await User.exists({ _id: req.params.id });
 
@@ -131,7 +131,7 @@ router.put("/editUser/:id", async (req, res) => {
  * @params mongoose id
  * @return returns user object. Else, returns 400 or 500 errors.
  */
-router.get("/getUser/:id", async (req, res) => {
+router.get("/users/:id", async (req, res) => {
   try {
     const userExists = await User.exists({ _id: req.params.id });
 
@@ -161,7 +161,7 @@ router.get("/getUser/:id", async (req, res) => {
 /** gets all users from data base
  * @return list of users. Else, returns 500 errors.
  */
-router.get("/getAllUsers", async (req, res) => {
+router.get("/users", async (req, res) => {
   try {
     const allUsers = await Users.find();
 
