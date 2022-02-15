@@ -1,11 +1,11 @@
 /**
  * API Routes for Companies Schema
- * POST (/addCompany)
- * DELETE (/deleteCompany/:id)
- * PUT (/editCompany/:id)
- * GET (/getCompany/:id)
- * GET (/getAllCompanies)
- * *
+ * POST /companies
+ * DELETE /companies/:id
+ * PUT /companies/:id
+ * GET /companies/:id
+ * GET /companies
+ *
  * @summary Companies routes for add, edit, delete, and get
  * @author Pratyush Chand
  */
@@ -21,7 +21,7 @@ const companies = require("../models/Organizations");
  * @params Name, Email, and Password
  * @return returns new company object if successfully created. Else, returns 409 or 500 errors.
  */
-router.post("/addCompany", async (req, res) => {
+router.post("/companies", async (req, res) => {
   try {
     const { Name, Email, Password } = req.body;
     const numMatched = await companies.count({ Email });
@@ -57,7 +57,7 @@ router.post("/addCompany", async (req, res) => {
  * @params mongoose id
  * @return returns success message. Else, returns 400 or 500 errors.
  */
-router.put("/editCompany/:id", async (req, res) => {
+router.put("/companies/:id", async (req, res) => {
   try {
     const companyExists = await companies.exists({ _id: req.params.id });
 
@@ -92,7 +92,7 @@ router.put("/editCompany/:id", async (req, res) => {
  * @params mongoose id
  * @return returns success message. Else, returns 400 or 500 errors.
  */
-router.delete("/deleteCompany/:id", async (req, res) => {
+router.delete("/companies/:id", async (req, res) => {
   try {
     const companyExists = await companies.exists({ _id: req.params.id });
 
@@ -123,7 +123,7 @@ router.delete("/deleteCompany/:id", async (req, res) => {
  * @params mongoose id
  * @return returns company information. Else, returns 500 errors.
  */
-router.get("/getCompany/:id", async (req, res) => {
+router.get("/companies/:id", async (req, res) => {
   try {
     const companyExists = await companies.exists({ _id: req.params.id });
     if (!companyExists) {
@@ -152,7 +152,7 @@ router.get("/getCompany/:id", async (req, res) => {
 /** gets all companies from database.
  * @return returns list of all companies. Else, returns 500 errors.
  */
-router.get("/getAllCompanies", async (req, res) => {
+router.get("/companies", async (req, res) => {
   try {
     const listOfCompanies = await companies.find();
     if (listOfCompanies) {
