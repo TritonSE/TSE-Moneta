@@ -64,9 +64,8 @@ OrganizationSchema.pre("findOneAndUpdate", async function (next) {
   }
 });
 
-
 OrganizationSchema.methods.verifyPassword = function (enteredPassword) {
-  bcrypt.compare(enteredPassword, this.password, function (err, matchBool) {
+  bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
     if (err) return err;
     return matchBool;
   });
