@@ -1,10 +1,16 @@
 /**
- * Schema for Groups with the properties
+ * Schema for Organization with the properties
  * Name (string)
- * Values (array of json objects(name, type))
+ * Email (string)
+ * Password (string)
+ * Approved Users (Array of user reference objects)
+ * status (string)
  * Timestamps
  *
- * @summary Groups schema
+ * password will be hashed
+ * status defaults to pending
+ *
+ * @summary Organizations schema
  * @author Ainesh Arumugam
  */
 
@@ -38,11 +44,11 @@ OrganizationSchema.pre("save", function (next) {
     if (salt_err) return next(salt_err);
 
     // hash the password with salt
-    return bcrypt.hash(organization.password, salt, (hash_err, hash) => {
+    return bcrypt.hash(organization.Password, salt, (hash_err, hash) => {
       if (hash_err) return next(hash_err);
 
       // replace password with hashed password
-      organization.password = hash;
+      organization.Password = hash;
       return next();
     });
   });
@@ -51,18 +57,20 @@ OrganizationSchema.pre("save", function (next) {
 OrganizationSchema.pre("findOneAndUpdate", async function (next) {
   const update = { ...this.getUpdate() };
 
-  if (update.password) {
+  if (update.Password) {
     const salt = bcrypt.genSaltSync();
-    update.password = await bcrypt.hash(update.password, salt);
+    update.Password = await bcrypt.hash(update.Password, salt);
     this.setUpdate(update);
   }
 });
 
-OrganizationSchema.methods.verifyPassword = (enteredPassword) =>
-  bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
-    if (err) throw err;
-    console.log(matchBool);
+
+OrganizationSchema.methods.verifyPassword = function (enteredPassword) {
+  bcrypt.compare(enteredPassword, this.password, function (err, matchBool) {
+    if (err) return err;
+    return matchBool;
   });
+};
 
 const Organization = mongoose.model("organizations", OrganizationSchema);
 
