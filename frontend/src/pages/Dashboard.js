@@ -102,7 +102,7 @@ function Dashboard() {
   const [visible, setVisibility] = useState(false);
   return (
     <>
-      <SideNavigation />
+      <SideNavigation currentPage="/" />
       <div className="dashboard-div">
         <h1 className="dashboard-header">Name of Nonprofit</h1>
         <Select

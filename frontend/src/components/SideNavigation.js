@@ -17,7 +17,19 @@ import "../css/SideNavigation.css";
  * Renders the side navigation bar
  * @returns side navigation content
  */
-function SideNavigation() {
+function SideNavigation(props) {
+  let databaseClassName = "sidenav-button database";
+  let adminClassName = "sidenav-button admin";
+  let settingsClassName = "sidenav-button settings";
+
+  if (props.currentPage === "/admin") {
+    adminClassName = "sidenav-button admin active";
+  } else if (props.currentPage === "/settings") {
+    settingsClassName = "sidenav-button settings active";
+  } else {
+    databaseClassName = "sidenav-button database active";
+  }
+
   return (
     <div className="side-navigation">
       <Link to="/">
@@ -28,22 +40,22 @@ function SideNavigation() {
       </Link>
 
       <Link to="/">
-        <button type="button" className="sidenav-button database">
-          <DatabaseIcon className="sidenav-icon database" />
+        <button type="button" className={databaseClassName}>
+          <DatabaseIcon className="sidenav-icon" />
         </button>
         <p className="sidenav-description database">Database</p>
       </Link>
 
       <Link to="/admin">
-        <button type="button" className="sidenav-button admin">
-          <AdminIcon className="sidenav-icon admin" />
+        <button type="button" className={adminClassName}>
+          <AdminIcon className="sidenav-icon" />
         </button>
         <p className="sidenav-description admin">Admin</p>
       </Link>
 
       <Link to="/settings">
-        <button type="button" className="sidenav-button settings">
-          <SettingsIcon className="sidenav-icon settings" />
+        <button type="button" className={settingsClassName}>
+          <SettingsIcon className="sidenav-icon" />
         </button>
         <p className="sidenav-description settings">Settings</p>
       </Link>
