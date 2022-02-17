@@ -13,6 +13,7 @@ import AdminIcon from "../images/AdminIcon";
 import SettingsIcon from "../images/SettingsIcon";
 import LogOut from "../images/LogOut.svg";
 import "../css/SideNavigation.css";
+
 /**
  * Renders the side navigation bar
  * @returns side navigation content
