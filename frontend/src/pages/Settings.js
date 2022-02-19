@@ -7,6 +7,8 @@
  */
 
 import React from "react";
+import SideNavigation from "../components/SideNavigation";
+import "../css/Settings.css";
 
 /**
  * renders the settings page
@@ -15,27 +17,30 @@ import React from "react";
  */
 function Settings() {
   return (
-    <div className="Settings">
-      <header className="Settings-header">
-        <h1>Change Password</h1>
-      </header>
-      <form className="Settings-form">
-        <label htmlFor="current-password">Current Password</label>
-        <br />
-        <input type="text" id="current-password" name="current-password" />
-        <br />
-        <label htmlFor="new-password">New Password</label>
-        <br />
-        <input type="text" id="new-password" name="new-password" />
-        <br />
-        <label htmlFor="confirm-password">Confirm New Password</label>
-        <br />
-        <input type="text" id="confirm-password" name="confirm-password" />
-        <br />
-        <br />
-        <input type="submit" value="Save" />
-      </form>
-    </div>
+    <>
+      <SideNavigation currentPage="/settings" />
+      <div className="Settings">
+        <header className="Settings-header">
+          <h1>Change Password</h1>
+        </header>
+        <form className="Settings-form">
+          <label htmlFor="current-password">Current Password</label>
+          <br />
+          <input type="text" id="current-password" name="current-password" />
+          <br />
+          <label htmlFor="new-password">New Password</label>
+          <br />
+          <input type="text" id="new-password" name="new-password" />
+          <br />
+          <label htmlFor="confirm-password">Confirm New Password</label>
+          <br />
+          <input type="text" id="confirm-password" name="confirm-password" />
+          <br />
+          <br />
+          <input type="submit" value="Save" />
+        </form>
+      </div>
+    </>
   );
 }
 
