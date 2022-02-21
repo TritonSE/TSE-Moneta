@@ -13,7 +13,6 @@ import "../css/Table.css";
 /** Dummy data used to display the table. */
 /** Only the fields specified in the schema will be columns in the table */
 const _schema = ["name", "age", "gender", "email", "alternateEmail"];
-let _table = [];
 
 /**
  * Renders the table display.
@@ -21,13 +20,20 @@ let _table = [];
  * @returns Table display for dashboard.
  */
 function Table() {
+  const [tableGroup, setTableGroup] = React.useState([]);
+  const [tableData, setTableData] = React.useState([]);
+
+  React.useEffect(async () => {
+    await fetch("http://localhost:8082/getAllRows")
+    .then(async (response) => {
+      const json = await response.json();
+
+      setTableData(json[0].data);
+    });
+  }, [])
   // call db data
   // put data into table var
-  fetch("http://localhost:8082/getAllRows/62043b1f1f82fc5e39c113f0")
-    .then(async (response) => {
-      _table = (await response.json())[0].data;
-      console.log(_table);
-    });
+  
 
   return (
     <div className="table-div">
@@ -37,8 +43,10 @@ function Table() {
             <th className="table-header-cell">{field}</th>
           ))}
         </tr>
-        {_table.map((entry) => (
+        {tableData.map((entry) => (
           <tr className="table-body-row" key={entry.email}>
+            {console.log("CONSOLE ----> ")}
+            {console.log(entry)}
             {_schema.map((field) => (
               <td className="table-body-cell">{entry[field]}</td>
             ))}

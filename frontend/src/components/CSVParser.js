@@ -16,12 +16,12 @@ import "../css/CSVParser.css";
 
 async function importToDB(values) {
   const data = {
-    group: "61f0898e595b30b05a64ee2f", // temporary dummy data
+    group: "61e666855f092f0a71a70c9e", // temporary dummy data
     data: values.data,
   };
   console.log(JSON.stringify(data));
 
-  await fetch("http://localhost:8082/addRow", {
+  const response = await fetch("http://localhost:8082/addRow", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,6 +32,8 @@ async function importToDB(values) {
     window.alert(error);
     return;
   });
+
+  console.log(response)
 }
 
 /**
