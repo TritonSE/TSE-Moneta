@@ -105,7 +105,7 @@ router.put("/editRow/:id", async (req, res) => {
  * If it does return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.get("/getAllRows/:id", (req, res) => {
+router.get("/getRow/:id", (req, res) => {
   try {
     TableData.find({ _id: req.params.id })
       .then((data) => {
