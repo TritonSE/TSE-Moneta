@@ -6,6 +6,7 @@
  *
  * @summary Groups schema
  * @author Ainesh Arumugam
+ * @author Navid Boloorian
  */
 
 const mongoose = require("mongoose");
@@ -20,6 +21,9 @@ const GroupSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+/**
+ * When a new group is added use the counter schema to add a GroupId
+ */
 GroupSchema.pre('save', async function() {
     const counter = await Counter.find({'fieldName': 'GroupId'});
     this.GroupId = counter[0].idVal;
