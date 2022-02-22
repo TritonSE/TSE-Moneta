@@ -101,6 +101,7 @@ function Dashboard() {
    * Toggles if the three dots in the top left is clicked.
    */
   const [visible, setVisibility] = useState(false);
+  const [CSVUploaded, setCSVUploaded] = useState(false);
   return (
     <>
       <SideNavigation currentPage="/" />
@@ -118,7 +119,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table />
+        <Table CSVUploaded={CSVUploaded} />
         <button
           type="button"
           className="toggle-csv-menu"
@@ -128,7 +129,7 @@ function Dashboard() {
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? <CSVParser /> : null}
+        {visible ? <CSVParser setCSVUploaded={setCSVUploaded} /> : null}
       </div>
       <CreateGroup />
     </>

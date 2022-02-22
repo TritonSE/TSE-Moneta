@@ -19,21 +19,18 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table() {
+function Table({ CSVUploaded }) {
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
 
   React.useEffect(async () => {
-    await fetch("http://localhost:8082/getAllRows")
-    .then(async (response) => {
+    await fetch("http://localhost:8082/getAllRows").then(async (response) => {
       const json = await response.json();
-
       setTableData(json[0].data);
     });
-  }, [])
+  }, [CSVUploaded]);
   // call db data
   // put data into table var
-  
 
   return (
     <div className="table-div">

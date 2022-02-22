@@ -45,8 +45,8 @@ router.post("/addRow", [body("group").exists(), body("data").exists()], async (r
       return;
     }
 
-    TableData.find({ group: req.body.group, data: req.body.data })
-      .then((data) => {
+    await TableData.find({ group: req.body.group, data: req.body.data })
+      .then(async (data) => {
         if (data.length) {
           // check if inserting duplicate
           res.status(409).json({ error: "Duplicate data" });
@@ -55,10 +55,8 @@ router.post("/addRow", [body("group").exists(), body("data").exists()], async (r
             group: req.body.group,
             data: req.body.data,
           });
-          tableData
-            .save()
-            .then(res.json("Posted TableData!"))
-            .catch((err) => res.status(500).json("Error: " + err));
+          await tableData.save().catch((err) => res.status(500).json("Error: " + err));
+          res.status(200).json("Posted TableData!");
         }
       })
       .catch((error) => {

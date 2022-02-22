@@ -14,33 +14,35 @@ import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 
 import "../css/CSVParser.css";
 
-async function importToDB(values) {
+/**
+ * Calls /addRow on CSV data to upload to db.
+ * @summary Uploads CSV data to db
+ * @author Kevin Fu
+ */
+async function importToDB(values, setUploadedCSV) {
   const data = {
-    group: "61e666855f092f0a71a70c9e", // temporary dummy data
+    group: "61f0898e595b30b05a64ee2f", // temporary dummy data
     data: values.data,
   };
-  console.log(JSON.stringify(data));
-
-  const response = await fetch("http://localhost:8082/addRow", {
+  // console.log(JSON.stringify(data));
+  await fetch("http://localhost:8082/addRow", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
     mode: "cors",
-  }).catch((error) => {
-    window.alert(error);
-    return;
+  }).catch((_error) => {
+    // window.alert(_error);
   });
-
-  console.log(response)
+  setUploadedCSV(true);
 }
 
 /**
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser() {
+function CSVParser({ setCSVUploaded }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
 
@@ -52,8 +54,8 @@ function CSVParser() {
           header: true,
         }}
         onUploadAccepted={(results) => {
-          importToDB(results).then((r) => {});
-          console.log(results);
+          importToDB(results, setCSVUploaded).then();
+          // console.log(results);
         }}
       >
         {({ getRootProps }) => (
