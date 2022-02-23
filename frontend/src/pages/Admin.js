@@ -8,6 +8,7 @@
 
 import React from "react";
 import AddIcon from "../images/AddIcon.svg";
+import SideNavigation from "../components/SideNavigation";
 import "../css/Admin.css";
 
 const entries = [
@@ -45,32 +46,35 @@ const entries = [
  */
 function Admin() {
   return (
-    <div>
-      <div className="admin-div">
-        <h1 className="admin-header">Employees with Access</h1>
-        <table className="admin-table">
-          {entries.map((entry) => (
-            <tr className="admin-row" key={entry.email}>
-              <td className="name">
-                {entry.firstName} {entry.lastName}
-              </td>
-              <td className="email">{entry.email}</td>
-              <td className="remove">
-                <button className="remove-button" type="button">
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))}
-        </table>
-        <div className="add-div">
-          <button className="add" type="button">
-            <img src={AddIcon} className="admin add-icon-svg" alt="plus icon on add button" />
-            Add
-          </button>
+    <>
+      <SideNavigation currentPage="/admin" />
+      <div>
+        <div className="admin-div">
+          <h1 className="admin-header">Employees with Access</h1>
+          <table className="admin-table">
+            {entries.map((entry) => (
+              <tr className="admin-row" key={entry.email}>
+                <td className="name">
+                  {entry.firstName} {entry.lastName}
+                </td>
+                <td className="email">{entry.email}</td>
+                <td className="remove">
+                  <button className="remove-button" type="button">
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </table>
+          <div className="add-div">
+            <button className="add" type="button">
+              <img src={AddIcon} className="admin add-icon-svg" alt="plus icon on add button" />
+              Add
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
