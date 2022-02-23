@@ -18,7 +18,15 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const SALT_WORK_FACTOR = 10;
-
+/**
+ * Schema for Organization with the properties
+ * Name (string)
+ * Email (string)
+ * Password (string)
+ * Approved Users (Array of user reference objects)
+ * status (string)
+ * Timestamps
+ */
 const OrganizationSchema = new mongoose.Schema(
   {
     Name: { type: String, required: true, index: true },
@@ -74,6 +82,7 @@ OrganizationSchema.pre("findOneAndUpdate", async function (next) {
  * Verifies that entered password matches ecnrypted password in the db
  * 
  * @param {*} enteredPassword - entered password
+ * @return matchBool - whether the entered password matches the hash stored in the database
  */
 OrganizationSchema.methods.verifyPassword = function (enteredPassword) {
   bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
