@@ -12,7 +12,6 @@ const tableDataSchema = mongoose.Schema(
   {
     group: {
       type: Number,
-      ref: "Group",
       required: true,
     },
     data: {
