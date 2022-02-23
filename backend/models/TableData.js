@@ -8,13 +8,10 @@
 
 const mongoose = require("mongoose");
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
-
 const tableDataSchema = mongoose.Schema(
   {
     group: {
-      type: ObjectId,
-      ref: "Group",
+      type: Number,
       required: true,
     },
     data: {
