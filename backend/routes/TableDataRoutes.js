@@ -18,7 +18,7 @@ const Group = require("../models/Groups");
  * @returns True if id exists, else False
  */
 async function isValidGroup(id, res) {
-  const result = await Group.find({ _id: id });
+  const result = await Group.find({ 'GroupId': id });
   if (!result.length) {
     res.status(500).json({ error: "invalid group" });
     return false;
