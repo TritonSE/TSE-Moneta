@@ -2,22 +2,22 @@
 
 * {
   font-family: "Poppins";
-  left: 320px;
 }
 
-.table-div {
+.admin-div {
   position: absolute;
+  left: 320px;
   top: 184px;
 }
 
-h1 {
+.admin-header {
   font-weight: 600;
   font-size: 24px;
   line-height: 36px;
   margin-bottom: 18px;
 }
 
-table {
+.admin-table {
   border-collapse: collapse;
   font-size: 16px;
   line-height: 24px;
@@ -29,17 +29,31 @@ table {
   left: 0px;
 }
 
-tr {
+.admin-row {
   max-width: 670px;
   height: 55px;
   box-sizing: border-box;
 }
 
-tr:nth-child(odd) {
+.admin-row:nth-child(odd) {
   background-color: #fafafa;
 }
 
-td {
+.name {
+  max-width: 268px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #353535;
+  padding-top: 16px;
+  padding-bottom: 15px;
+  padding-left: 17px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.email {
+  max-width: 262px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -49,28 +63,13 @@ td {
   padding-left: 17px;
 }
 
-td:first-child {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-
-td:last-child {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-.name {
-  max-width: 268px;
-}
-
-.email {
-  max-width: 262px;
-}
-
 .remove {
   padding-top: 13px;
   padding-bottom: 12px;
+  padding-left: 17px;
   padding-right: 14px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .remove-button {
@@ -103,9 +102,12 @@ td:last-child {
 }
 
 .add-icon-svg {
-  margin-right: 10.58px;
   padding-top: 2px;
   padding-bottom: 2px;
   width: 19px;
   height: 19px;
+}
+
+.admin.add-icon-svg {
+  margin-right: 10.58px;
 }
