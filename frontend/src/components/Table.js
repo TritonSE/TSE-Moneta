@@ -22,15 +22,16 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
 function Table({ CSVUploaded }) {
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
+  const group = "61f0898e595b30b05a64ee2f"; // temporary dummy data, should be determined by drop-down menu
 
   React.useEffect(async () => {
-    await fetch("http://localhost:8082/getAllRows").then(async (response) => {
-      const json = await response.json();
-      setTableData(json[0].data);
+    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
+      let json = await response.json();
+      json = json.map((row) => row.data);
+      console.log(json);
+      setTableData(json);
     });
   }, [CSVUploaded]);
-  // call db data
-  // put data into table var
 
   return (
     <div className="table-div">
