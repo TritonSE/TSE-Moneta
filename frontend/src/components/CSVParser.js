@@ -15,34 +15,40 @@ import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 import "../css/CSVParser.css";
 
 /**
- * Calls /addRow on CSV data to upload to db.
- * @summary Uploads CSV data to db
+ * Calls POST /row on CSV data to upload to db.
+ *
  * @author Kevin Fu
  */
-async function importToDB(values, setUploadedCSV) {
-  const data = {
-    group: "61f0898e595b30b05a64ee2f", // temporary dummy data
-    data: values.data,
-  };
-  // console.log(JSON.stringify(data));
-  await fetch("http://localhost:8082/addRow", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+async function importToDB(values, CSVUploaded, setUploadedCSV) {
+  const group = "61f0898e595b30b05a64ee2f"; // temporary dummy data, should be determined by drop-down menu
+
+  // should ask user to confirm before clearing
+  await fetch("http://localhost:8082/rows?group=" + group, {
+    method: "DELETE",
     mode: "cors",
-  }).catch((_error) => {
-    // window.alert(_error);
   });
-  setUploadedCSV(true);
+  for (const row of values) {
+    const data = {
+      group,
+      data: row,
+    };
+    await fetch("http://localhost:8082/rows", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      mode: "cors",
+    });
+  }
+  setUploadedCSV(!CSVUploaded); // tell table to reload
 }
 
 /**
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ setCSVUploaded }) {
+function CSVParser({ CSVUploaded, setCSVUploaded }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
 
@@ -54,7 +60,7 @@ function CSVParser({ setCSVUploaded }) {
           header: true,
         }}
         onUploadAccepted={(results) => {
-          importToDB(results, setCSVUploaded).then();
+          importToDB(results.data, CSVUploaded, setCSVUploaded).then();
           // console.log(results);
         }}
       >

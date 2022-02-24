@@ -129,7 +129,7 @@ function Dashboard() {
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? <CSVParser setCSVUploaded={setCSVUploaded} /> : null}
+        {visible ? <CSVParser CSVUploaded={CSVUploaded} setCSVUploaded={setCSVUploaded} /> : null}
       </div>
       <CreateGroup />
     </>
