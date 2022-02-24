@@ -27,7 +27,7 @@ async function isValidGroup(id, res) {
 }
 
 /**
- * "/addRow" - inserts new TableData
+ * "POST /row" - inserts new TableData
  * Duplicate data is if all columns are equivalent and they are in the same group return 409
  * If required values are missing return 500
  * If neither of the above is true return 200
@@ -68,7 +68,7 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
 });
 
 /**
- * "/editRow:id" - edits TableData
+ * "PUT /row:id" - edits TableData
  * If edit results in duplicate data return 409
  * If id does not exist return 500
  * If neither of the above is true return 200
@@ -98,7 +98,7 @@ router.put("/rows/:id", async (req, res) => {
 });
 
 /**
- * "/rows?<queries>" - gets all TableDatas according to <queries>
+ * "GET /rows?<queries>" - gets all TableDatas according to <queries>
  * e.g /rows?_id=123 gets TableData with _id=123
  * Return 200 if successful, else return 500
  */
@@ -107,7 +107,34 @@ router.get("/rows", (req, res) => {
     TableData.find(req.query)
       .exec()
       .then((data) => {
-        if (!data.length) res.status(500).json({ error: "Empty result" });
+        if (!data.length) {
+          res.status(500).json({ error: "No matching results" });
+          return;
+        }
+        res.json(data);
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+/**
+ * "DELETE /rows?<queries>" - deletes all TableDatas according to <queries>
+ * e.g /rows?_id=123 deletes TableData with _id=123
+ * Return 200 if successful, else return 500
+ */
+router.delete("/rows", (req, res) => {
+  try {
+    TableData.deleteMany(req.query)
+      .exec()
+      .then((data) => {
+        if (data.deletedCount == 0) {
+          res.status(500).json({ error: "No matching results" });
+          return;
+        }
         res.json(data);
       })
       .catch((error) => {
