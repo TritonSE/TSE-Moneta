@@ -33,7 +33,7 @@ async function isValidGroup(id, res) {
  * If neither of the above is true return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.post("/addRow", [body("group").exists(), body("data").exists()], async (req, res) => {
+router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
     // check if all required fields are present
     const errors = validationResult(req);
@@ -74,7 +74,7 @@ router.post("/addRow", [body("group").exists(), body("data").exists()], async (r
  * If neither of the above is true return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.put("/editRow/:id", async (req, res) => {
+router.put("/rows/:id", async (req, res) => {
   try {
     if (!(await isValidGroup(req.body.group, res))) {
       return;
@@ -103,7 +103,7 @@ router.put("/editRow/:id", async (req, res) => {
  * If it does return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.get("/getRow/:id", (req, res) => {
+router.get("/rows/:id", (req, res) => {
   try {
     TableData.find({ _id: req.params.id })
       .then((data) => {
@@ -126,7 +126,7 @@ router.get("/getRow/:id", (req, res) => {
  * "/getAllRows" - gets all TableDatas
  * Return 200
  */
-router.get("/getAllRows", (req, res) => {
+router.get("/rows", (req, res) => {
   TableData.find({}).then((data) => res.json(data));
 });
 
