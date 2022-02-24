@@ -98,21 +98,17 @@ router.put("/rows/:id", async (req, res) => {
 });
 
 /**
- * "/getRow/:id" - gets TableData by id
- * If id does not exist return 500
- * If it does return 200
- * Return 500 in a catch if something else goes wrong
+ * "/rows?<queries>" - gets all TableDatas according to <queries>
+ * e.g /rows?_id=123 gets TableData with _id=123
+ * Return 200 if successful, else return 500
  */
-router.get("/rows/:id", (req, res) => {
+router.get("/rows", (req, res) => {
   try {
-    TableData.find({ _id: req.params.id })
+    TableData.find(req.query)
+      .exec()
       .then((data) => {
-        if (!data.length) {
-          // if find returns empty array
-          res.status(500).json({ error: "id not found" });
-        } else {
-          res.json(data);
-        }
+        if (!data.length) res.status(500).json({ error: "Empty result" });
+        res.json(data);
       })
       .catch((error) => {
         res.status(500).json(error);
@@ -120,14 +116,6 @@ router.get("/rows/:id", (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-});
-
-/**
- * "/getAllRows" - gets all TableDatas
- * Return 200
- */
-router.get("/rows", (req, res) => {
-  TableData.find({}).then((data) => res.json(data));
 });
 
 module.exports = router;
