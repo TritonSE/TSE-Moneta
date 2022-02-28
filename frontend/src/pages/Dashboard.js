@@ -14,11 +14,7 @@ import AddIcon from "../images/AddIcon.svg";
 import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
-<<<<<<< HEAD
 import SearchIcon from "../images/SearchIcon.svg";
-import "../css/Dashboard.css";
-=======
->>>>>>> ab82113 (Added snackbar instead of alert for errors/success)
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
