@@ -28,7 +28,6 @@ function Table({ CSVUploaded }) {
     await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
       let json = await response.json();
       json = json.map((row) => row.data);
-      console.log(json);
       setTableData(json);
     });
   }, [CSVUploaded]);
@@ -43,8 +42,6 @@ function Table({ CSVUploaded }) {
         </tr>
         {tableData.map((entry) => (
           <tr className="table-body-row" key={entry.email}>
-            {console.log("CONSOLE ----> ")}
-            {console.log(entry)}
             {_schema.map((field) => (
               <td className="table-body-cell">{entry[field]}</td>
             ))}
