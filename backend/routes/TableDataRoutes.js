@@ -17,14 +17,14 @@ const Group = require("../models/Groups");
  * @param res - response object to use for sending error
  * @returns True if id exists, else False
  */
-async function isValidGroup(id, res) {
-  const result = await Group.find({ 'GroupId': id });
-  if (!result.length) {
-    res.status(500).json({ error: "invalid group" });
-    return false;
-  }
-  return true;
-}
+// async function isValidGroup(id, res) {
+//   const result = await Group.find({ _id: id });
+//   if (!result.length) {
+//     res.status(500).json({ error: "invalid group" });
+//     return false;
+//   }
+//   return true;
+// }
 
 /**
  * "POST /row" - inserts new TableData
@@ -41,9 +41,9 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       res.status(500).json(errors);
       return;
     }
-    if (!(await isValidGroup(req.body.group, res))) {
-      return;
-    }
+    //if (!(await isValidGroup(req.body.group, res))) {
+    //  return;
+    // }
 
     await TableData.find({ group: req.body.group, data: req.body.data })
       .then(async (data) => {
