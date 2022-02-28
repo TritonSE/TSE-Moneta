@@ -22,7 +22,7 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
 function Table({ CSVUploaded }) {
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
-  const group = "61f0898e595b30b05a64ee2f"; // temporary dummy data, should be determined by drop-down menu
+  const group = "1"; // temporary dummy data, should be determined by drop-down menu
 
   React.useEffect(async () => {
     await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {

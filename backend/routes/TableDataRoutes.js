@@ -9,7 +9,6 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const TableData = require("../models/TableData");
-const Group = require("../models/Groups");
 
 /**
  * Helper func that checks if provided id is an actual group in the database
@@ -41,7 +40,7 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       res.status(500).json(errors);
       return;
     }
-    //if (!(await isValidGroup(req.body.group, res))) {
+    // if (!(await isValidGroup(req.body.group, res))) {
     //  return;
     // }
 
@@ -76,9 +75,9 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
  */
 router.put("/rows/:id", async (req, res) => {
   try {
-    if (!(await isValidGroup(req.body.group, res))) {
-      return;
-    }
+    // if (!(await isValidGroup(req.body.group, res))) {
+    //   return;
+    // }
     const tableData = await TableData.find({ _id: req.params.id });
     if (!tableData.length) {
       // if .find returns empty array
