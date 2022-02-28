@@ -10,128 +10,28 @@ import React from "react";
 import Pencil from "../images/Pencil.svg";
 import "../css/Table.css";
 
-/**
- * Dummy data used to display the table.
- * Only the fields specified in the schema will be columns in the table
- */
-const _schema = ["name", "age", "gender", "email", "alternateEmail", "role"];
-const _table = [
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-  {
-    id: 1,
-    name: "First Last",
-    age: 20,
-    gender: "Female",
-    email: "firstlast@email.com",
-    alternateEmail: "firstlast@hotmail.com",
-    role: "Employee",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    age: 25,
-    gender: "Male",
-    email: "johndoe@gmail.com",
-    alternateEmail: "john@email.com",
-    role: "Employee",
-  },
-];
+/** Dummy data used to display the table. */
+/** Only the fields specified in the schema will be columns in the table */
+const _schema = ["name", "age", "gender", "email", "alternateEmail"];
 
 /**
  * Renders the table display.
  *
  * @returns Table display for dashboard.
  */
-function Table() {
+function Table({ CSVUploaded }) {
+  const [tableGroup, setTableGroup] = React.useState([]);
+  const [tableData, setTableData] = React.useState([]);
+  const group = "1"; // temporary dummy data, should be determined by drop-down menu
+
+  React.useEffect(async () => {
+    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
+      let json = await response.json();
+      json = json.map((row) => row.data);
+      setTableData(json);
+    });
+  }, [CSVUploaded]);
+
   return (
     <div className="table-div">
       <table className="table">
@@ -140,7 +40,7 @@ function Table() {
             <th className="table-header-cell">{field}</th>
           ))}
         </tr>
-        {_table.map((entry) => (
+        {tableData.map((entry) => (
           <tr className="table-body-row" key={entry.email}>
             {_schema.map((field) => (
               <td className="table-body-cell">{entry[field]}</td>
