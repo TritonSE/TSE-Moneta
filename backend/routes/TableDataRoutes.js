@@ -131,7 +131,7 @@ router.delete("/rows", (req, res) => {
     TableData.deleteMany(req.query)
       .exec()
       .then((data) => {
-        if (data.deletedCount == 0) {
+        if (data.deletedCount === 0) {
           res.status(500).json({ error: "No matching results" });
           return;
         }
