@@ -14,7 +14,7 @@ const CounterSchema = new mongoose.Schema({
 
 const Counter = mongoose.model("counters", CounterSchema);
 
-if (Counter.count({ fieldName: "GroupId" }) == 0) {
+if (Counter.count({ fieldName: "GroupId" }) === 0) {
   const counter = new Counter({ fieldName: "GroupId" });
   counter.save();
 }

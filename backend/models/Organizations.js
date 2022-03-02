@@ -68,7 +68,7 @@ OrganizationSchema.pre("save", function (next) {
 /**
  * Makes sure passwords are encrypted on update
  */
-OrganizationSchema.pre("findOneAndUpdate", async function (next) {
+OrganizationSchema.pre("findOneAndUpdate", async function () {
   const update = { ...this.getUpdate() };
 
   if (update.Password) {
