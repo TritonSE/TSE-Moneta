@@ -7,7 +7,7 @@ const companyRoutes = require("./routes/companiesRoutes");
 const groupRoutes = require("./routes/groupsRoutes");
 
 const app = express();
-app.use("/tableDataRoutes", TableDataRoutes);
+app.use("/", TableDataRoutes);
 
 connectDB();
 
