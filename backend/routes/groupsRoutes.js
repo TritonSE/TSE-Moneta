@@ -27,7 +27,7 @@ router.post("/groups", async (req, res) => {
     const numMatched = await groups.count({ Name });
 
     if (numMatched > 0) {
-      return res.status(409).json({ msg: "Name already registered!" });
+      return res.status(409).json({ msg: "Group name already registered!" });
     }
 
     const group = {
