@@ -142,8 +142,7 @@ function Dashboard() {
       body: JSON.stringify({ group, search: Search }),
     };
     await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
-      let json = await response.json();
-      json = json.map((row) => row.data);
+      const json = await response.json();
       setTableData(json);
     });
   }, [Search]);
