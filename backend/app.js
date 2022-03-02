@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const tableDataRoutes = require("./routes/tableDataRoutes");
 const userRoutes = require("./routes/userRoutes");
-const companyRoutes = require("./routes/organizationRoutes");
+const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", userRoutes);
-app.use("/", companyRoutes);
+app.use("/", organizationRoutes);
 app.use("/", groupRoutes);
 app.use("/", tableDataRoutes);
 
