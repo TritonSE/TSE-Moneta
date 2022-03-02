@@ -6,8 +6,8 @@
  * GET /groups/:id
  * GET /groups
  *
- * @summary Companies routes for add, edit, delete, and get
- * @author Pratyush Chand
+ * @summary Groups routes for add, edit, delete, and get
+ * @author Ainesh Arumugam
  */
 
 const express = require("express");
@@ -15,17 +15,16 @@ const express = require("express");
 
 const router = express.Router();
 
-const companies = require("../models/Organizations");
 const groups = require("../models/Groups");
 
 /** adds new group to database.
  * @params Name, and atleast one value
  * @return returns new group object if successfully created. Else, returns 409 or 500 errors.
  */
-router.post("/companies", async (req, res) => {
+router.post("/groups", async (req, res) => {
   try {
     const { Name, Values } = req.body;
-    const numMatched = await companies.count({ Name });
+    const numMatched = await groups.count({ Name });
 
     if (numMatched > 0) {
       return res.status(409).json({ msg: "Name already registered!" });
@@ -36,7 +35,7 @@ router.post("/companies", async (req, res) => {
       Values
     };
 
-    const addGroup = await companies.create(group);
+    const addGroup = await groups.create(group);
 
     if (addGroup) {
       return res.status(200).json({
@@ -66,7 +65,7 @@ router.put("/groups/:id", async (req, res) => {
     }
 
     const { Name, Values } = req.body;
-    const company = {
+    const group = {
       Name,
       Values
     };
@@ -149,14 +148,14 @@ router.get("/groups/:id", async (req, res) => {
 });
 
 /** gets all groups from database.
- * @return returns list of all companies. Else, returns 500 errors.
+ * @return returns list of all groups. Else, returns 500 errors.
  */
 router.get("/groups", async (req, res) => {
   try {
-    const listOfCompanies = await companies.find();
-    if (listOfCompanies) {
+    const listOfGroups = await groups.find();
+    if (listOfGroups) {
       return res.status(200).json({
-        listOfCompanies,
+        listOfGroups,
       });
     }
 
