@@ -19,7 +19,8 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table({ CSVUploaded }) {
+function Table({ Data }) {
+  /**
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
   const group = "1"; // temporary dummy data, should be determined by drop-down menu
@@ -31,6 +32,7 @@ function Table({ CSVUploaded }) {
       setTableData(json);
     });
   }, [CSVUploaded]);
+  */
 
   return (
     <div className="table-div">
@@ -40,7 +42,7 @@ function Table({ CSVUploaded }) {
             <th className="table-header-cell">{field}</th>
           ))}
         </tr>
-        {tableData.map((entry) => (
+        {Data.map((entry) => (
           <tr className="table-body-row" key={entry.email}>
             {_schema.map((field) => (
               <td className="table-body-cell">{entry[field]}</td>

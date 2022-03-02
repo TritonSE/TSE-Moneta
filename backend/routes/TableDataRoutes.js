@@ -9,6 +9,7 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const TableData = require("../models/TableData");
+const Group = require("../models/Groups");
 
 /**
  * Helper func that checks if provided id is an actual group in the database
@@ -145,28 +146,25 @@ router.delete("/rows", (req, res) => {
 });
 
 /**
- * GET "/groups" - gets all Groups
- * Returns 200
+ * "POST /search" - searches for all rows with the correct group and search query
+ * Return 200 if successful, else return 500
  */
-router.get("/groups", (req, res) => {
-  Group.find({}).then((data) => res.json(data));
-});
-
 router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
-  if (!(await isValidGroup(req.body.group, res))) {
-    return;
-  }
-  const tableData = await TableData.findOne({group: req.body.group});
-  const ret = []
-  for (const entry of tableData.data) {
-    for (const [_field, value] of Object.entries(entry)) {
-      if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
-        ret.push(entry);
-        break;
+  try {
+    const tableData = await TableData.find({ group: req.body.group });
+    const ret = [];
+    for (const row of tableData) {
+      for (const [_field, value] of Object.entries(row.data)) {
+        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
+          ret.push(row);
+          break;
+        }
       }
     }
+    res.json(ret);
+  } catch (error) {
+    res.status(500).json(error);
   }
-  res.json(ret);
 });
 
 module.exports = router;
