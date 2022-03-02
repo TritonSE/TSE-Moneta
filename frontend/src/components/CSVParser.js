@@ -15,6 +15,34 @@ import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 import "../css/CSVParser.css";
 
 /**
+ *  Returns true if CSV values are valid, otherwise false.
+ *  Checks if the right number of columns are present in each row and whether
+ *  each value has the correct type (possible types are number, text, and email).
+ * @param values - Array of objects representing a row in the CSV
+ */
+function validateCSV(values) {
+  const columns = [
+    { name: "id", type: "Number" },
+    { name: "name", type: "Text" },
+    { name: "age", type: "Number" },
+    { name: "gender", type: "Text" },
+    { name: "email", type: "Email" },
+    { name: "alternateEmail", type: "Email" },
+  ]; // temporary dummy data, should be determined by group selected by drop-down menu
+
+  for (const row of values) {
+    if (Object.keys(row).length !== columns.length) return false; // check if the right number of columns are present
+    for (const key of Object.keys(row)) {
+      const field = columns.find((obj) => obj.name === key);
+      if (field === null) return false; // if the row has a field not part of schema
+      if (field.type.toLowerCase() === "number" && Number.isNaN(row[key])) return false; // if invalid number
+      if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return false; // if invalid email
+    }
+  }
+  return true;
+}
+
+/**
  * Calls POST /row on CSV data to upload to db.
  *
  * @author Kevin Fu
@@ -22,16 +50,22 @@ import "../css/CSVParser.css";
 async function importToDB(values, CSVUploaded, setUploadedCSV) {
   const group = "1"; // temporary dummy data, should be determined by drop-down menu
 
+  if (!validateCSV(values)) {
+    alert("Invalid CSV!");
+    return;
+  }
   // should ask user to confirm before clearing
   await fetch("http://localhost:8082/rows?group=" + group, {
     method: "DELETE",
     mode: "cors",
   });
+
   for (const row of values) {
     const data = {
       group,
       data: row,
     };
+
     await fetch("http://localhost:8082/rows", {
       method: "POST",
       headers: {
