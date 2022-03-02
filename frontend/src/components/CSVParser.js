@@ -35,7 +35,7 @@ function validateCSV(values) {
     for (const key of Object.keys(row)) {
       const field = columns.find((obj) => obj.name === key);
       if (field === null) return false; // if the row has a field not part of schema
-      if (field.type.toLowerCase() === "number" && Number.isNaN(row[key])) return false; // if invalid number
+      if (field.type.toLowerCase() === "number" && !/^\d+$/.test(row[key])) return false; // if invalid number
       if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return false; // if invalid email
     }
   }
