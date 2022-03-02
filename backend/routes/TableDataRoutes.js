@@ -9,7 +9,6 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const TableData = require("../models/TableData");
-const Group = require("../models/Groups");
 
 /**
  * Helper func that checks if provided id is an actual group in the database
@@ -17,23 +16,23 @@ const Group = require("../models/Groups");
  * @param res - response object to use for sending error
  * @returns True if id exists, else False
  */
-async function isValidGroup(id, res) {
-  const result = await Group.find({ 'GroupId': id });
-  if (!result.length) {
-    res.status(500).json({ error: "invalid group" });
-    return false;
-  }
-  return true;
-}
+// async function isValidGroup(id, res) {
+//   const result = await Group.find({ _id: id });
+//   if (!result.length) {
+//     res.status(500).json({ error: "invalid group" });
+//     return false;
+//   }
+//   return true;
+// }
 
 /**
- * POST "/row" - inserts new TableData
+ * "POST /row" - inserts new TableData
  * Duplicate data is if all columns are equivalent and they are in the same group return 409
  * If required values are missing return 500
  * If neither of the above is true return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.post("/row", [body("group").exists(), body("data").exists()], async (req, res) => {
+router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
     // check if all required fields are present
     const errors = validationResult(req);
@@ -41,12 +40,12 @@ router.post("/row", [body("group").exists(), body("data").exists()], async (req,
       res.status(500).json(errors);
       return;
     }
-    if (!(await isValidGroup(req.body.group, res))) {
-      return;
-    }
+    // if (!(await isValidGroup(req.body.group, res))) {
+    //  return;
+    // }
 
-    TableData.find({ group: req.body.group, data: req.body.data })
-      .then((data) => {
+    await TableData.find({ group: req.body.group, data: req.body.data })
+      .then(async (data) => {
         if (data.length) {
           // check if inserting duplicate
           res.status(409).json({ error: "Duplicate data" });
@@ -55,10 +54,8 @@ router.post("/row", [body("group").exists(), body("data").exists()], async (req,
             group: req.body.group,
             data: req.body.data,
           });
-          tableData
-            .save()
-            .then(res.json("Posted TableData!"))
-            .catch((err) => res.status(500).json("Error: " + err));
+          await tableData.save().catch((err) => res.status(500).json("Error: " + err));
+          res.status(200).json("Posted TableData!");
         }
       })
       .catch((error) => {
@@ -78,9 +75,9 @@ router.post("/row", [body("group").exists(), body("data").exists()], async (req,
  */
 router.put("/rows/:id", async (req, res) => {
   try {
-    if (!(await isValidGroup(req.body.group, res))) {
-      return;
-    }
+    // if (!(await isValidGroup(req.body.group, res))) {
+    //   return;
+    // }
     const tableData = await TableData.find({ _id: req.params.id });
     if (!tableData.length) {
       // if .find returns empty array
@@ -100,21 +97,20 @@ router.put("/rows/:id", async (req, res) => {
 });
 
 /**
- * GET "/rows/:id" - gets TableData by id
- * If id does not exist return 500
- * If it does return 200
- * Return 500 in a catch if something else goes wrong
+ * "GET /rows?<queries>" - gets all TableDatas according to <queries>
+ * e.g /rows?_id=123 gets TableData with _id=123
+ * Return 200 if successful, else return 500
  */
-router.get("/rows/:id", (req, res) => {
+router.get("/rows", (req, res) => {
   try {
-    TableData.find({ _id: req.params.id })
+    TableData.find(req.query)
+      .exec()
       .then((data) => {
         if (!data.length) {
-          // if find returns empty array
-          res.status(500).json({ error: "id not found" });
-        } else {
-          res.json(data);
+          res.status(500).json({ error: "No matching results" });
+          return;
         }
+        res.json(data);
       })
       .catch((error) => {
         res.status(500).json(error);
@@ -125,11 +121,27 @@ router.get("/rows/:id", (req, res) => {
 });
 
 /**
- * GET "/rows" - gets all TableDatas
- * Return 200
+ * "DELETE /rows?<queries>" - deletes all TableDatas according to <queries>
+ * e.g /rows?_id=123 deletes TableData with _id=123
+ * Return 200 if successful, else return 500
  */
-router.get("/rows", (req, res) => {
-  TableData.find({}).then((data) => res.json(data));
+router.delete("/rows", (req, res) => {
+  try {
+    TableData.deleteMany(req.query)
+      .exec()
+      .then((data) => {
+        if (data.deletedCount === 0) {
+          res.status(500).json({ error: "No matching results" });
+          return;
+        }
+        res.json(data);
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 /**

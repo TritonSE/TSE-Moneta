@@ -18,6 +18,7 @@
 }
 
 .admin-table {
+  width: 100%;
   border-collapse: collapse;
   font-size: 16px;
   line-height: 24px;
@@ -30,7 +31,7 @@
 }
 
 .admin-row {
-  max-width: 670px;
+  max-width: 1056px;
   height: 55px;
   box-sizing: border-box;
 }
@@ -40,7 +41,7 @@
 }
 
 .name {
-  max-width: 268px;
+  max-width: 50%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,7 +54,7 @@
 }
 
 .email {
-  max-width: 262px;
+  max-width: 50%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
