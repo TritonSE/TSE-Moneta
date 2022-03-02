@@ -5,7 +5,7 @@
  * PUT /users/:id
  * GET /users/:id
  * GET /users
- * 
+ *
  * @summary Users routes for add, edit, delete, and get
  * @author Pratyush Chand
  */

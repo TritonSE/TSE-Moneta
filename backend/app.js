@@ -4,8 +4,8 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const tableDataRoutes = require("./routes/tableDataRoutes");
 const userRoutes = require("./routes/userRoutes");
-const companyRoutes = require("./routes/organizationsRoutes");
-const groupRoutes = require("./routes/groupsRoutes");
+const companyRoutes = require("./routes/organizationRoutes");
+const groupRoutes = require("./routes/groupRoutes");
 
 const app = express();
 

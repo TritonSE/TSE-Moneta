@@ -1,21 +1,20 @@
 /**
- * API Routes for Companies Schema
- * POST /companies
- * DELETE /companies/:id
- * PUT /companies/:id
- * GET /companies/:id
- * GET /companies
+ * API Routes for Organizations Schema
+ * POST /organizations
+ * DELETE /organizations/:id
+ * PUT /organizations/:id
+ * GET /organizations/:id
+ * GET /organizations
  *
- * @summary Companies routes for add, edit, delete, and get
+ * @summary Organizations routes for add, edit, delete, and get
  * @author Pratyush Chand
  */
 
 const express = require("express");
-const User = require("../models/Users");
 
 const router = express.Router();
 
-const companies = require("../models/Organizations");
+const organizations = require("../models/Organizations");
 
 /** adds new company to database.
  * @params Name, Email, and Password
@@ -24,7 +23,7 @@ const companies = require("../models/Organizations");
 router.post("/organizations", async (req, res) => {
   try {
     const { Name, Email, Password } = req.body;
-    const numMatched = await companies.count({ Email });
+    const numMatched = await organizations.count({ Email });
 
     if (numMatched > 0) {
       return res.status(409).json({ msg: "Email already registered!" });
@@ -36,7 +35,7 @@ router.post("/organizations", async (req, res) => {
       Password,
     };
 
-    const addCompany = await companies.create(company);
+    const addCompany = await organizations.create(company);
 
     if (addCompany) {
       return res.status(200).json({
@@ -59,7 +58,7 @@ router.post("/organizations", async (req, res) => {
  */
 router.put("/organizations/:id", async (req, res) => {
   try {
-    const companyExists = await companies.exists({ _id: req.params.id });
+    const companyExists = await organizations.exists({ _id: req.params.id });
 
     if (!companyExists) {
       return res.status(400).json({ msg: "This company does not exist!" });
@@ -72,7 +71,7 @@ router.put("/organizations/:id", async (req, res) => {
       Password,
     };
 
-    const editCompany = await companies.findOneAndUpdate(req.params.id, company);
+    const editCompany = await organizations.findOneAndUpdate(req.params.id, company);
     if (editCompany) {
       return res.status(200).json({
         msg: "Company edited succesfully!",
@@ -94,7 +93,7 @@ router.put("/organizations/:id", async (req, res) => {
  */
 router.delete("/organizations/:id", async (req, res) => {
   try {
-    const companyExists = await companies.exists({ _id: req.params.id });
+    const companyExists = await organizations.exists({ _id: req.params.id });
 
     if (!companyExists) {
       return res.status(400).json({
@@ -102,7 +101,7 @@ router.delete("/organizations/:id", async (req, res) => {
       });
     }
 
-    const deletedCompany = await companies.findByIdAndDelete(req.params.id);
+    const deletedCompany = await organizations.findByIdAndDelete(req.params.id);
 
     if (deletedCompany) {
       return res.status(200).json({
@@ -125,14 +124,14 @@ router.delete("/organizations/:id", async (req, res) => {
  */
 router.get("/organizations/:id", async (req, res) => {
   try {
-    const companyExists = await companies.exists({ _id: req.params.id });
+    const companyExists = await organizations.exists({ _id: req.params.id });
     if (!companyExists) {
       return res.status(400).json({
         msg: "This company does not exist",
       });
     }
 
-    const getCompany = await companies.findById(req.params.id);
+    const getCompany = await organizations.findById(req.params.id);
     if (getCompany) {
       return res.status(200).json({
         getCompany,
@@ -142,22 +141,21 @@ router.get("/organizations/:id", async (req, res) => {
     return res.status(500).json({
       Error: "Error",
     });
-    
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err });
   }
 });
 
-/** gets all companies from database.
- * @return returns list of all companies. Else, returns 500 errors.
+/** gets all organizations from database.
+ * @return returns list of all organizations. Else, returns 500 errors.
  */
 router.get("/organizations", async (req, res) => {
   try {
-    const listOfCompanies = await companies.find();
-    if (listOfCompanies) {
+    const listOfOrganizations = await organizations.find();
+    if (listOfOrganizations) {
       return res.status(200).json({
-        listOfCompanies,
+        listOfOrganizations,
       });
     }
 

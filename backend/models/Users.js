@@ -45,7 +45,7 @@ UserSchema.pre("save", function (next) {
   });
 });
 
-UserSchema.pre("findOneAndUpdate", async function (next) {
+UserSchema.pre("findOneAndUpdate", async function () {
   const update = { ...this.getUpdate() };
 
   if (update.password) {

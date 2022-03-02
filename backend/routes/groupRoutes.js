@@ -1,5 +1,5 @@
 /**
- * API Routes for Groups Schema 
+ * API Routes for Groups Schema
  * POST /groups
  * DELETE /groups/:id
  * PUT /groups/:id
@@ -11,7 +11,6 @@
  */
 
 const express = require("express");
-
 
 const router = express.Router();
 
@@ -32,7 +31,7 @@ router.post("/groups", async (req, res) => {
 
     const group = {
       Name,
-      Values
+      Values,
     };
 
     const addGroup = await groups.create(group);
@@ -67,7 +66,7 @@ router.put("/groups/:id", async (req, res) => {
     const { Name, Values } = req.body;
     const group = {
       Name,
-      Values
+      Values,
     };
 
     const editGroup = await groups.findOneAndUpdate(req.params.id, group);
@@ -140,7 +139,6 @@ router.get("/groups/:id", async (req, res) => {
     return res.status(500).json({
       Error: "Error",
     });
-    
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err });
