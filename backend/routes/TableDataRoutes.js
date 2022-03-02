@@ -9,7 +9,6 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const TableData = require("../models/TableData");
-const Group = require("../models/Groups");
 
 /**
  * Helper func that checks if provided id is an actual group in the database

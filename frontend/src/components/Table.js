@@ -43,9 +43,9 @@ function Table({ Data }) {
           ))}
         </tr>
         {Data.map((entry) => (
-          <tr className="table-body-row" key={entry.email}>
+          <tr className="table-body-row" key={entry._id}>
             {_schema.map((field) => (
-              <td className="table-body-cell">{entry[field]}</td>
+              <td className="table-body-cell">{entry.data[field]}</td>
             ))}
             <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
           </tr>
