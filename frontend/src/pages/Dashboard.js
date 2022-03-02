@@ -135,6 +135,19 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
+  useEffect(async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ group, search: Search }),
+    };
+    await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
+      let json = await response.json();
+      json = json.map((row) => row.data);
+      setTableData(json);
+    });
+  }, [Search]);
+
   return (
     <>
       <SideNavigation currentPage="/" />
