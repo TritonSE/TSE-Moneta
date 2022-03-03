@@ -19,7 +19,7 @@ import "../css/CSVParser.css";
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ CSVUploaded, setCSVUploaded, snackbar, setSnackbar }) {
+function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
 
@@ -30,7 +30,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, snackbar, setSnackbar }) {
    * @param values - Array of objects representing a row in the CSV
    */
   function validateCSV(values) {
-    const columns = [
+    const schemaColumns = [
       { name: "id", type: "Number" },
       { name: "name", type: "Text" },
       { name: "age", type: "Number" },
@@ -40,15 +40,15 @@ function CSVParser({ CSVUploaded, setCSVUploaded, snackbar, setSnackbar }) {
     ]; // temporary dummy data, should be determined by group selected by drop-down menu
 
     for (const row of values) {
-      if (Object.keys(row).length !== columns.length) return false; // check if the right number of columns are present
+      if (Object.keys(row).length < schemaColumns.length) return 1; // check if sufficient columns are present
       for (const key of Object.keys(row)) {
-        const field = columns.find((obj) => obj.name === key);
-        if (field === null) return false; // if the row has a field not part of schema
-        if (field.type.toLowerCase() === "number" && !/^\d+$/.test(row[key])) return false; // if invalid number
-        if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return false; // if invalid email
+        const field = schemaColumns.find((obj) => obj.name === key);
+        if (field == null) continue; // skip if col is not present in schema
+        if (field.type.toLowerCase() === "number" && !/^\d+$/.test(row[key])) return 2; // if invalid number
+        if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return 2; // if invalid email
       }
     }
-    return true;
+    return 0;
   }
 
   /**
@@ -59,13 +59,21 @@ function CSVParser({ CSVUploaded, setCSVUploaded, snackbar, setSnackbar }) {
   async function importToDB(values, CSVUploaded, setUploadedCSV) {
     const group = "1"; // temporary dummy data, should be determined by drop-down menu
 
-    if (!validateCSV(values)) {
-      setSnackbar({
-        open: true,
-        message: "Invalid CSV! Field types do not mach!",
-        severity: "error",
-      });
-      return;
+    switch (validateCSV(values)) {
+      case 1:
+        setSnackbar({
+          open: true,
+          message: "Invalid CSV! Missing Columns!",
+          severity: "error",
+        });
+        return;
+      case 2:
+        setSnackbar({
+          open: true,
+          message: "Invalid CSV! Field types do not match!",
+          severity: "error",
+        });
+        return;
     }
 
     // should ask user to confirm before clearing
