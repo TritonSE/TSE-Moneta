@@ -56,7 +56,7 @@ UserSchema.pre("findOneAndUpdate", async function (next) {
 });
 
 UserSchema.methods.verifyPassword = function (enteredPassword) {
-  bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
+  bcrypt.compare(enteredPassword, this.password, function (err, matchBool) {
     if (err) return err;
     return matchBool;
   });

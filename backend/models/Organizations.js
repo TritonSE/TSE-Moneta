@@ -51,11 +51,11 @@ OrganizationSchema.pre("save", function (next) {
   const organization = this;
 
   // generate a salt
-  return bcrypt.genSalt(SALT_WORK_FACTOR, (salt_err, salt) => {
+  return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
     if (salt_err) return next(salt_err);
 
     // hash the password with salt
-    return bcrypt.hash(organization.Password, salt, (hash_err, hash) => {
+    return bcrypt.hash(organization.Password, salt, function (hash_err, hash) {
       if (hash_err) return next(hash_err);
 
       // replace password with hashed password
