@@ -44,36 +44,40 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
 
     
     const group = await Group.findById(req.body.group).distinct("Values");
-    console.log(group);
-      if(group.length > Object.keys(req.body.data).length){
-        return res.status(500).json({
-          Error: "One or more fields are empty!"
-        })
-      }else if(group.length < Object.keys(req.body.data).length){
-        return res.status(500).json({
-          Error: "Extra fields!"
-        })
-      }
-    let broken = false;
-    let unfilledVals = new Set([]);
-    for(val in req.body.data){
-      group.forEach((value)=>{
-        
-        if(!Object.keys(value).includes(val)){
-          //console.log("hi")
-          broken = true;  
-          unfilledVals.add(Object.keys(value))     
-        }
-      })      
-    }
-    console.log(unfilledVals)
-    if(broken){
+
+    if(group.length < Object.keys(req.body.data).length){
       return res.status(500).json({
-        Error: unfilledVals
+        Error: "Extra fields!"
       })
     }
 
+    let broken = false;
+    const groupVals = new Set([]);
     
+    group.forEach((value)=>{
+      groupVals.add(value.name)
+    })
+    
+    const miscellaneous = Object.keys(req.body.data).map( val => {
+      if(groupVals.has(val)){
+        groupVals.delete(val)
+      }else{
+        broken = true;
+      }  
+      return 0;
+      }
+    );
+
+    if(groupVals.size !== 0){
+      broken = true;
+    }
+
+    const missingFields = Array.from(groupVals)
+    if(broken){
+      return res.status(500).json({
+        Error: missingFields
+      })
+    }
 
     // if (!(await isValidGroup(req.body.group, res))) {
     //  return;
@@ -84,22 +88,19 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
         if (data.length) {
           // check if inserting duplicate
           return res.status(409).json({ error: "Duplicate data" });
-        } else {
+        } 
           const tableData = new TableData({
             group: req.body.group,
             data: req.body.data,
           });
           await tableData.save().catch((err) => res.status(500).json("Error: " + err));
           return res.status(200).json("Posted TableData!");
-        }
+        
       })
-      .catch((error) => {
-        return res.status(500).json(error);
-      });
+      .catch((error) => res.status(500).json(error));
     
   } catch (error) {
     res.status(500).json(error);
-    console.log("catch block")
     console.log(error);
     return 0;
   }
