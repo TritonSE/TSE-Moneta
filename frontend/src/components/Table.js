@@ -7,7 +7,8 @@
  */
 
 import React from "react";
-import Pencil from "../images/Pencil.svg";
+import TableRow from "./TableRow";
+
 import "../css/Table.css";
 
 /** Dummy data used to display the table. */
@@ -41,12 +42,7 @@ function Table({ CSVUploaded }) {
           ))}
         </tr>
         {tableData.map((entry) => (
-          <tr className="table-body-row" key={entry.email}>
-            {_schema.map((field) => (
-              <td className="table-body-cell">{entry[field]}</td>
-            ))}
-            <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
-          </tr>
+          <TableRow columnData={entry} groupFields={_schema} />
         ))}
       </table>
     </div>
