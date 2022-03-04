@@ -20,7 +20,7 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table({ CSVUploaded }) {
+function Table({ CSVUploaded, setSnackbar }) {
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
   const group = "1"; // temporary dummy data, should be determined by drop-down menu
@@ -42,7 +42,7 @@ function Table({ CSVUploaded }) {
           ))}
         </tr>
         {tableData.map((entry) => (
-          <TableRow columnData={entry} groupFields={_schema} />
+          <TableRow cellData={entry} groupFields={_schema} />
         ))}
       </table>
     </div>

@@ -136,7 +136,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} />
+        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} />
         <button
           type="button"
           className="toggle-csv-menu"
