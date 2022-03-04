@@ -135,21 +135,6 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
-  useEffect(async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group, search: Search }),
-    };
-    try {
-      const response = await fetch("http://localhost:8082/search", requestOptions);
-      const json = await response.json();
-      setTableData(json);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [Search]);
-
   return (
     <>
       <SideNavigation currentPage="/" />
