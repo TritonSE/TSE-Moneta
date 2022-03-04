@@ -119,7 +119,7 @@ function Dashboard() {
     indicatorSeparator: () => null,
     closeMenuOnSelect: false,
   };
-
+  
   return (
     <>
       <SideNavigation currentPage="/" />

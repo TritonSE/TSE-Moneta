@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const tableDataSchema = mongoose.Schema(
   {
     group: {
-      type: Number,
+      type: String,
       required: true,
     },
     data: {
