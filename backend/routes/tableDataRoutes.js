@@ -82,9 +82,6 @@ router.put("/rows/:id", async (req, res) => {
     if (!tableData.length) {
       // if .find returns empty array
       res.status(500).json({ error: "id not found" });
-    } else if (tableData.group === req.body.group && tableData.data === req.body.data) {
-      // if edit results in duplicate data
-      res.status(409).json({ error: "duplicate data" });
     } else {
       await TableData.updateOne({ _id: req.params.id }, req.body).catch((error) => {
         res.status(500).json(error);

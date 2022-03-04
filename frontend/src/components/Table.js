@@ -28,10 +28,86 @@ function Table({ CSVUploaded, setSnackbar }) {
   React.useEffect(async () => {
     await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
       let json = await response.json();
-      json = json.map((row) => row.data);
-      setTableData(json);
+
+      console.log(json);
+
+      let dataArray = json.map((row) => {
+        row.data._id = row._id;
+        return row.data;
+      });
+
+      setTableData(dataArray);
     });
   }, [CSVUploaded]);
+
+  const updateTableData = async (uploadObj) => {
+    const { _id } = uploadObj;
+
+    let tempData = {};
+
+    for(let key in uploadObj) {
+      if(key != "_id") {
+        tempData[key] = uploadObj[key];
+      }
+    }
+
+    const data = {
+      id: _id,
+      data: tempData
+    }
+
+    const res = await fetch(`http://localhost:8082/rows/${_id}`, {
+      method: "put",
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    })
+
+    if(res.ok) {
+      setSnackbar({
+        open: true,
+        message: "Successfully updated table!",
+        severity: "success",
+      })
+    }
+    else {
+      setSnackbar({
+        open: true,
+        message: "Error: Table update unsuccessful!",
+        severity: "error",
+      })
+    }
+  }
+
+  const deleteTableData = async (id) => {
+
+    const res = await fetch(`http://localhost:8082/rows?_id=${id}`, {
+      method: "delete",
+      headers: {
+        'content-type': 'application/json'
+      },
+    })
+
+    console.log(res);
+
+    if(res.ok) {
+      setSnackbar({
+        open: true,
+        message: "Successfully deleted row from table!",
+        severity: "success",
+      })
+
+      location.reload();
+    }
+    else {
+      setSnackbar({
+        open: true,
+        message: "Error: Table row deletion unsuccessful!",
+        severity: "error",
+      })
+    }
+  }
 
   return (
     <div className="table-div">
@@ -42,7 +118,7 @@ function Table({ CSVUploaded, setSnackbar }) {
           ))}
         </tr>
         {tableData.map((entry) => (
-          <TableRow cellData={entry} groupFields={_schema} />
+          <TableRow newRow={false} deleteTableData={deleteTableData} uploadTableData={updateTableData} cellData={entry} groupFields={_schema} />
         ))}
       </table>
     </div>

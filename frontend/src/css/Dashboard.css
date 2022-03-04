@@ -6,6 +6,7 @@
   position: absolute;
   left: 320px;
   top: 40px;
+  min-width: 500px;
   font-weight: 500;
   font-size: 24px;
   line-height: 36px;

@@ -5,11 +5,12 @@
 import React from "react";
 
 import Pencil from "../images/Pencil.svg";
-import CheckMark from "../images/CheckMark.svg";
+import CheckMark from "../images/checkMark.svg";
+import Trashcan from "../images/trashCan.svg";
 
 import "../css/TableRow.css";
 
-export default function TableRow({ cellData, groupFields }) {
+export default function TableRow({ newRow, uploadTableData, deleteTableData, cellData, groupFields }) {
     const inputFields = React.useRef([]);
 
     const [editActivated, setEditActivated] = React.useState(false);
@@ -23,12 +24,11 @@ export default function TableRow({ cellData, groupFields }) {
     }, [])
 
     React.useEffect(() => {
-        inputFields.current.map(field => {
-            console.log(field.parentNode)
-            field.parentNode.dataset.value = field.value;
-        })
-
-        console.log(inputFields.current);
+        if(editActivated) {
+            inputFields.current.map(field => {
+                field.parentNode.dataset.value = field.value;
+            })
+        }
     }, [editActivated])
 
     if(isLoading)
@@ -45,7 +45,7 @@ export default function TableRow({ cellData, groupFields }) {
                                 <input
                                     ref={element => inputFields.current[index] = element}
                                     type="text"
-                                    size={1}
+                                    size="1"
                                     className="edit-cell-input"
                                     value={cellDatas[field]}
                                     variant="outlined"
@@ -57,17 +57,34 @@ export default function TableRow({ cellData, groupFields }) {
                             </div>
                         )
                         :
-                        cellData[field]
+                        cellDatas[field]
                     }
                 </td>
             ))}
-
-            {
-                editActivated ? 
-                <img src={CheckMark} onClick={()=>setEditActivated(!editActivated)} className="checkmark-svg clickable" alt="edit icon on table row" />
-                :
-                <img src={Pencil} onClick={()=>setEditActivated(!editActivated)} className="pencil-svg clickable" alt="edit icon on table row" />
-            }  
+            <div 
+                className="cell-aligner"
+                style={editActivated ? {"gridTemplateColumns": "1fr 1fr"} : {}}
+            >
+                {
+                    editActivated ? 
+                    <>
+                        <div className="icon-spacer">
+                            <img src={Trashcan} onClick={()=>{
+                                deleteTableData(cellDatas._id);
+                                setEditActivated(!editActivated);
+                            }} className="checkmark-svg clickable" alt="confirm edit icon on table row" />
+                        </div>
+                        <div className="icon-spacer">
+                            <img src={CheckMark} onClick={()=>{
+                                uploadTableData(cellDatas);
+                                setEditActivated(!editActivated);
+                            }} className="checkmark-svg clickable" alt="delete icon on table row" />
+                        </div>
+                    </>
+                    :
+                    <img src={Pencil} onClick={()=>setEditActivated(!editActivated)} className="pencil-svg clickable" alt="edit icon on table row" />
+                }
+            </div>
         </tr>
     )
 }
