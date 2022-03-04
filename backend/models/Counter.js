@@ -7,18 +7,16 @@
 
 const mongoose = require("mongoose");
 
-const CounterSchema = new mongoose.Schema(
-  {
-    fieldName: {type: String, required: true},
-    idVal: {type: Number, default: 0}
-  },
-);
+const CounterSchema = new mongoose.Schema({
+  fieldName: { type: String, required: true },
+  idVal: { type: Number, default: 0 },
+});
 
 const Counter = mongoose.model("counters", CounterSchema);
 
-if(Counter.count({'fieldName': 'GroupId'}) == 0) {
-    const counter = new Counter({'fieldName': 'GroupId'});
-    counter.save();
+if (Counter.count({ fieldName: "GroupId" }) === 0) {
+  const counter = new Counter({ fieldName: "GroupId" });
+  counter.save();
 }
 
 module.exports = Counter;
