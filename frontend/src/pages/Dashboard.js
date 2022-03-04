@@ -31,6 +31,7 @@ function Dashboard() {
    */
   const [visible, setVisibility] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
+  const [addingRow, setAddingRow] = useState(false);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -65,14 +66,14 @@ function Dashboard() {
   const iconOption = (props) => {
     if (props.data.isCreate) {
       return (
-        <components.Option {...props}>
+        <components.Option {...props} className="clickable">
           {props.data.label}
           <Plus className="Plus" />
         </components.Option>
       );
     }
     return (
-      <components.Option {...props}>
+      <components.Option {...props} className="clickable">
         {props.data.label}
         <Pencil className="Pencil" />
       </components.Option>
@@ -132,11 +133,11 @@ function Dashboard() {
           styles={selectStyles}
           components={{ Option: iconOption }}
         />
-        <button className="add-row" type="button">
+        <button className="add-row clickable" type="button" onClick={()=>setAddingRow(!addingRow)}>
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} />
+        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} />
         <button
           type="button"
           className="toggle-csv-menu"

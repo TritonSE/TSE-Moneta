@@ -35,11 +35,11 @@ const TableData = require("../models/TableData");
 router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
     // check if all required fields are present
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(500).json(errors);
-      return;
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   res.status(500).json(errors);
+    //   return;
+    // }
     // if (!(await isValidGroup(req.body.group, res))) {
     //  return;
     // }
@@ -100,7 +100,7 @@ router.put("/rows/:id", async (req, res) => {
  */
 router.get("/rows", (req, res) => {
   try {
-    TableData.find(req.query)
+    TableData.find(req.query).sort({createdAt: -1})
       .exec()
       .then((data) => {
         if (!data.length) {

@@ -1,3 +1,7 @@
+.clickable:hover {
+  cursor: pointer;
+}
+
 .dashboard-div {
   position: absolute;
 }

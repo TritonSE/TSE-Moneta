@@ -20,8 +20,8 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table({ CSVUploaded, setSnackbar }) {
-  const [tableGroup, setTableGroup] = React.useState([]);
+function Table({ CSVUploaded, setSnackbar, addingRow }) {
+  const [tableGroup, setTableGroup] = React.useState(1);
   const [tableData, setTableData] = React.useState([]);
   const group = "1"; // temporary dummy data, should be determined by drop-down menu
 
@@ -80,6 +80,46 @@ function Table({ CSVUploaded, setSnackbar }) {
     }
   }
 
+  const createTableData = async (uploadObj) => {
+    let tempData = {};
+
+    console.log(uploadObj);
+
+    for(let key in uploadObj) {
+      if(key != "_id") {
+        tempData[key] = uploadObj[key];
+      }
+    }
+
+    const data = {
+      group: tableGroup,
+      data: tempData
+    }
+
+    const res = await fetch(`http://localhost:8082/rows`, {
+      method: "post",
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    })
+
+    if(res.ok) {
+      setSnackbar({
+        open: true,
+        message: "Successfully added row to table!",
+        severity: "success",
+      })
+    }
+    else {
+      setSnackbar({
+        open: true,
+        message: "Error: table add unsuccessful!",
+        severity: "error",
+      })
+    }
+  }
+
   const deleteTableData = async (id) => {
 
     const res = await fetch(`http://localhost:8082/rows?_id=${id}`, {
@@ -117,8 +157,9 @@ function Table({ CSVUploaded, setSnackbar }) {
             <th className="table-header-cell">{field}</th>
           ))}
         </tr>
+        {addingRow ? <TableRow newRow={true} createTableData={createTableData} cellData={_schema} groupFields={_schema} /> : ""}
         {tableData.map((entry) => (
-          <TableRow newRow={false} deleteTableData={deleteTableData} uploadTableData={updateTableData} cellData={entry} groupFields={_schema} />
+          <TableRow newRow={false} deleteTableData={deleteTableData} updateTableData={updateTableData} cellData={entry} groupFields={_schema} />
         ))}
       </table>
     </div>

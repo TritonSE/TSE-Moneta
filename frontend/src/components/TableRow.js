@@ -10,15 +10,28 @@ import Trashcan from "../images/trashCan.svg";
 
 import "../css/TableRow.css";
 
-export default function TableRow({ newRow, uploadTableData, deleteTableData, cellData, groupFields }) {
+export default function TableRow({ newRow, createTableData, updateTableData, deleteTableData, cellData, groupFields }) {
     const inputFields = React.useRef([]);
 
     const [editActivated, setEditActivated] = React.useState(false);
     const [cellDatas, setCellDatas] = React.useState({});
     const [isLoading, setIsLoading] = React.useState(false);
+    const [fieldDefaultSize, setFieldDefaultSize] = React.useState(1);
 
     React.useEffect(() => {
         setIsLoading(true);
+
+        if(newRow) {
+            setEditActivated(true);
+            setFieldDefaultSize(5);
+
+            cellData={};
+
+            for(let fieldName in groupFields) {
+                cellData[groupFields[fieldName]] = "";
+            }
+        }
+
         setCellDatas(cellData);
         setIsLoading(false);
     }, [])
@@ -45,13 +58,13 @@ export default function TableRow({ newRow, uploadTableData, deleteTableData, cel
                                 <input
                                     ref={element => inputFields.current[index] = element}
                                     type="text"
-                                    size="1"
+                                    size={fieldDefaultSize}
                                     className="edit-cell-input"
                                     value={cellDatas[field]}
                                     variant="outlined"
                                     onChange={event => {
                                         event.target.parentNode.dataset.value=event.target.value;
-                                        setCellDatas({...cellDatas, [field]: event.target.value})
+                                        setCellDatas({...cellDatas, [field]: event.target.value});
                                     }}
                                 />
                             </div>
@@ -63,20 +76,25 @@ export default function TableRow({ newRow, uploadTableData, deleteTableData, cel
             ))}
             <div 
                 className="cell-aligner"
-                style={editActivated ? {"gridTemplateColumns": "1fr 1fr"} : {}}
+                style={editActivated && !newRow ? {"gridTemplateColumns": "1fr 1fr"} : {}}
             >
                 {
                     editActivated ? 
                     <>
-                        <div className="icon-spacer">
-                            <img src={Trashcan} onClick={()=>{
-                                deleteTableData(cellDatas._id);
-                                setEditActivated(!editActivated);
-                            }} className="checkmark-svg clickable" alt="confirm edit icon on table row" />
-                        </div>
-                        <div className="icon-spacer">
+                        {!newRow ?
+                            <div className="icon-spacer">
+                                <img src={Trashcan} onClick={()=>{
+                                    deleteTableData(cellDatas._id);
+                                    setEditActivated(!editActivated);
+                                }} className="checkmark-svg clickable" alt="confirm edit icon on table row" />
+                            </div>
+                            :
+                            ""
+                        }
+                        
+                        <div className={!newRow ? "icon-spacer" : ""}>
                             <img src={CheckMark} onClick={()=>{
-                                uploadTableData(cellDatas);
+                                newRow ? createTableData(cellDatas) : updateTableData(cellDatas);
                                 setEditActivated(!editActivated);
                             }} className="checkmark-svg clickable" alt="delete icon on table row" />
                         </div>
