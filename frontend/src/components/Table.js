@@ -42,7 +42,6 @@ function Table({ CSVUploaded, setSnackbar, addingRow }) {
 
   const updateTableData = async (uploadObj) => {
     const { _id } = uploadObj;
-
     let tempData = {};
 
     for(let key in uploadObj) {
@@ -78,6 +77,8 @@ function Table({ CSVUploaded, setSnackbar, addingRow }) {
         severity: "error",
       })
     }
+
+    return res.ok;
   }
 
   const createTableData = async (uploadObj) => {
@@ -110,6 +111,8 @@ function Table({ CSVUploaded, setSnackbar, addingRow }) {
         message: "Successfully added row to table!",
         severity: "success",
       })
+
+      location.reload();
     }
     else {
       setSnackbar({
@@ -118,6 +121,8 @@ function Table({ CSVUploaded, setSnackbar, addingRow }) {
         severity: "error",
       })
     }
+
+    return res.ok;
   }
 
   const deleteTableData = async (id) => {
@@ -147,6 +152,8 @@ function Table({ CSVUploaded, setSnackbar, addingRow }) {
         severity: "error",
       })
     }
+
+    return res.ok;
   }
 
   return (
