@@ -46,7 +46,7 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
     const group = await Group.findById(req.body.group).distinct("Values");
 
     if(group.length < Object.keys(req.body.data).length){
-      return res.status(500).json({
+      return res.status(409).json({
         Error: "Extra fields!"
       })
     }
@@ -74,7 +74,7 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
 
     const missingFields = Array.from(groupVals)
     if(broken){
-      return res.status(500).json({
+      return res.status(409).json({
         Error: missingFields
       })
     }
