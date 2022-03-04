@@ -51,7 +51,7 @@ function Dashboard() {
       const json = await response.json();
       setTableData(json);
     });
-  }, [Search]);
+  }, [Search, CSVUploaded]);
 
   /** Dropdown options for the Select Group dropdown menu */
   const options = [
