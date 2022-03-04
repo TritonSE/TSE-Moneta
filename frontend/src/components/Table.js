@@ -19,7 +19,7 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table({ Data }) {
+function Table({ data }) {
   /**
   const [tableGroup, setTableGroup] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
@@ -42,7 +42,7 @@ function Table({ Data }) {
             <th className="table-header-cell">{field}</th>
           ))}
         </tr>
-        {Data.map((entry) => (
+        {data.map((entry) => (
           <tr className="table-body-row" key={entry._id}>
             {_schema.map((field) => (
               <td className="table-body-cell">{entry.data[field]}</td>

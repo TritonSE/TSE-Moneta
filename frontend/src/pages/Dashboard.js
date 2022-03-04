@@ -141,10 +141,13 @@ function Dashboard() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ group, search: Search }),
     };
-    await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
+    try {
+      const response = await fetch("http://localhost:8082/search", requestOptions);
       const json = await response.json();
       setTableData(json);
-    });
+    } catch (error) {
+      console.error(error);
+    }
   }, [Search]);
 
   return (
@@ -164,7 +167,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table Data={tableData} />
+        <Table data={tableData} />
         <input
           type="text"
           className="dashboard-search"
