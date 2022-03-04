@@ -5,7 +5,7 @@
  * @author Alex Zhang
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import { Snackbar, Alert } from "@mui/material";
 import SideNavigation from "../components/SideNavigation";
@@ -14,6 +14,7 @@ import AddIcon from "../images/AddIcon.svg";
 import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
+import SearchIcon from "../images/SearchIcon.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
@@ -31,11 +32,26 @@ function Dashboard() {
    */
   const [visible, setVisibility] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [Search, setSearch] = useState("");
+  const group = "1";
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
     severity: "",
   });
+
+  useEffect(async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ group, search: Search }),
+    };
+    await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
+      const json = await response.json();
+      setTableData(json);
+    });
+  }, [Search, CSVUploaded]);
 
   /** Dropdown options for the Select Group dropdown menu */
   const options = [
@@ -136,7 +152,15 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} />
+        <Table data={tableData} />
+        <input
+          type="text"
+          className="dashboard-search"
+          placeholder="Search"
+          value={Search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
         <button
           type="button"
           className="toggle-csv-menu"

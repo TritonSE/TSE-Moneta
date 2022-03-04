@@ -67,7 +67,7 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
 });
 
 /**
- * "PUT /row:id" - edits TableData
+ * PUT "/rows/:id" - edits TableData
  * If edit results in duplicate data return 409
  * If id does not exist return 500
  * If neither of the above is true return 200
@@ -139,6 +139,28 @@ router.delete("/rows", (req, res) => {
       .catch((error) => {
         res.status(500).json(error);
       });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+/**
+ * "POST /search" - searches for all rows with the correct group and search query
+ * Return 200 if successful, else return 500
+ */
+router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
+  try {
+    const tableData = await TableData.find({ group: req.body.group });
+    const ret = [];
+    for (const row of tableData) {
+      for (const [_field, value] of Object.entries(row.data)) {
+        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
+          ret.push(row);
+          break;
+        }
+      }
+    }
+    res.json(ret);
   } catch (error) {
     res.status(500).json(error);
   }
