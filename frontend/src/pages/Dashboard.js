@@ -5,7 +5,7 @@
  * @author Alex Zhang
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Select, { components } from "react-select";
 import { Snackbar, Alert } from "@mui/material";
 import SideNavigation from "../components/SideNavigation";
@@ -34,37 +34,47 @@ function Dashboard() {
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [Search, setSearch] = useState("");
-  const group = "1";
+  const groupID = "1";
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
     severity: "",
   });
+  const [groupOptions, setGroupOptions] = useState([]);
+
+  const fetchGroups = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:8082/groups");
+      const { listOfGroups } = await response.json();
+      const options = [{ value: "create-new", label: "Create New", isCreate: true }];
+      for (const group of listOfGroups) {
+        const { Name, GroupId } = group;
+        options.push({ value: GroupId, label: Name, isCreate: false });
+      }
+      setGroupOptions(options);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  /**
+   * Initial group retrieval to populate group selection dropdown
+   */
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
 
   useEffect(async () => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group, search: Search }),
+      body: JSON.stringify({ group: groupID, search: Search }),
     };
     await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
       const json = await response.json();
       setTableData(json);
     });
   }, [Search, CSVUploaded]);
-
-  /** Dropdown options for the Select Group dropdown menu */
-  const options = [
-    { value: "create-new", label: "Create New", isCreate: true },
-    { value: "group1", label: "Group 1", isCreate: false },
-    { value: "group2", label: "Group 2", isCreate: false },
-    { value: "group3", label: "Group 3", isCreate: false },
-    { value: "group4", label: "Group 4", isCreate: false },
-    { value: "group5", label: "Group 5", isCreate: false },
-    { value: "group6", label: "Group 6", isCreate: false },
-    { value: "group7", label: "Group 7", isCreate: false },
-    { value: "group8", label: "Group 8", isCreate: false },
-  ];
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -103,6 +113,7 @@ function Dashboard() {
       background: "#F3F3F3",
       boxShadow: state.isFocused ? null : null,
       color: state.isSelected ? "#949494" : "#949494",
+      cursor: "pointer",
     }),
     menu: (base) => ({
       ...base,
@@ -120,6 +131,7 @@ function Dashboard() {
       background: state.isFocused ? "#F3F3F3" : "#F3F3F3",
       stroke: state.isFocused ? "#4B6A9B" : "#949494",
       fill: state.isFocused ? "#4B6A9B" : "#949494",
+      cursor: "pointer",
     }),
     menuList: (base) => ({
       ...base,
@@ -143,7 +155,7 @@ function Dashboard() {
         <Select
           className="group-select"
           classNamePrefix="select"
-          options={options}
+          options={groupOptions}
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}

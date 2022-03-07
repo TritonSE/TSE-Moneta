@@ -25,6 +25,7 @@
   padding-left: 17px;
   text-align: left;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .csv-icon {

@@ -40,6 +40,7 @@
   height: 40px;
   background: #05204a;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .dashboard.add-icon-svg {
@@ -83,4 +84,5 @@
   top: 123px;
   border: 0px;
   background: transparent;
+  cursor: pointer;
 }

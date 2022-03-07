@@ -30,7 +30,7 @@ function CreateGroup() {
           <span className="group-second-header">Fields</span>
           <br />
           <span className="group-third-header">
-            List the fields you want associated with this group.....
+            List the fields you want associated with this group....
           </span>
           <button className="add-group-button" type="button">
             <img src={AddFieldIcon} className="add-field-svg" alt="add group button icon" />
