@@ -34,14 +34,17 @@ function Dashboard() {
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [Search, setSearch] = useState("");
-  const groupID = "1";
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
     severity: "",
   });
   const [groupOptions, setGroupOptions] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
+  /**
+   * Fetch the list of groups and populate the options in the group selection dropdown
+   */
   const fetchGroups = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:8082/groups");
@@ -52,8 +55,34 @@ function Dashboard() {
         options.push({ value: GroupId, label: Name, isCreate: false });
       }
       setGroupOptions(options);
+      if (selectedGroup === null && options.length > 1) {
+        setSelectedGroup(options[1]);
+      }
     } catch (error) {
-      console.error(error);
+      setSnackbar({
+        open: true,
+        message: `An error occurred: ${error}`,
+        severity: "error",
+      });
+    }
+  }, []);
+
+  const fetchRows = useCallback(async (groupID, searchString = "") => {
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ group: groupID, search: searchString }),
+      };
+      const response = await fetch("http://localhost:8082/search", requestOptions);
+      const json = await response.json();
+      setTableData(json);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: `An error occurred: ${error}`,
+        severity: "error",
+      });
     }
   }, []);
 
@@ -64,17 +93,11 @@ function Dashboard() {
     fetchGroups();
   }, [fetchGroups]);
 
-  useEffect(async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group: groupID, search: Search }),
-    };
-    await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
-      const json = await response.json();
-      setTableData(json);
-    });
-  }, [Search, CSVUploaded]);
+  useEffect(() => {
+    if (selectedGroup) {
+      fetchRows(selectedGroup.value, Search);
+    }
+  }, [selectedGroup, Search, CSVUploaded]);
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -159,6 +182,7 @@ function Dashboard() {
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
+          onChange={setSelectedGroup}
         />
         <button className="add-row" type="button">
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
