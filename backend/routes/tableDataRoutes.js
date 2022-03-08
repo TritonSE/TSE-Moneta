@@ -8,6 +8,7 @@ const express = require("express");
 
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
+const Group = require("../models/Groups");
 const TableData = require("../models/TableData");
 
 /**
@@ -37,32 +38,70 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
     // check if all required fields are present
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(500).json(errors);
-      return;
+      return res.status(500).json(errors);
+      
     }
+
+    
+    const group = await Group.findById(req.body.group).distinct("Values");
+
+    if(group.length < Object.keys(req.body.data).length){
+      return res.status(409).json({
+        Error: "Extra fields!"
+      })
+    }
+
+    let broken = false;
+    const groupVals = new Set([]);
+    
+    group.forEach((value)=>{
+      groupVals.add(value.name)
+    })
+    
+    const miscellaneous = Object.keys(req.body.data).map( val => {
+      if(groupVals.has(val)){
+        groupVals.delete(val)
+      }else{
+        broken = true;
+      }  
+      return 0;
+      }
+    );
+
+    if(groupVals.size !== 0){
+      broken = true;
+    }
+
+    const missingFields = Array.from(groupVals)
+    if(broken){
+      return res.status(409).json({
+        Error: missingFields
+      })
+    }
+
     // if (!(await isValidGroup(req.body.group, res))) {
     //  return;
     // }
 
-    await TableData.find({ group: req.body.group, data: req.body.data })
+    return await TableData.find({ group: req.body.group, data: req.body.data })
       .then(async (data) => {
         if (data.length) {
           // check if inserting duplicate
-          res.status(409).json({ error: "Duplicate data" });
-        } else {
+          return res.status(409).json({ error: "Duplicate data" });
+        } 
           const tableData = new TableData({
             group: req.body.group,
             data: req.body.data,
           });
           await tableData.save().catch((err) => res.status(500).json("Error: " + err));
-          res.status(200).json("Posted TableData!");
-        }
+          return res.status(200).json("Posted TableData!");
+        
       })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
+      .catch((error) => res.status(500).json(error));
+    
   } catch (error) {
-    res.status(500).json(error);
+    console.log(error);
+    return res.status(500).json(error);    
   }
 });
 
