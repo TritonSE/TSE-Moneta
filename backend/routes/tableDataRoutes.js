@@ -100,8 +100,8 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       .catch((error) => res.status(500).json(error));
     
   } catch (error) {
-    return res.status(500).json(error);
     console.log(error);
+    return res.status(500).json(error);    
   }
 });
 
