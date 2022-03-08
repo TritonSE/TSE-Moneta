@@ -64,7 +64,7 @@
   color: #949494;
   top: 110px;
   left: 892px;
-  width: 363px;
+  width: 393px;
   height: 40px;
   padding-left: 48px;
   border: 0px;
@@ -77,9 +77,10 @@
   left: 908px;
   top: 121px;
 }
+
 .toggle-csv-menu {
   position: absolute;
-  left: 1320px;
+  left: 1350px;
   top: 123px;
   border: 0px;
   background: transparent;

@@ -26,6 +26,7 @@
 }
 
 .pencil-svg {
+  float: right;
   padding-top: 18px;
   padding-bottom: 15px;
   padding-right: 22px;

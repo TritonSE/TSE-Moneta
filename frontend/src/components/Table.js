@@ -19,37 +19,25 @@ const _schema = ["name", "age", "gender", "email", "alternateEmail"];
  *
  * @returns Table display for dashboard.
  */
-function Table({ data }) {
-  /**
-  const [tableGroup, setTableGroup] = React.useState([]);
-  const [tableData, setTableData] = React.useState([]);
-  const group = "1"; // temporary dummy data, should be determined by drop-down menu
-
-  React.useEffect(async () => {
-    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
-      let json = await response.json();
-      json = json.map((row) => row.data);
-      setTableData(json);
-    });
-  }, [CSVUploaded]);
-  */
-
+function Table({ data, group }) {
   return (
     <div className="table-div">
       <table className="table">
-        <tr className="table-header-row">
-          {_schema.map((field) => (
-            <th className="table-header-cell">{field}</th>
-          ))}
-        </tr>
-        {data.map((entry) => (
-          <tr className="table-body-row" key={entry._id}>
-            {_schema.map((field) => (
-              <td className="table-body-cell">{entry.data[field]}</td>
+        <tbody>
+          <tr className="table-header-row">
+            {group.Values.map((field) => (
+              <th className="table-header-cell">{field.name}</th>
             ))}
-            <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
           </tr>
-        ))}
+          {data.map((entry) => (
+            <tr className="table-body-row" key={entry._id}>
+              {group.Values.map((field) => (
+                <td className="table-body-cell">{entry.data[field.name]}</td>
+              ))}
+              <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
