@@ -179,7 +179,7 @@ function Dashboard() {
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
-          onChange={(option) => 
+          onChange={(option) =>
             option.isCreate ? setDisplayCreateGroup(true) : setCurrentGroup(option.value)
           }
         />
@@ -187,7 +187,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table data={tableData} group={currentGroup} />
+        <Table data={tableData} group={currentGroup} elementsPerPage={20} />
         <input
           type="text"
           className="dashboard-search"
