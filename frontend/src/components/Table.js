@@ -20,6 +20,10 @@ import "../css/Table.css";
 function Table({ data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
+  if (Object.keys(group).length === 0) {
+    /** Handle no groups selected table here */
+    return null;
+  }
   return (
     <div className="table-div">
       <table className="table">

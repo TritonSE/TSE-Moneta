@@ -20,41 +20,6 @@ import CreateGroup from "../components/CreateGroup";
 
 import "../css/Dashboard.css";
 
-const defaultGroup = {
-  _id: "62270210faf593bb4250d743",
-  Name: "employees",
-  Values: [
-    {
-      name: "name",
-      type: "String",
-      _id: "62270210faf593bb4250d744",
-    },
-    {
-      name: "age",
-      type: "String",
-      _id: "62270210faf593bb4250d745",
-    },
-    {
-      name: "gender",
-      type: "String",
-      _id: "62270210faf593bb4250d746",
-    },
-    {
-      name: "email",
-      type: "String",
-      _id: "62270210faf593bb4250d747",
-    },
-    {
-      name: "alternateEmail",
-      type: "String",
-      _id: "62270210faf593bb4250d748",
-    },
-  ],
-  GroupId: 5,
-  createdAt: "2022-03-08T07:13:20.284Z",
-  updatedAt: "2022-03-08T07:13:20.284Z",
-  __v: 0,
-};
 /**
  * Renders the dashboard page
  *
@@ -69,7 +34,7 @@ function Dashboard() {
   const [displayCreateGroup, setDisplayCreateGroup] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [dropdownOptions, setDropdownOptions] = useState([]);
-  const [currentGroup, setCurrentGroup] = useState(defaultGroup);
+  const [currentGroup, setCurrentGroup] = useState({});
   const [tableData, setTableData] = useState([]);
   const [search, setSearch] = useState("");
   const [snackbar, setSnackbar] = React.useState({
@@ -91,6 +56,10 @@ function Dashboard() {
     await fetch("http://localhost:8082/groups").then(async (response) => {
       const json = await response.json();
       const options = [{ value: "create-new", label: "Create New", isCreate: true }];
+      if (Object.keys(currentGroup).length === 0 && json.listOfGroups.length > 0) {
+        /** Set initial group to the first in the dropdown if no group set yet */
+        setCurrentGroup(json.listOfGroups[0]);
+      }
       json.listOfGroups.map((group) =>
         options.push({ value: group, label: group.Name, isCreate: false })
       );
