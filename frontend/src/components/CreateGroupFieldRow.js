@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+import TrashCan from "../images/TrashCan.svg";
 import "../css/CreateGroupFieldRow.css";
 
 /**
@@ -14,6 +15,7 @@ import "../css/CreateGroupFieldRow.css";
  * @return jsx for create group module field row
  */
 function CreateGroupFieldRow({ index, fieldName, fieldType, changeDispatch }) {
+  /* eslint-disable jsx-a11y/no-onchange */
   return (
     <div className="group-field-row">
       <input
@@ -35,6 +37,15 @@ function CreateGroupFieldRow({ index, fieldName, fieldType, changeDispatch }) {
         <option value="Text">Text</option>
         <option value="Number">Number</option>
       </select>
+      {index !== 0 && (
+        <button
+          className="group-field-delete"
+          type="button"
+          onClick={() => changeDispatch({ type: "DELETE_ROW", payload: { index } })}
+        >
+          <img src={TrashCan} alt="Delete row" />
+        </button>
+      )}
     </div>
   );
 }

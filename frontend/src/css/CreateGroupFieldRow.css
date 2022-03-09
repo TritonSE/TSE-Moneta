@@ -2,10 +2,12 @@
   padding-top: 2px;
   padding-bottom: 2px;
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
 }
 
 .group-field-name-input {
-  width: 60%;
+  width: 52%;
   height: 40px;
   border-width: 1px;
   border-radius: 5px;
@@ -25,4 +27,15 @@
   border-color: #c4c4c4;
   color: #626262;
   font-size: 16px;
+}
+
+.group-field-delete {
+  width: 21px;
+  height: 27px;
+  padding: 0px;
+  padding-top: 4px;
+  margin-left: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #fff;
 }

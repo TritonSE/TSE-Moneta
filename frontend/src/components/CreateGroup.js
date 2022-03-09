@@ -76,6 +76,7 @@ function CreateGroup({ onConfirm, onCancel }) {
           </h3>
           <div className="group-fields-list">
             {fields.map(({ name, type }, index) => (
+              /* eslint-disable react/no-array-index-key */
               <CreateGroupFieldRow
                 key={index}
                 index={index}
