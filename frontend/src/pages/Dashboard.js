@@ -112,7 +112,6 @@ function Dashboard() {
           body: JSON.stringify({ Name: groupName, Values: groupFields }),
         });
         const json = await response.json();
-        console.log(JSON.stringify(json));
         if (!response.ok) {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
         }
