@@ -5,72 +5,100 @@
  *
  * @summary Module that displays form for adding group
  * @author Kevin Fu
+ * @author William Wu
  */
 
-import React from "react";
+import React, { useReducer, useState } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
+import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
+
+/**
+ * Reducer for the module's list of field names and types. The action `type` can be one of the
+ * following:
+ * - `"SET_NAME"` or `"SET_TYPE"` - the `payload` should be an object containing both the `index`
+ * and the new `value`.
+ * - `"ADD_ROW"` - no `payload`.
+ * - `"DELETE_ROW"` - the `payload` should be an object containing the `index` to delete.
+ */
+const fieldsReducer = (prevFields, { type, payload }) => {
+  const { index, value } = payload ?? {};
+  const newFields = [...prevFields];
+  newFields[index] = { ...prevFields[index] };
+  switch (type) {
+    case "SET_NAME":
+      newFields[index].name = value;
+      break;
+    case "SET_TYPE":
+      newFields[index].type = value;
+      break;
+    case "ADD_ROW":
+      newFields.push({ name: "", type: "" });
+      break;
+    case "DELETE_ROW":
+      newFields.splice(index, 1);
+      break;
+    default:
+      throw new Error(`Unrecognized action type: ${type}`);
+  }
+  return newFields;
+};
+
 /**
  * Renders create group module
  *
  * @return jsx for create group module
  */
-function CreateGroup() {
+function CreateGroup({ onConfirm, onCancel }) {
+  const [groupName, setGroupName] = useState("");
+  /**
+   * `fields` is an array of objects representing the group's fields. Each object has a `name` and
+   * a `type`.
+   * To update this state, call `dispatch` and pass in an object with the action's `type` and
+   * `payload` as described for the `fieldsReducer` function above.
+   */
+  const [fields, dispatch] = useReducer(fieldsReducer, [{ name: "", type: "" }]);
+
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="group-first-header">Create New Group</span>
-        <div className="group-name-form">
-          <span className="group-second-header">Group Name</span>
-          <form>
-            <input className="group-name-field" />
-          </form>
-        </div>
-        <div className="fields-form-div">
-          <span className="group-second-header">Fields</span>
-          <br />
-          <span className="group-third-header">
+    <div className="modal-background">
+      <div className="modal-view">
+        <form className="group-form" onSubmit={() => console.log("submit")}>
+          <h1 className="group-first-header">Create New Group</h1>
+          <h2 className="group-second-header">Group Name</h2>
+          <input
+            className="group-name-field"
+            value={groupName}
+            onChange={(event) => setGroupName(event.target.value)}
+          />
+          <h2 className="group-second-header">Fields</h2>
+          <h3 className="group-third-header">
             List the fields you want associated with this group....
-          </span>
-          <button className="add-group-button" type="button">
-            <img src={AddFieldIcon} className="add-field-svg" alt="add group button icon" />
+          </h3>
+          <div className="group-fields-list">
+            {fields.map(({ name, type }, index) => (
+              <CreateGroupFieldRow
+                key={index}
+                index={index}
+                fieldName={name}
+                fieldType={type}
+                changeDispatch={dispatch}
+              />
+            ))}
+          </div>
+          <button
+            className="add-field-button"
+            type="button"
+            onClick={() => dispatch({ type: "ADD_ROW" })}
+          >
+            <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
             Add new field
           </button>
-          <form id="field-form">
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-          </form>
           <div className="group-submit-div">
             <button className="group-modal-submit" type="button">
               Create
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
