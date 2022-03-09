@@ -51,6 +51,16 @@ async function importToDB(values, CSVUploaded, setUploadedCSV) {
 function CSVParser({ CSVUploaded, setCSVUploaded }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
+  const [tableData, setTableData] = React.useState([]);
+  const group = "1";
+
+  React.useEffect(async () => {
+    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
+      let json = await response.json();
+      json = json.map((row) => row.data);
+      setTableData(json);
+    });
+  }, [CSVUploaded]);
 
   return (
     <div className="csv-parser">
@@ -81,24 +91,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded }) {
         config={{
           delimiter: ";",
         }}
-        data={[
-          {
-            id: 1,
-            name: "First Last",
-            age: 20,
-            gender: "Female",
-            email: "firstlast@email.com",
-            alternateEmail: "firstlast@hotmail.com",
-          },
-          {
-            id: 2,
-            name: "John Doe",
-            age: 25,
-            gender: "Male",
-            email: "johndoe@gmail.com",
-            alternateEmail: "john@email.com",
-          },
-        ]}
+        data={tableData}
       >
         <AiOutlineDownload className="csv-icon download" /> Download
       </CSVDownloader>
