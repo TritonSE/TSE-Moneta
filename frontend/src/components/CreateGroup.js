@@ -62,7 +62,13 @@ function CreateGroup({ onConfirm, onCancel }) {
   return (
     <div className="modal-background">
       <div className="modal-view">
-        <form className="group-form" onSubmit={() => console.log("submit")}>
+        <form
+          className="group-form"
+          onSubmit={(event) => {
+            onConfirm(groupName, fields);
+            event.preventDefault();
+          }}
+        >
           <h1 className="group-first-header">Create New Group</h1>
           <h2 className="group-second-header">Group Name</h2>
           <input
@@ -95,7 +101,7 @@ function CreateGroup({ onConfirm, onCancel }) {
             Add new field
           </button>
           <div className="group-submit-div">
-            <button className="group-modal-submit" type="button">
+            <button className="group-modal-submit" type="submit">
               Create
             </button>
             <button className="group-modal-cancel" type="button" onClick={onCancel}>

@@ -3,6 +3,7 @@
  *
  * @summary Dashboard page.
  * @author Alex Zhang
+ * @author William Wu
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -46,7 +47,8 @@ function Dashboard() {
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
 
   /**
-   * Fetch the list of groups and populate the options in the group selection dropdown
+   * Fetches the list of groups and populates the options in the group selection dropdown.
+   * @returns The new list of options
    */
   const fetchGroups = useCallback(async () => {
     try {
@@ -61,17 +63,19 @@ function Dashboard() {
       if (selectedGroup === null && options.length > 1) {
         setSelectedGroup(options[1]);
       }
+      return options;
     } catch (error) {
       setSnackbar({
         open: true,
-        message: `An error occurred: ${error}`,
+        message: error.message,
         severity: "error",
       });
+      return [];
     }
   }, []);
 
   /**
-   * Fetch the rows in the given group which contain the given search string
+   * Fetches the rows in the given group which contain the given search string
    */
   const fetchRows = useCallback(async (groupID, searchString = "") => {
     try {
@@ -86,11 +90,54 @@ function Dashboard() {
     } catch (error) {
       setSnackbar({
         open: true,
-        message: `An error occurred: ${error}`,
+        message: error.message,
         severity: "error",
       });
     }
   }, []);
+
+  /**
+   * Callback which receives new group info from the create group module and sends a request to the
+   * backend to create the group. If the creation succeeds, then the newly created group gets
+   * displayed.
+   */
+  const submitNewGroup = useCallback(
+    async (groupName, groupFields) => {
+      try {
+        const response = await fetch("http://localhost:8082/groups", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ Name: groupName, Values: groupFields }),
+        });
+        const json = await response.json();
+        console.log(JSON.stringify(json));
+        if (!response.ok) {
+          throw new Error(json.msg ?? json.message.message);
+        }
+
+        // display the newly created group
+        const {
+          addGroup: { GroupId: newGroupID },
+        } = json;
+        const options = await fetchGroups();
+        for (const option of options) {
+          if (option.value === newGroupID) {
+            setSelectedGroup(option);
+            return;
+          }
+        }
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message,
+          severity: "error",
+        });
+      }
+    },
+    [fetchGroups]
+  );
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -235,7 +282,13 @@ function Dashboard() {
         ) : null}
       </div>
       {groupCreationVisible && (
-        <CreateGroup onConfirm={() => {}} onCancel={() => setGroupCreationVisible(false)} />
+        <CreateGroup
+          onConfirm={(name, fields) => {
+            submitNewGroup(name, fields);
+            setGroupCreationVisible(false);
+          }}
+          onCancel={() => setGroupCreationVisible(false)}
+        />
       )}
       <div className="snackbar">
         <Snackbar
