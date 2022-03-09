@@ -22,16 +22,6 @@ import "../css/CSVParser.css";
 function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
-  const [tableData, setTableData] = React.useState([]);
-  const group = "1";
-
-  React.useEffect(async () => {
-    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
-      let json = await response.json();
-      json = json.map((row) => row.data);
-      setTableData(json);
-    });
-  }, [CSVUploaded]);
 
   /**
    *  Returns true if CSV values are valid, otherwise false.
@@ -144,7 +134,24 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
         config={{
           delimiter: ";",
         }}
-        data={tableData}
+        data={[
+          {
+            id: 1,
+            name: "First Last",
+            age: 20,
+            gender: "Female",
+            email: "firstlast@email.com",
+            alternateEmail: "firstlast@hotmail.com",
+          },
+          {
+            id: 2,
+            name: "John Doe",
+            age: 25,
+            gender: "Male",
+            email: "johndoe@gmail.com",
+            alternateEmail: "john@email.com",
+          },
+        ]}
       >
         <AiOutlineDownload className="csv-icon download" /> Download
       </CSVDownloader>
