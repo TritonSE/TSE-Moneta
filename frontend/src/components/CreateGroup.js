@@ -72,7 +72,7 @@ function CreateGroup({ onConfirm, onCancel }) {
           />
           <h2 className="group-second-header">Fields</h2>
           <h3 className="group-third-header">
-            List the fields you want associated with this group....
+            List the fields you want associated with this group...
           </h3>
           <div className="group-fields-list">
             {fields.map(({ name, type }, index) => (
@@ -96,6 +96,9 @@ function CreateGroup({ onConfirm, onCancel }) {
           <div className="group-submit-div">
             <button className="group-modal-submit" type="button">
               Create
+            </button>
+            <button className="group-modal-cancel" type="button" onClick={onCancel}>
+              Cancel
             </button>
           </div>
         </form>

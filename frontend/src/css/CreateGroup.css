@@ -112,3 +112,18 @@
   color: #ffffff;
   cursor: pointer;
 }
+
+.group-modal-cancel {
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 5px;
+  border-color: #05204a;
+  border-width: 3px;
+  border-style: solid;
+  width: 119px;
+  height: 40px;
+  margin-left: 20px;
+  background: #ffffff;
+  color: #05204a;
+  cursor: pointer;
+}

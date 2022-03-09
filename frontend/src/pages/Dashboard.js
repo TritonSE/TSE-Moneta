@@ -234,7 +234,9 @@ function Dashboard() {
           />
         ) : null}
       </div>
-      {groupCreationVisible && <CreateGroup />}
+      {groupCreationVisible && (
+        <CreateGroup onConfirm={() => {}} onCancel={() => setGroupCreationVisible(false)} />
+      )}
       <div className="snackbar">
         <Snackbar
           open={snackbar.open}
