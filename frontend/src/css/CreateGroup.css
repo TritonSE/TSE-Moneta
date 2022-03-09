@@ -40,7 +40,7 @@
   margin-bottom: 11px;
 }
 
-.group-name-field {
+.group-name-input {
   display: block;
   width: 95%;
   height: 40px;
@@ -54,11 +54,22 @@
   font-size: 16px;
 }
 
+.invalid {
+  border-color: #f00;
+}
+
 .group-fields-list {
   height: 160px;
   overflow-y: auto;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.group-fields-list.invalid {
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  padding-left: 2px;
 }
 
 .group-fields-list::-webkit-scrollbar {

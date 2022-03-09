@@ -99,7 +99,7 @@ function Dashboard() {
   /**
    * Callback which receives new group info from the create group module and sends a request to the
    * backend to create the group. If the creation succeeds, then the newly created group gets
-   * displayed.
+   * displayed and the module gets closed.
    */
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
@@ -114,8 +114,9 @@ function Dashboard() {
         const json = await response.json();
         console.log(JSON.stringify(json));
         if (!response.ok) {
-          throw new Error(json.msg ?? json.message.message);
+          throw new Error(json.msg ?? json.Error ?? json.message.message);
         }
+        setGroupCreationVisible(false);
 
         // display the newly created group
         const {
@@ -282,13 +283,7 @@ function Dashboard() {
         ) : null}
       </div>
       {groupCreationVisible && (
-        <CreateGroup
-          onConfirm={(name, fields) => {
-            submitNewGroup(name, fields);
-            setGroupCreationVisible(false);
-          }}
-          onCancel={() => setGroupCreationVisible(false)}
-        />
+        <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
       <div className="snackbar">
         <Snackbar

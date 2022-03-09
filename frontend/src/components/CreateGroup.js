@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useReducer, useState } from "react";
+import React, { useCallback, useReducer, useState } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -20,6 +20,8 @@ import "../css/CreateGroup.css";
  * and the new `value`.
  * - `"ADD_ROW"` - no `payload`.
  * - `"DELETE_ROW"` - the `payload` should be an object containing the `index` to delete.
+ * - `"SET_VALID"` or `"SET_INVALID"` - the `payload` should be an object containing the `index` to
+ * update.
  */
 const fieldsReducer = (prevFields, { type, payload }) => {
   const { index, value } = payload ?? {};
@@ -38,6 +40,12 @@ const fieldsReducer = (prevFields, { type, payload }) => {
     case "DELETE_ROW":
       newFields.splice(index, 1);
       break;
+    case "SET_VALID":
+      delete newFields[index].invalid;
+      break;
+    case "SET_INVALID":
+      newFields[index].invalid = true;
+      break;
     default:
       throw new Error(`Unrecognized action type: ${type}`);
   }
@@ -51,13 +59,48 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  */
 function CreateGroup({ onConfirm, onCancel }) {
   const [groupName, setGroupName] = useState("");
+  const [groupNameInvalid, setGroupNameInvalid] = useState(false);
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
-   * a `type`.
+   * a `type`, both strings. Each object may also have a boolean `invalid` field, denoting whether
+   * there is a problem with the user-given values. Upon calling `onConfirm`, every `invalid` field
+   * should be removed.
    * To update this state, call `dispatch` and pass in an object with the action's `type` and
    * `payload` as described for the `fieldsReducer` function above.
    */
   const [fields, dispatch] = useReducer(fieldsReducer, [{ name: "", type: "" }]);
+  const [fieldsInvalid, setFieldsInvalid] = useState(false);
+
+  const tryConfirm = useCallback(
+    (groupName_, fields_) => {
+      let valid = true;
+      setGroupNameInvalid(false);
+      setFieldsInvalid(false);
+
+      if (groupName_.length === 0) {
+        setGroupNameInvalid(true);
+        valid = false;
+      }
+      for (let i = 0; i < fields_.length; i++) {
+        const fieldInfo = fields_[i];
+        if (fieldInfo.name.length === 0) {
+          dispatch({ type: "SET_INVALID", payload: { index: i } });
+          setFieldsInvalid(true);
+          valid = false;
+        } else {
+          dispatch({ type: "SET_VALID", payload: { index: i } });
+        }
+      }
+
+      if (valid) {
+        onConfirm(groupName_, fields_);
+      }
+    },
+    [onConfirm]
+  );
+
+  const nameInputClass = "group-name-input" + (groupNameInvalid ? " invalid" : "");
+  const fieldsListDivClass = "group-fields-list" + (fieldsInvalid ? " invalid" : "");
 
   return (
     <div className="modal-background">
@@ -65,14 +108,14 @@ function CreateGroup({ onConfirm, onCancel }) {
         <form
           className="group-form"
           onSubmit={(event) => {
-            onConfirm(groupName, fields);
+            tryConfirm(groupName, fields);
             event.preventDefault();
           }}
         >
           <h1 className="group-first-header">Create New Group</h1>
           <h2 className="group-second-header">Group Name</h2>
           <input
-            className="group-name-field"
+            className={nameInputClass}
             value={groupName}
             onChange={(event) => setGroupName(event.target.value)}
           />
@@ -80,14 +123,15 @@ function CreateGroup({ onConfirm, onCancel }) {
           <h3 className="group-third-header">
             List the fields you want associated with this group...
           </h3>
-          <div className="group-fields-list">
-            {fields.map(({ name, type }, index) => (
+          <div className={fieldsListDivClass}>
+            {fields.map(({ name, type, invalid }, index) => (
               /* eslint-disable react/no-array-index-key */
               <CreateGroupFieldRow
                 key={index}
                 index={index}
                 fieldName={name}
                 fieldType={type}
+                invalid={invalid}
                 changeDispatch={dispatch}
               />
             ))}

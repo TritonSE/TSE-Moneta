@@ -14,12 +14,13 @@ import "../css/CreateGroupFieldRow.css";
  *
  * @return jsx for create group module field row
  */
-function CreateGroupFieldRow({ index, fieldName, fieldType, changeDispatch }) {
+function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispatch }) {
+  const fieldNameInputClass = "group-field-name-input" + (invalid ? " invalid" : "");
   /* eslint-disable jsx-a11y/no-onchange */
   return (
     <div className="group-field-row">
       <input
-        className="group-field-name-input"
+        className={fieldNameInputClass}
         placeholder="Field name"
         value={fieldName}
         onChange={(event) =>

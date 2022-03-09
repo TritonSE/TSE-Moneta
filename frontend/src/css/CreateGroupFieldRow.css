@@ -39,3 +39,7 @@
   border: none;
   background-color: #fff;
 }
+
+.invalid {
+  border-color: #f00;
+}
