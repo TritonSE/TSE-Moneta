@@ -12,10 +12,6 @@ import PrevPage from "../images/PrevPageIcon.svg";
 import NextPage from "../images/NextPageIcon.svg";
 import "../css/Table.css";
 
-/** Dummy data used to display the table. */
-/** Only the fields specified in the schema will be columns in the table */
-const _schema = ["name", "age", "gender", "email", "alternateEmail"];
-
 /**
  * Renders the table display.
  *
@@ -45,26 +41,28 @@ function Table({ data, group, elementsPerPage }) {
             ))}
         </tbody>
       </table>
-      <div className="table-page-selector">
-        <button
-          className="table-button prev-page"
-          type="button"
-          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-        >
-          <img src={PrevPage} className="table-prev-page-icon" alt="Previous Page" />
-        </button>
-        <p className="table-page-selector-text current">{currentPage}</p>
-        <p className="table-page-selector-text of">of</p>
-        <p className="table-page-selector-text">{maxPage}</p>
-        <p className="table-row-count">{data.length} rows</p>
-        <button
-          className="table-button next-page"
-          type="button"
-          onClick={() => setCurrentPage(Math.min(maxPage, currentPage + 1))}
-        >
-          <img src={NextPage} className="table-next-page-icon" alt="Next Page" />
-        </button>
-      </div>
+      {maxPage === 0 ? null : (
+        <div className="table-page-selector">
+          <button
+            className="table-button prev-page"
+            type="button"
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          >
+            <img src={PrevPage} className="table-prev-page-icon" alt="Previous Page" />
+          </button>
+          <p className="table-page-selector-text current">{currentPage}</p>
+          <p className="table-page-selector-text of">of</p>
+          <p className="table-page-selector-text">{maxPage}</p>
+          <p className="table-row-count">{data.length} rows</p>
+          <button
+            className="table-button next-page"
+            type="button"
+            onClick={() => setCurrentPage(Math.min(maxPage, currentPage + 1))}
+          >
+            <img src={NextPage} className="table-next-page-icon" alt="Next Page" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
