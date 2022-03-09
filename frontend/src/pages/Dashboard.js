@@ -5,91 +5,21 @@
  * @author Alex Zhang
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
+import { Snackbar, Alert } from "@mui/material";
 import SideNavigation from "../components/SideNavigation";
 import Table from "../components/Table";
 import AddIcon from "../images/AddIcon.svg";
 import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
-import "../css/Dashboard.css";
+import SearchIcon from "../images/SearchIcon.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
-/** Dropdown options for the Select Group dropdown menu */
-const options = [
-  { value: "create-new", label: "Create New", isCreate: true },
-  { value: "group1", label: "Group 1", isCreate: false },
-  { value: "group2", label: "Group 2", isCreate: false },
-  { value: "group3", label: "Group 3", isCreate: false },
-  { value: "group4", label: "Group 4", isCreate: false },
-  { value: "group5", label: "Group 5", isCreate: false },
-  { value: "group6", label: "Group 6", isCreate: false },
-  { value: "group7", label: "Group 7", isCreate: false },
-  { value: "group8", label: "Group 8", isCreate: false },
-];
+import "../css/Dashboard.css";
 
-/**
- * Custom option component for the Select Group dropdown menu
- * Includes an icon alongside the labeled dropdown row.
- */
-const iconOption = (props) => {
-  if (props.data.isCreate) {
-    return (
-      <components.Option {...props}>
-        {props.data.label}
-        <Plus className="Plus" />
-      </components.Option>
-    );
-  }
-  return (
-    <components.Option {...props}>
-      {props.data.label}
-      <Pencil className="Pencil" />
-    </components.Option>
-  );
-};
-
-/** Styling for the react-select Select Group dropdown menu. */
-const selectStyles = {
-  control: (base, state) => ({
-    ...base,
-    border: "0px",
-    background: "#F3F3F3",
-    boxShadow: state.isFocused ? null : null,
-    color: state.isSelected ? "#949494" : "#949494",
-  }),
-  menu: (base) => ({
-    ...base,
-    overflow: 0,
-    background: "#F3F3F3",
-    borderRadius: 5,
-    marginTop: 7,
-    border: 0,
-  }),
-  option: (provided, state) => ({
-    height: 36,
-    paddingLeft: 15,
-    paddingTop: 9,
-    color: state.isFocused ? "#4B6A9B" : "#949494",
-    background: state.isFocused ? "#F3F3F3" : "#F3F3F3",
-    stroke: state.isFocused ? "#4B6A9B" : "#949494",
-    fill: state.isFocused ? "#4B6A9B" : "#949494",
-  }),
-  menuList: (base) => ({
-    ...base,
-    "::-webkit-scrollbar": {
-      width: "6px",
-      height: "0px",
-    },
-    "::-webkit-scrollbar-thumb": {
-      background: "#888",
-    },
-  }),
-  indicatorSeparator: () => null,
-  closeMenuOnSelect: false,
-};
 /**
  * Renders the dashboard page
  *
@@ -102,6 +32,109 @@ function Dashboard() {
    */
   const [visible, setVisibility] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [Search, setSearch] = useState("");
+  const group = "1";
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  useEffect(async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ group, search: Search }),
+    };
+    await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
+      const json = await response.json();
+      setTableData(json);
+    });
+  }, [Search, CSVUploaded]);
+
+  /** Dropdown options for the Select Group dropdown menu */
+  const options = [
+    { value: "create-new", label: "Create New", isCreate: true },
+    { value: "group1", label: "Group 1", isCreate: false },
+    { value: "group2", label: "Group 2", isCreate: false },
+    { value: "group3", label: "Group 3", isCreate: false },
+    { value: "group4", label: "Group 4", isCreate: false },
+    { value: "group5", label: "Group 5", isCreate: false },
+    { value: "group6", label: "Group 6", isCreate: false },
+    { value: "group7", label: "Group 7", isCreate: false },
+    { value: "group8", label: "Group 8", isCreate: false },
+  ];
+
+  const handleSnackClose = () => {
+    setSnackbar({
+      open: false,
+      message: "",
+      severity: "",
+    });
+  };
+
+  /**
+   * Custom option component for the Select Group dropdown menu
+   * Includes an icon alongside the labeled dropdown row.
+   */
+  const iconOption = (props) => {
+    if (props.data.isCreate) {
+      return (
+        <components.Option {...props}>
+          {props.data.label}
+          <Plus className="Plus" />
+        </components.Option>
+      );
+    }
+    return (
+      <components.Option {...props}>
+        {props.data.label}
+        <Pencil className="Pencil" />
+      </components.Option>
+    );
+  };
+
+  /** Styling for the react-select Select Group dropdown menu. */
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      border: "0px",
+      background: "#F3F3F3",
+      boxShadow: state.isFocused ? null : null,
+      color: state.isSelected ? "#949494" : "#949494",
+    }),
+    menu: (base) => ({
+      ...base,
+      overflow: 0,
+      background: "#F3F3F3",
+      borderRadius: 5,
+      marginTop: 7,
+      border: 0,
+    }),
+    option: (provided, state) => ({
+      height: 36,
+      paddingLeft: 15,
+      paddingTop: 9,
+      color: state.isFocused ? "#4B6A9B" : "#949494",
+      background: state.isFocused ? "#F3F3F3" : "#F3F3F3",
+      stroke: state.isFocused ? "#4B6A9B" : "#949494",
+      fill: state.isFocused ? "#4B6A9B" : "#949494",
+    }),
+    menuList: (base) => ({
+      ...base,
+      "::-webkit-scrollbar": {
+        width: "6px",
+        height: "0px",
+      },
+      "::-webkit-scrollbar-thumb": {
+        background: "#888",
+      },
+    }),
+    indicatorSeparator: () => null,
+    closeMenuOnSelect: false,
+  };
+
   return (
     <>
       <SideNavigation currentPage="/" />
@@ -119,7 +152,15 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} />
+        <Table data={tableData} />
+        <input
+          type="text"
+          className="dashboard-search"
+          placeholder="Search"
+          value={Search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
         <button
           type="button"
           className="toggle-csv-menu"
@@ -129,9 +170,33 @@ function Dashboard() {
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? <CSVParser CSVUploaded={CSVUploaded} setCSVUploaded={setCSVUploaded} /> : null}
+        {visible ? (
+          <CSVParser
+            CSVUploaded={CSVUploaded}
+            setCSVUploaded={setCSVUploaded}
+            snackbar={snackbar}
+            setSnackbar={setSnackbar}
+          />
+        ) : null}
       </div>
       <CreateGroup />
+      <div className="snackbar">
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackClose}
+          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+        >
+          <Alert
+            onClose={handleSnackClose}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+            variant="filled"
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </div>
     </>
   );
 }

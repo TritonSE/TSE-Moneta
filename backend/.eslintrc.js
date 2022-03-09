@@ -8,6 +8,10 @@ const generalRules = {
   "no-continue": "off",
   "prefer-template": "off",
   "prefer-destructuring": "off",
+  "no-await-in-loop": "off",
+  "prefer-arrow-callback": "off",
+  "func-names": "off",
+  "no-restricted-syntax": "off",
 
   // Allow leading underscores in identifiers (e.g. _id in MongoDB).
   "no-underscore-dangle": "off",
