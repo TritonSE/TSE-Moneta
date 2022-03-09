@@ -39,8 +39,11 @@ function Dashboard() {
     message: "",
     severity: "",
   });
+
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const [groupCreationVisible, setGroupCreationVisible] = useState(false);
 
   /**
    * Fetch the list of groups and populate the options in the group selection dropdown
@@ -67,6 +70,9 @@ function Dashboard() {
     }
   }, []);
 
+  /**
+   * Fetch the rows in the given group which contain the given search string
+   */
   const fetchRows = useCallback(async (groupID, searchString = "") => {
     try {
       const requestOptions = {
@@ -93,11 +99,23 @@ function Dashboard() {
     fetchGroups();
   }, [fetchGroups]);
 
+  /**
+   * Update the table whenever a group is selected, the search string is changed, or
+   * some CSV is uploaded
+   */
   useEffect(() => {
     if (selectedGroup) {
       fetchRows(selectedGroup.value, Search);
     }
   }, [selectedGroup, Search, CSVUploaded]);
+
+  const handleSelectGroup = useCallback((option) => {
+    if (option.isCreate) {
+      setGroupCreationVisible(true);
+    } else {
+      setSelectedGroup(option);
+    }
+  }, []);
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -182,7 +200,8 @@ function Dashboard() {
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
-          onChange={setSelectedGroup}
+          value={selectedGroup}
+          onChange={handleSelectGroup}
         />
         <button className="add-row" type="button">
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
@@ -215,7 +234,7 @@ function Dashboard() {
           />
         ) : null}
       </div>
-      <CreateGroup />
+      {groupCreationVisible && <CreateGroup />}
       <div className="snackbar">
         <Snackbar
           open={snackbar.open}
