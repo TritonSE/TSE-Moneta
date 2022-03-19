@@ -1,3 +1,8 @@
+.table-div {
+  position: absolute;
+  left: 320px;
+  top: 167px;
+}
 .table-header-row {
   font-weight: 500;
 }
@@ -11,12 +16,101 @@
 
 .table {
   position: relative;
-  left: 320px;
-  top: 150px;
+  width: 1056px;
   text-align: left;
   font-size: 16px;
   line-height: 24px;
   border-collapse: collapse;
   overflow: visible;
   margin: 0px;
+}
+
+.table-body-row {
+  border-radius: 5px;
+  max-height: 55px;
+}
+
+.pencil-svg {
+  float: right;
+  padding-top: 18px;
+  padding-bottom: 15px;
+  padding-right: 22px;
+  visibility: hidden;
+}
+
+.table-body-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table-body-row:hover {
+  box-shadow: 0px 0px 0px 1px #334a88 inset;
+}
+
+.table-body-row:hover .pencil-svg {
+  visibility: visible;
+}
+
+.table-body-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  padding-left: 17px;
+  padding-top: 16px;
+  padding-bottom: 15px;
+  padding-right: 50px;
+  color: #353535;
+}
+
+.table-page-selector {
+  text-align: center;
+  margin-top: 39px;
+  margin-bottom: 34px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #353535;
+}
+
+.table-page-selector-text {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.table-page-selector-text.current {
+  background: #f4f4f4;
+  border-radius: 2px;
+}
+
+.table-page-selector-text.of {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.table-row-count {
+  float: right;
+  position: relative;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #949494;
+}
+
+.table-button {
+  display: inline-block;
+  background: transparent;
+  border: 0px;
+  height: 22px;
+  padding: 0px;
+  vertical-align: middle;
+  margin-top: 0px;
+}
+
+.table-button.prev-page {
+  padding-right: 20px;
+}
+.table-button.next-page {
+  padding-left: 20px;
 }

@@ -8,6 +8,7 @@ const express = require("express");
 
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
+const Group = require("../models/Groups");
 const TableData = require("../models/TableData");
 
 /**
@@ -35,39 +36,72 @@ const TableData = require("../models/TableData");
 router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
     // check if all required fields are present
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   res.status(500).json(errors);
-    //   return;
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(500).json(errors);
+    }
+
+    const group = await Group.findById(req.body.group).distinct("Values");
+
+    if (group.length < Object.keys(req.body.data).length) {
+      return res.status(409).json({
+        Error: "Extra fields!",
+      });
+    }
+
+    let broken = false;
+    const groupVals = new Set([]);
+
+    group.forEach((value) => {
+      groupVals.add(value.name);
+    });
+
+    Object.keys(req.body.data).map((val) => {
+      if (groupVals.has(val)) {
+        groupVals.delete(val);
+      } else {
+        broken = true;
+      }
+      return 0;
+    });
+
+    if (groupVals.size !== 0) {
+      broken = true;
+    }
+
+    const missingFields = Array.from(groupVals);
+    if (broken) {
+      return res.status(409).json({
+        Error: missingFields,
+      });
+    }
+
     // if (!(await isValidGroup(req.body.group, res))) {
     //  return;
     // }
 
-    await TableData.find({ group: req.body.group, data: req.body.data })
+    return await TableData.find({ group: req.body.group, data: req.body.data })
       .then(async (data) => {
         if (data.length) {
           // check if inserting duplicate
-          res.status(409).json({ error: "Duplicate data" });
-        } else {
-          const tableData = new TableData({
-            group: req.body.group,
-            data: req.body.data,
-          });
-          await tableData.save().catch((err) => res.status(500).json("Error: " + err));
-          res.status(200).json("Posted TableData!");
+          return res.status(409).json({ error: "Duplicate data" });
         }
+        const tableData = new TableData({
+          group: req.body.group,
+          data: req.body.data,
+        });
+        await tableData.save().catch((err) => res.status(500).json("Error: " + err));
+        return res.status(200).json("Posted TableData!");
       })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
+      .catch((error) => res.status(500).json(error));
   } catch (error) {
-    res.status(500).json(error);
+    console.log(error);
+    return res.status(500).json(error);
   }
 });
 
 /**
- * "PUT /row:id" - edits TableData
+ * PUT "/rows/:id" - edits TableData
  * If edit results in duplicate data return 409
  * If id does not exist return 500
  * If neither of the above is true return 200
@@ -136,6 +170,46 @@ router.delete("/rows", (req, res) => {
       .catch((error) => {
         res.status(500).json(error);
       });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+/**
+ * "POST /search" - searches for all rows with the correct group and search query
+ * Return 200 if successful, else return 500
+ */
+router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
+  try {
+    const tableData = await TableData.find({ group: req.body.group });
+    const ret = [];
+    for (const row of tableData) {
+      for (const [_field, value] of Object.entries(row.data)) {
+        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
+          ret.push(row);
+          break;
+        }
+      }
+    }
+    res.json(ret);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
+  try {
+    const tableData = await TableData.find({ group: req.body.group });
+    const ret = [];
+    for (const row of tableData) {
+      for (const [_field, value] of Object.entries(row.data)) {
+        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
+          ret.push(row);
+          break;
+        }
+      }
+    }
+    res.json(ret);
   } catch (error) {
     res.status(500).json(error);
   }

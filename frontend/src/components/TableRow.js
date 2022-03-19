@@ -5,8 +5,8 @@
 import React from "react";
 
 import Pencil from "../images/Pencil.svg";
-import CheckMark from "../images/checkMark.svg";
-import Trashcan from "../images/trashCan.svg";
+import CheckMark from "../images/CheckMark.svg";
+import Trashcan from "../images/TrashCan.svg";
 
 import "../css/TableRow.css";
 

@@ -22,6 +22,16 @@ import "../css/CSVParser.css";
 function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
+  const [tableData, setTableData] = React.useState([]);
+  const group = "1";
+
+  React.useEffect(async () => {
+    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
+      let json = await response.json();
+      json = json.map((row) => row.data);
+      setTableData(json);
+    });
+  }, [CSVUploaded]);
 
   /**
    *  Returns true if CSV values are valid, otherwise false.
@@ -56,9 +66,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
    *
    * @author Kevin Fu
    */
-  async function importToDB(values, CSVUploaded, setUploadedCSV) {
-    const group = "1"; // temporary dummy data, should be determined by drop-down menu
-
+  async function importToDB(values, CSVUploadedArg, setUploadedCSV) {
     switch (validateCSV(values)) {
       case 1:
         setSnackbar({
@@ -97,7 +105,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
         mode: "cors",
       });
     }
-    setUploadedCSV(!CSVUploaded); // tell table to reload
+    setUploadedCSV(!CSVUploadedArg); // tell table to reload
     setSnackbar({
       open: true,
       message: "CSV uploaded!",
@@ -134,24 +142,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
         config={{
           delimiter: ";",
         }}
-        data={[
-          {
-            id: 1,
-            name: "First Last",
-            age: 20,
-            gender: "Female",
-            email: "firstlast@email.com",
-            alternateEmail: "firstlast@hotmail.com",
-          },
-          {
-            id: 2,
-            name: "John Doe",
-            age: 25,
-            gender: "Male",
-            email: "johndoe@gmail.com",
-            alternateEmail: "john@email.com",
-          },
-        ]}
+        data={tableData}
       >
         <AiOutlineDownload className="csv-icon download" /> Download
       </CSVDownloader>

@@ -5,72 +5,154 @@
  *
  * @summary Module that displays form for adding group
  * @author Kevin Fu
+ * @author William Wu
  */
 
-import React from "react";
+import React, { useCallback, useReducer, useState } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
+import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
+
+/**
+ * Reducer for the module's list of field names and types. The action `type` can be one of the
+ * following:
+ * - `"SET_NAME"` or `"SET_TYPE"` - the `payload` should be an object containing both the `index`
+ * and the new `value`.
+ * - `"ADD_ROW"` - no `payload`.
+ * - `"DELETE_ROW"` - the `payload` should be an object containing the `index` to delete.
+ * - `"SET_VALID"` or `"SET_INVALID"` - the `payload` should be an object containing the `index` to
+ * update.
+ */
+const fieldsReducer = (prevFields, { type, payload }) => {
+  const { index, value } = payload ?? {};
+  const newFields = [...prevFields];
+  newFields[index] = { ...prevFields[index] };
+  switch (type) {
+    case "SET_NAME":
+      newFields[index].name = value;
+      break;
+    case "SET_TYPE":
+      newFields[index].type = value;
+      break;
+    case "ADD_ROW":
+      newFields.push({ name: "", type: "" });
+      break;
+    case "DELETE_ROW":
+      newFields.splice(index, 1);
+      break;
+    case "SET_VALID":
+      delete newFields[index].invalid;
+      break;
+    case "SET_INVALID":
+      newFields[index].invalid = true;
+      break;
+    default:
+      throw new Error(`Unrecognized action type: ${type}`);
+  }
+  return newFields;
+};
+
 /**
  * Renders create group module
  *
  * @return jsx for create group module
  */
-function CreateGroup() {
+function CreateGroup({ onConfirm, onCancel }) {
+  const [groupName, setGroupName] = useState("");
+  const [groupNameInvalid, setGroupNameInvalid] = useState(false);
+  /**
+   * `fields` is an array of objects representing the group's fields. Each object has a `name` and
+   * a `type`, both strings. Each object may also have a boolean `invalid` field, denoting whether
+   * there is a problem with the user-given values. Upon calling `onConfirm`, every `invalid` field
+   * should be removed.
+   * To update this state, call `dispatch` and pass in an object with the action's `type` and
+   * `payload` as described for the `fieldsReducer` function above.
+   */
+  const [fields, dispatch] = useReducer(fieldsReducer, [{ name: "", type: "" }]);
+  const [fieldsInvalid, setFieldsInvalid] = useState(false);
+
+  const tryConfirm = useCallback(
+    (groupName_, fields_) => {
+      let valid = true;
+      setGroupNameInvalid(false);
+      setFieldsInvalid(false);
+
+      if (groupName_.length === 0) {
+        setGroupNameInvalid(true);
+        valid = false;
+      }
+      for (let i = 0; i < fields_.length; i++) {
+        const fieldInfo = fields_[i];
+        if (fieldInfo.name.length === 0) {
+          dispatch({ type: "SET_INVALID", payload: { index: i } });
+          setFieldsInvalid(true);
+          valid = false;
+        } else {
+          dispatch({ type: "SET_VALID", payload: { index: i } });
+        }
+      }
+
+      if (valid) {
+        onConfirm(groupName_, fields_);
+      }
+    },
+    [onConfirm]
+  );
+
+  const nameInputClass = "group-name-input" + (groupNameInvalid ? " invalid" : "");
+  const fieldsListDivClass = "group-fields-list" + (fieldsInvalid ? " invalid" : "");
+
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="group-first-header">Create New Group</span>
-        <div className="group-name-form">
-          <span className="group-second-header">Group Name</span>
-          <form>
-            <input className="group-name-field" />
-          </form>
-        </div>
-        <div className="fields-form-div">
-          <span className="group-second-header">Fields</span>
-          <br />
-          <span className="group-third-header">
-            List the fields you want associated with this group.....
-          </span>
-          <button className="add-group-button" type="button">
-            <img src={AddFieldIcon} className="add-field-svg" alt="add group button icon" />
+    <div className="modal-background">
+      <div className="modal-view">
+        <form
+          className="group-form"
+          onSubmit={(event) => {
+            tryConfirm(groupName, fields);
+            event.preventDefault();
+          }}
+        >
+          <h1 className="group-first-header">Create New Group</h1>
+          <h2 className="group-second-header">Group Name</h2>
+          <input
+            className={nameInputClass}
+            value={groupName}
+            onChange={(event) => setGroupName(event.target.value)}
+          />
+          <h2 className="group-second-header">Fields</h2>
+          <h3 className="group-third-header">
+            List the fields you want associated with this group...
+          </h3>
+          <div className={fieldsListDivClass}>
+            {fields.map(({ name, type, invalid }, index) => (
+              /* eslint-disable react/no-array-index-key */
+              <CreateGroupFieldRow
+                key={index}
+                index={index}
+                fieldName={name}
+                fieldType={type}
+                invalid={invalid}
+                changeDispatch={dispatch}
+              />
+            ))}
+          </div>
+          <button
+            className="add-field-button"
+            type="button"
+            onClick={() => dispatch({ type: "ADD_ROW" })}
+          >
+            <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
             Add new field
           </button>
-          <form id="field-form">
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-            <br />
-            <input className="create-group-field" />
-            <select className="field-select">
-              <option value="Email">Email</option>
-              <option value="Text">Text</option>
-              <option value="Number">Number</option>
-            </select>
-          </form>
           <div className="group-submit-div">
-            <button className="group-modal-submit" type="button">
+            <button className="group-modal-submit" type="submit">
               Create
             </button>
+            <button className="group-modal-cancel" type="button" onClick={onCancel}>
+              Cancel
+            </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
