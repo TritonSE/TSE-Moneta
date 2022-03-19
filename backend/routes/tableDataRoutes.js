@@ -166,4 +166,22 @@ router.post("/search", [body("group").exists(), body("search").exists()], async 
   }
 });
 
+router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
+  try {
+    const tableData = await TableData.find({ group: req.body.group });
+    const ret = [];
+    for (const row of tableData) {
+      for (const [_field, value] of Object.entries(row.data)) {
+        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
+          ret.push(row);
+          break;
+        }
+      }
+    }
+    res.json(ret);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

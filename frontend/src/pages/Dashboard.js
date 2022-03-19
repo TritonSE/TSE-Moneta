@@ -185,21 +185,25 @@ function Dashboard() {
       </div>
       {displayCreateGroup ? <CreateGroup /> : null}
       <div className="snackbar">
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
-          <Alert
+        {snackbar.severity === "" ? (
+          ""
+        ) : (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
             onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
+            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        )}
       </div>
     </>
   );

@@ -29,8 +29,10 @@ function Table({ data, group, elementsPerPage }) {
       <table className="table">
         <tbody>
           <tr className="table-header-row">
-            {group.Values.map((field) => (
-              <th className="table-header-cell">{field.name}</th>
+            {group.Values.map((field, key) => (
+              <th className="table-header-cell" key={field.name}>
+                {field.name}
+              </th>
             ))}
           </tr>
           {data
@@ -38,9 +40,13 @@ function Table({ data, group, elementsPerPage }) {
             .map((entry) => (
               <tr className="table-body-row" key={entry._id}>
                 {group.Values.map((field) => (
-                  <td className="table-body-cell">{entry.data[field.name]}</td>
+                  <td className="table-body-cell" key={entry._id}>
+                    {entry.data[field.name]}
+                  </td>
                 ))}
-                <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
+                <td>
+                  <img src={Pencil} className="pencil-svg" alt="edit icon on table row" />
+                </td>
               </tr>
             ))}
         </tbody>
