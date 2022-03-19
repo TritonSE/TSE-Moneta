@@ -30,11 +30,13 @@ function Dashboard() {
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
    */
-  const [visible, setVisibility] = useState(false);
+  const [displayCSVMenu, setDisplayCSVMenu] = useState(false);
+  const [displayCreateGroup, setDisplayCreateGroup] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState({});
   const [tableData, setTableData] = useState([]);
-  const [Search, setSearch] = useState("");
-  const group = "1";
+  const [search, setSearch] = useState("");
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -45,26 +47,25 @@ function Dashboard() {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group, search: Search }),
+      body: JSON.stringify({ group: currentGroup.GroupId, search }),
     };
     await fetch("http://localhost:8082/search", requestOptions).then(async (response) => {
       const json = await response.json();
       setTableData(json);
     });
-  }, [Search, CSVUploaded]);
-
-  /** Dropdown options for the Select Group dropdown menu */
-  const options = [
-    { value: "create-new", label: "Create New", isCreate: true },
-    { value: "group1", label: "Group 1", isCreate: false },
-    { value: "group2", label: "Group 2", isCreate: false },
-    { value: "group3", label: "Group 3", isCreate: false },
-    { value: "group4", label: "Group 4", isCreate: false },
-    { value: "group5", label: "Group 5", isCreate: false },
-    { value: "group6", label: "Group 6", isCreate: false },
-    { value: "group7", label: "Group 7", isCreate: false },
-    { value: "group8", label: "Group 8", isCreate: false },
-  ];
+    await fetch("http://localhost:8082/groups").then(async (response) => {
+      const json = await response.json();
+      const options = [{ value: "create-new", label: "Create New", isCreate: true }];
+      if (Object.keys(currentGroup).length === 0 && json.listOfGroups.length > 0) {
+        /** Set initial group to the first in the dropdown if no group set yet */
+        setCurrentGroup(json.listOfGroups[0]);
+      }
+      json.listOfGroups.map((group) =>
+        options.push({ value: group, label: group.Name, isCreate: false })
+      );
+      setDropdownOptions(options);
+    });
+  }, [search, CSVUploaded, currentGroup]);
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -143,21 +144,24 @@ function Dashboard() {
         <Select
           className="group-select"
           classNamePrefix="select"
-          options={options}
+          options={dropdownOptions}
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
+          onChange={(option) =>
+            option.isCreate ? setDisplayCreateGroup(true) : setCurrentGroup(option.value)
+          }
         />
         <button className="add-row" type="button">
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table data={tableData} />
+        <Table data={tableData} group={currentGroup} elementsPerPage={20} />
         <input
           type="text"
           className="dashboard-search"
           placeholder="Search"
-          value={Search}
+          value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
@@ -165,12 +169,12 @@ function Dashboard() {
           type="button"
           className="toggle-csv-menu"
           onClick={() => {
-            setVisibility(!visible);
+            setDisplayCSVMenu(!displayCSVMenu);
           }}
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? (
+        {displayCSVMenu ? (
           <CSVParser
             CSVUploaded={CSVUploaded}
             setCSVUploaded={setCSVUploaded}
@@ -179,23 +183,27 @@ function Dashboard() {
           />
         ) : null}
       </div>
-      <CreateGroup />
+      {displayCreateGroup ? <CreateGroup /> : null}
       <div className="snackbar">
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
-          <Alert
+        {snackbar.severity === "" ? (
+          ""
+        ) : (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
             onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
+            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        )}
       </div>
     </>
   );

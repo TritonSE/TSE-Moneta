@@ -66,7 +66,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
    *
    * @author Kevin Fu
    */
-  async function importToDB(values, CSVUploaded, setUploadedCSV) {
+  async function importToDB(values, CSVUploadedArg, setUploadedCSV) {
     const group = "1"; // temporary dummy data, should be determined by drop-down menu
 
     switch (validateCSV(values)) {
@@ -107,7 +107,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
         mode: "cors",
       });
     }
-    setUploadedCSV(!CSVUploaded); // tell table to reload
+    setUploadedCSV(!CSVUploadedArg); // tell table to reload
     setSnackbar({
       open: true,
       message: "CSV uploaded!",
