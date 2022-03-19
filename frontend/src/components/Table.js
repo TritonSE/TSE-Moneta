@@ -20,7 +20,7 @@ import "../css/Table.css";
 function Table({ data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
-  if (Object.keys(group).length === 0) {
+  if (group === null || group === undefined || Object.keys(group).length === 0) {
     /** Handle no groups selected table here */
     return null;
   }
@@ -29,8 +29,8 @@ function Table({ data, group, elementsPerPage }) {
       <table className="table">
         <tbody>
           <tr className="table-header-row">
-            {group.Values.map((field, key) => (
-              <th className="table-header-cell" key={field.name}>
+            {group.values.map((field) => (
+              <th className="table-header-cell" key={field._id}>
                 {field.name}
               </th>
             ))}
@@ -39,8 +39,8 @@ function Table({ data, group, elementsPerPage }) {
             .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
             .map((entry) => (
               <tr className="table-body-row" key={entry._id}>
-                {group.Values.map((field) => (
-                  <td className="table-body-cell" key={entry._id}>
+                {group.values.map((field) => (
+                  <td className="table-body-cell" key={field._id}>
                     {entry.data[field.name]}
                   </td>
                 ))}

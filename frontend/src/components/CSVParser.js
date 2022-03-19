@@ -67,8 +67,6 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
    * @author Kevin Fu
    */
   async function importToDB(values, CSVUploadedArg, setUploadedCSV) {
-    const group = "1"; // temporary dummy data, should be determined by drop-down menu
-
     switch (validateCSV(values)) {
       case 1:
         setSnackbar({

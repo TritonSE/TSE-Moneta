@@ -1,23 +1,23 @@
-.modal {
+.modal-background {
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.2);
-  padding: 13vh 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.modal-content {
+.modal-view {
   background-color: #ffffff;
-  margin: 0 auto;
   padding: 27px 37px;
   border-radius: 5px;
-  width: 491px;
-  height: 505px;
+  width: 500px;
+  height: 500px;
 }
 
 .group-first-header {
@@ -40,11 +40,7 @@
   margin-bottom: 11px;
 }
 
-.group-name-form {
-  margin: 20px 0 35px;
-}
-
-.group-name-field {
+.group-name-input {
   display: block;
   width: 95%;
   height: 40px;
@@ -58,7 +54,38 @@
   font-size: 16px;
 }
 
-.add-group-button {
+.invalid {
+  border-color: #f00;
+}
+
+.group-fields-list {
+  height: 160px;
+  overflow-y: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.group-fields-list.invalid {
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  padding-left: 2px;
+}
+
+.group-fields-list::-webkit-scrollbar {
+  border-radius: 2px;
+  background-color: #e5e5e5;
+  width: 12px;
+}
+
+.group-fields-list::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  border: 3px solid #e5e5e5; /* adds border around thumb to make it look smaller */
+  background-color: #ffffff;
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.add-field-button {
   padding: 0;
   background: white;
   color: #05204a;
@@ -80,54 +107,6 @@
   height: 19px;
 }
 
-#field-form {
-  display: block;
-  height: 160px;
-  overflow-y: auto;
-}
-
-.create-group-field {
-  width: 60%;
-  height: 40px;
-  float: left;
-  border-width: 1px;
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #c4c4c4;
-  padding: 0px 10px;
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-.field-select {
-  display: block;
-  width: 30%;
-  height: 43px;
-  margin-left: 14px;
-  margin-bottom: 15px;
-  padding-left: 15px;
-  float: left;
-  border-width: 1px;
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #c4c4c4;
-  color: #c4c4c4;
-  font-size: 16px;
-}
-
-#field-form::-webkit-scrollbar {
-  border-radius: 2px;
-  background-color: #e5e5e5;
-  width: 12px;
-}
-
-#field-form::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  border: 3px solid #e5e5e5; /* adds border around thumb to make it look smaller */
-  background-color: #ffffff;
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
-}
-
 .group-submit-div {
   text-align: center;
   margin-top: 24px;
@@ -142,5 +121,20 @@
   height: 40px;
   background: #05204a;
   color: #ffffff;
+  cursor: pointer;
+}
+
+.group-modal-cancel {
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 5px;
+  border-color: #05204a;
+  border-width: 3px;
+  border-style: solid;
+  width: 119px;
+  height: 40px;
+  margin-left: 20px;
+  background: #ffffff;
+  color: #05204a;
   cursor: pointer;
 }

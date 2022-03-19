@@ -39,44 +39,41 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(500).json(errors);
-      
     }
 
-    
     const group = await Group.findById(req.body.group).distinct("Values");
 
-    if(group.length < Object.keys(req.body.data).length){
+    if (group.length < Object.keys(req.body.data).length) {
       return res.status(409).json({
-        Error: "Extra fields!"
-      })
+        Error: "Extra fields!",
+      });
     }
 
     let broken = false;
     const groupVals = new Set([]);
-    
-    group.forEach((value)=>{
-      groupVals.add(value.name)
-    })
-    
-    const miscellaneous = Object.keys(req.body.data).map( val => {
-      if(groupVals.has(val)){
-        groupVals.delete(val)
-      }else{
-        broken = true;
-      }  
-      return 0;
-      }
-    );
 
-    if(groupVals.size !== 0){
+    group.forEach((value) => {
+      groupVals.add(value.name);
+    });
+
+    Object.keys(req.body.data).map((val) => {
+      if (groupVals.has(val)) {
+        groupVals.delete(val);
+      } else {
+        broken = true;
+      }
+      return 0;
+    });
+
+    if (groupVals.size !== 0) {
       broken = true;
     }
 
-    const missingFields = Array.from(groupVals)
-    if(broken){
+    const missingFields = Array.from(groupVals);
+    if (broken) {
       return res.status(409).json({
-        Error: missingFields
-      })
+        Error: missingFields,
+      });
     }
 
     // if (!(await isValidGroup(req.body.group, res))) {
@@ -88,20 +85,18 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
         if (data.length) {
           // check if inserting duplicate
           return res.status(409).json({ error: "Duplicate data" });
-        } 
-          const tableData = new TableData({
-            group: req.body.group,
-            data: req.body.data,
-          });
-          await tableData.save().catch((err) => res.status(500).json("Error: " + err));
-          return res.status(200).json("Posted TableData!");
-        
+        }
+        const tableData = new TableData({
+          group: req.body.group,
+          data: req.body.data,
+        });
+        await tableData.save().catch((err) => res.status(500).json("Error: " + err));
+        return res.status(200).json("Posted TableData!");
       })
       .catch((error) => res.status(500).json(error));
-    
   } catch (error) {
     console.log(error);
-    return res.status(500).json(error);    
+    return res.status(500).json(error);
   }
 });
 
