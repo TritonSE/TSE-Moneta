@@ -31,10 +31,13 @@ function Dashboard() {
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
    */
-  const [visible, setVisibility] = useState(false);
+  const [displayCSVMenu, setDisplayCSVMenu] = useState(false);
+  const [displayCreateGroup, setDisplayCreateGroup] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState({});
   const [tableData, setTableData] = useState([]);
-  const [Search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -152,9 +155,9 @@ function Dashboard() {
    */
   useEffect(() => {
     if (selectedGroup) {
-      fetchRows(selectedGroup.value, Search);
+      fetchRows(selectedGroup.value, search);
     }
-  }, [selectedGroup, Search, CSVUploaded]);
+  }, [selectedGroup, search, CSVUploaded]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -254,12 +257,12 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table data={tableData} />
+        <Table data={tableData} group={currentGroup} elementsPerPage={20} />
         <input
           type="text"
           className="dashboard-search"
           placeholder="Search"
-          value={Search}
+          value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
@@ -267,12 +270,12 @@ function Dashboard() {
           type="button"
           className="toggle-csv-menu"
           onClick={() => {
-            setVisibility(!visible);
+            setDisplayCSVMenu(!displayCSVMenu);
           }}
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? (
+        {displayCSVMenu ? (
           <CSVParser
             CSVUploaded={CSVUploaded}
             setCSVUploaded={setCSVUploaded}
@@ -285,21 +288,25 @@ function Dashboard() {
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
       <div className="snackbar">
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
-          <Alert
+        {snackbar.severity === "" ? (
+          ""
+        ) : (
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
             onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
+            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        )}
       </div>
     </>
   );
