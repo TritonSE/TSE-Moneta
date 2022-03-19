@@ -31,13 +31,10 @@ function Dashboard() {
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
    */
-  const [displayCSVMenu, setDisplayCSVMenu] = useState(false);
-  const [displayCreateGroup, setDisplayCreateGroup] = useState(false);
+  const [visible, setVisibility] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
-  const [dropdownOptions, setDropdownOptions] = useState([]);
-  const [currentGroup, setCurrentGroup] = useState({});
   const [tableData, setTableData] = useState([]);
-  const [search, setSearch] = useState("");
+  const [Search, setSearch] = useState("");
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -57,10 +54,10 @@ function Dashboard() {
     try {
       const response = await fetch("http://localhost:8082/groups");
       const { listOfGroups } = await response.json();
-      const options = [{ value: "create-new", label: "Create New", isCreate: true }];
+      const options = [{ value: "create-new", values: [], label: "Create New", isCreate: true }];
       for (const group of listOfGroups) {
-        const { Name, GroupId } = group;
-        options.push({ value: GroupId, label: Name, isCreate: false });
+        const { Name, GroupId, Values } = group;
+        options.push({ value: GroupId, values: Values, label: Name, isCreate: false });
       }
       setGroupOptions(options);
       if (selectedGroup === null && options.length > 1) {
@@ -155,9 +152,9 @@ function Dashboard() {
    */
   useEffect(() => {
     if (selectedGroup) {
-      fetchRows(selectedGroup.value, search);
+      fetchRows(selectedGroup.value, Search);
     }
-  }, [selectedGroup, search, CSVUploaded]);
+  }, [selectedGroup, Search, CSVUploaded]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -257,12 +254,12 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table data={tableData} group={currentGroup} elementsPerPage={20} />
+        <Table group={selectedGroup} data={tableData} elementsPerPage={25} />
         <input
           type="text"
           className="dashboard-search"
           placeholder="Search"
-          value={search}
+          value={Search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
@@ -270,12 +267,12 @@ function Dashboard() {
           type="button"
           className="toggle-csv-menu"
           onClick={() => {
-            setDisplayCSVMenu(!displayCSVMenu);
+            setVisibility(!visible);
           }}
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {displayCSVMenu ? (
+        {visible ? (
           <CSVParser
             CSVUploaded={CSVUploaded}
             setCSVUploaded={setCSVUploaded}
@@ -288,25 +285,21 @@ function Dashboard() {
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
       <div className="snackbar">
-        {snackbar.severity === "" ? (
-          ""
-        ) : (
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={6000}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackClose}
+          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+        >
+          <Alert
             onClose={handleSnackClose}
-            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+            variant="filled"
           >
-            <Alert
-              onClose={handleSnackClose}
-              severity={snackbar.severity}
-              sx={{ width: "100%" }}
-              variant="filled"
-            >
-              {snackbar.message}
-            </Alert>
-          </Snackbar>
-        )}
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </div>
     </>
   );
