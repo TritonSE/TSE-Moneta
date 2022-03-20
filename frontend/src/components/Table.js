@@ -31,7 +31,7 @@
       data: data
     }
 
-    const response = await fetch(`http://localhost:8082/rows/${id}`, {
+    await fetch(`http://localhost:8082/rows/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -41,8 +41,12 @@
     }) 
   }
 
-  const deleteTableData = (data) => {
-    console.log(data);
+  const deleteTableData = async (id) => {
+    const response = await fetch(`http://localhost:8082/rows?_id=${id}`, {
+      method: "DELETE",
+    }) 
+
+    console.log(response)
   }
 
   if (!group || Object.keys(group).length === 0) {
@@ -68,6 +72,7 @@
                 newRow={false}
                 createTableData={createTableData}
                 updateTableData={updateTableData}
+                deleteTableData={deleteTableData}
                 cellData={entry.data}
                 groupFields={group.values}
               />

@@ -84,7 +84,7 @@ export default function TableRow({ id, newRow, createTableData, updateTableData,
                         {!newRow ?
                             <div className="icon-spacer">
                                 <img src={Trashcan} onClick={()=>{
-                                    deleteTableData(cellDatas._id);
+                                    deleteTableData(id);
                                     setEditActivated(!editActivated);
                                 }} className="checkmark-svg clickable" alt="confirm edit icon on table row" />
                             </div>

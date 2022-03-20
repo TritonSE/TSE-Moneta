@@ -193,11 +193,8 @@ router.post("/search", [body("group").exists(), body("search").exists()], async 
       }
     }
 
-    console.log("ret")
-
     res.json(ret);
   } catch (error) {
-    console.log(error)
     res.status(500).json(error);
   }
 });
