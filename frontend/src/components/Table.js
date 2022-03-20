@@ -6,7 +6,7 @@
  * @author Alex Zhang
  */
 
- import React, { useState } from "react";
+ import React, { useEffect, useState } from "react";
  import TableRow from "./TableRow";
  import PrevPage from "../images/PrevPageIcon.svg";
  import NextPage from "../images/NextPageIcon.svg";
@@ -17,12 +17,52 @@
   *
   * @returns Table display for dashboard.
   */
- function Table({ data, group, elementsPerPage }) {
+ function Table({ setSnackbar, addingRow, data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
-  const createTableData = (data) => {
-    console.log(data);
+  let rowTemplate = {};
+
+  useEffect(() => {
+    if(group && group.values) {
+      for(let value of group.values) {
+        rowTemplate[value] = "";
+      }
+    }
+  }, [group])
+
+  const createTableData = async (data) => {
+    const tempData = {
+      group: group.id, 
+      data: data
+    }
+
+    const response = await fetch(`http://localhost:8082/rows`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(tempData)
+    }) 
+
+    if(response.ok) {
+      setSnackbar({
+        open: true,
+        message: "Row added!",
+        severity: "success"
+      })
+    }
+    else {
+      const json = await response.json();
+      const error = json.error;
+
+      setSnackbar({
+        open: true,
+        message: error,
+        severity: "error"
+      })
+    }
   }
 
   const updateTableData = async (id, data) => {
@@ -31,7 +71,7 @@
       data: data
     }
 
-    await fetch(`http://localhost:8082/rows/${id}`, {
+    const response = await fetch(`http://localhost:8082/rows/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -39,6 +79,24 @@
       },
       body: JSON.stringify(tempData)
     }) 
+
+    if(response.ok) {
+      setSnackbar({
+        open: true,
+        message: "Row updated!",
+        severity: "success"
+      })
+    }
+    else {
+      const json = await response.json();
+      const error = json.error;
+
+      setSnackbar({
+        open: true,
+        message: error,
+        severity: "error"
+      })
+    }
   }
 
   const deleteTableData = async (id) => {
@@ -46,7 +104,23 @@
       method: "DELETE",
     }) 
 
-    console.log(response)
+    if(response.ok) {
+      setSnackbar({
+        open: true,
+        message: "Row deleted!",
+        severity: "success"
+      })
+    }
+    else {
+      const json = await response.json();
+      const error = json.error;
+
+      setSnackbar({
+        open: true,
+        message: error,
+        severity: "error"
+      })
+    }
   }
 
   if (!group || Object.keys(group).length === 0) {
@@ -64,13 +138,19 @@
               </th>
             ))}
           </tr>
+          {addingRow ? 
+          <TableRow 
+            newRow
+            createTableData={createTableData}
+            cellData={rowTemplate}
+            groupFields={group.values}
+          /> : ""}
           {data
             .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
             .map((entry) => (
               <TableRow 
                 id={entry._id}
                 newRow={false}
-                createTableData={createTableData}
                 updateTableData={updateTableData}
                 deleteTableData={deleteTableData}
                 cellData={entry.data}

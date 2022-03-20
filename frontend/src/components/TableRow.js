@@ -24,12 +24,6 @@ export default function TableRow({ id, newRow, createTableData, updateTableData,
         if(newRow) {
             setEditActivated(true);
             setFieldDefaultSize(5);
-
-            cellData={};
-
-            for(let fieldName in groupFields) {
-                cellData[groupFields[fieldName]] = "";
-            }
         }
 
         setCellDatas(cellData);

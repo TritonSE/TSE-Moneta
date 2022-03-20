@@ -41,7 +41,15 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       return res.status(500).json(errors);
     }
 
+    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
+      res.status(409).json({error: "The first column is the primary column and must be included"})
+      return;
+    }
+
     const group = await Group.findById(req.body.group).distinct("Values");
+
+    console.log(group);
+    console.log(req.body.data)
 
     if (group.length < Object.keys(req.body.data).length) {
       return res.status(409).json({
@@ -93,10 +101,9 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
         await tableData.save().catch((err) => res.status(500).json("Error: " + err));
         return res.status(200).json("Posted TableData!");
       })
-      .catch((error) => res.status(500).json(error));
+      .catch((error) => res.status(500).json({error: "Server error"}));
   } catch (error) {
-    console.log(error);
-    return res.status(500).json(error);
+    return res.status(500).json({error: "Server error"});
   }
 });
 
@@ -109,21 +116,22 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
  */
 router.put("/rows/:id", async (req, res) => {
   try {
-    // if (!(await isValidGroup(req.body.group, res))) {
-    //   return;
-    // }
     const tableData = await TableData.find({ _id: req.params.id });
-    if (!tableData.length) {
+
+    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
+      res.status(409).json({error: "The first column is the primary column and must be included"})
+    }
+    else if (!tableData.length) {
       // if .find returns empty array
-      res.status(500).json({ error: "id not found" });
+      res.status(500).json({ error: "Row not found" });
     } else {
       await TableData.updateOne({ _id: req.params.id }, req.body).catch((error) => {
-        res.status(500).json(error);
+        res.status(500).json({error: "Server error"});
       });
       res.json(tableData);
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({error: "Server error"});
   }
 });
 
@@ -168,10 +176,10 @@ router.delete("/rows", (req, res) => {
         res.json(data);
       })
       .catch((error) => {
-        res.status(500).json(error);
+        res.status(500).json("Server error");
       });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json("Server error");
   }
 });
 

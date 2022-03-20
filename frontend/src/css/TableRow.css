@@ -1,6 +1,8 @@
 .table-body-row {
     border-radius: 5px;
     max-height: 55px;
+    position: relative;
+    width: 100%;
 }
 
 .table-body-row:nth-child(even) {
@@ -66,11 +68,13 @@
 }
 
 .cell-aligner {
+    position: relative;
     height: 62px;
-    width: 100%;
+    width: 100px;
     display: grid;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
+    left: calc(100% - 100px)
 }
 
 .icon-spacer {
