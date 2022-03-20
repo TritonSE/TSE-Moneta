@@ -181,25 +181,8 @@ router.delete("/rows", (req, res) => {
  */
 router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
   try {
-    const tableData = await TableData.find({ group: req.body.group });
-    const ret = [];
-    for (const row of tableData) {
-      for (const [_field, value] of Object.entries(row.data)) {
-        if (value.toLowerCase().includes(req.body.search.toLowerCase())) {
-          ret.push(row);
-          break;
-        }
-      }
-    }
-    res.json(ret);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
+    const tableData = await TableData.find({"group": {$eq: req.body.group}});
 
-router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
-  try {
-    const tableData = await TableData.find({ group: req.body.group });
     const ret = [];
     for (const row of tableData) {
       for (const [_field, value] of Object.entries(row.data)) {
@@ -209,8 +192,12 @@ router.post("/search", [body("group").exists(), body("search").exists()], async 
         }
       }
     }
+
+    console.log("ret")
+
     res.json(ret);
   } catch (error) {
+    console.log(error)
     res.status(500).json(error);
   }
 });

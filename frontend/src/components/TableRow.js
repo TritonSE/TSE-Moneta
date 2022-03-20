@@ -10,7 +10,7 @@ import Trashcan from "../images/TrashCan.svg";
 
 import "../css/TableRow.css";
 
-export default function TableRow({ newRow, createTableData, updateTableData, deleteTableData, cellData, groupFields }) {
+export default function TableRow({ id, newRow, createTableData, updateTableData, deleteTableData, cellData, groupFields }) {
     const inputFields = React.useRef([]);
 
     const [editActivated, setEditActivated] = React.useState(false);
@@ -60,17 +60,17 @@ export default function TableRow({ newRow, createTableData, updateTableData, del
                                     type="text"
                                     size={fieldDefaultSize}
                                     className="edit-cell-input"
-                                    value={cellDatas[field]}
+                                    value={cellDatas[field.name]}
                                     variant="outlined"
                                     onChange={event => {
                                         event.target.parentNode.dataset.value=event.target.value;
-                                        setCellDatas({...cellDatas, [field]: event.target.value});
+                                        setCellDatas({...cellDatas, [field.name]: event.target.value});
                                     }}
                                 />
                             </div>
                         )
                         :
-                        cellDatas[field]
+                        cellDatas[field.name]
                     }
                 </td>
             ))}
@@ -100,7 +100,7 @@ export default function TableRow({ newRow, createTableData, updateTableData, del
                                 )
                                 : 
                                 (
-                                    updateTableData(cellDatas) ? setEditActivated(!editActivated) : ""
+                                    updateTableData(id, cellDatas) ? setEditActivated(!editActivated) : ""
                                 )
                                 
                             }} className="checkmark-svg clickable" alt="checkmark icon on table row" />

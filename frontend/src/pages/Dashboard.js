@@ -55,10 +55,10 @@ function Dashboard() {
     try {
       const response = await fetch("http://localhost:8082/groups");
       const { listOfGroups } = await response.json();
-      const options = [{ value: "create-new", values: [], label: "Create New", isCreate: true }];
+      const options = [{ id: "", value: "create-new", values: [], label: "Create New", isCreate: true }];
       for (const group of listOfGroups) {
-        const { Name, GroupId, Values } = group;
-        options.push({ value: GroupId, values: Values, label: Name, isCreate: false });
+        const { Name, _id, GroupId, Values } = group;
+        options.push({ id: _id, value: GroupId, values: Values, label: Name, isCreate: false });
       }
       setGroupOptions(options);
       if (selectedGroup === null && options.length > 1) {
@@ -87,6 +87,7 @@ function Dashboard() {
       };
       const response = await fetch("http://localhost:8082/search", requestOptions);
       const json = await response.json();
+
       setTableData(json);
     } catch (error) {
       setSnackbar({
@@ -153,7 +154,7 @@ function Dashboard() {
    */
   useEffect(() => {
     if (selectedGroup) {
-      fetchRows(selectedGroup.value, Search);
+      fetchRows(selectedGroup.id, Search);
     }
   }, [selectedGroup, Search, CSVUploaded]);
 
