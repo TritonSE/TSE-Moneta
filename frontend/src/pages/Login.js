@@ -5,6 +5,7 @@ import "../css/Login.css";
 /**
  * Renders login page
  * @author Kevin Fu
+ * @author Navid Boloorian
  */
 function Login() {
   const navigate = useNavigate();

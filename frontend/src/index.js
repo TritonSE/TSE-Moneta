@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
