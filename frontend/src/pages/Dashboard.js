@@ -36,6 +36,7 @@ function Dashboard() {
   const [addingRow, setAddingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [Search, setSearch] = useState("");
+  const [tableChanged, setTableChanged] = useState(false);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -155,8 +156,9 @@ function Dashboard() {
   useEffect(() => {
     if (selectedGroup) {
       fetchRows(selectedGroup.id, Search);
+      setAddingRow(false);
     }
-  }, [selectedGroup, Search, CSVUploaded]);
+  }, [selectedGroup, Search, CSVUploaded, tableChanged]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -256,7 +258,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} />
+        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} />
         <input
           type="text"
           className="dashboard-search"

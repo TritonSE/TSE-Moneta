@@ -17,7 +17,7 @@
   *
   * @returns Table display for dashboard.
   */
- function Table({ setSnackbar, addingRow, data, group, elementsPerPage }) {
+ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
@@ -32,6 +32,8 @@
   }, [group])
 
   const createTableData = async (data) => {
+    setTableChanged(true);
+
     const tempData = {
       group: group.id, 
       data: data
@@ -63,9 +65,13 @@
         severity: "error"
       })
     }
+
+    setTableChanged(false);
   }
 
   const updateTableData = async (id, data) => {
+    setTableChanged(true);
+
     const tempData = {
       group: group.id, 
       data: data
@@ -97,9 +103,13 @@
         severity: "error"
       })
     }
+
+    setTableChanged(false);
   }
 
   const deleteTableData = async (id) => {
+    setTableChanged(true);
+
     const response = await fetch(`http://localhost:8082/rows?_id=${id}`, {
       method: "DELETE",
     }) 
@@ -121,12 +131,15 @@
         severity: "error"
       })
     }
+
+    setTableChanged(false);
   }
 
   if (!group || Object.keys(group).length === 0) {
     /** Handle no groups selected table here */
-    return null;
+    return <></>;
   }
+
   return (
     <div className="table-div">
       <table className="table">
@@ -148,6 +161,7 @@
           {data
             .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
             .map((entry) => (
+              console.log(entry.data),
               <TableRow 
                 id={entry._id}
                 newRow={false}

@@ -10,7 +10,7 @@ import Trashcan from "../images/TrashCan.svg";
 
 import "../css/TableRow.css";
 
-export default function TableRow({ id, newRow, createTableData, updateTableData, deleteTableData, cellData, groupFields }) {
+export default function TableRow({ id, newRow, forceUpdate, createTableData, updateTableData, deleteTableData, cellData, groupFields }) {
     const inputFields = React.useRef([]);
 
     const [editActivated, setEditActivated] = React.useState(false);
