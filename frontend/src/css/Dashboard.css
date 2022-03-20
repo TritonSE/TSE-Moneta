@@ -1,12 +1,12 @@
 .dashboard-div {
   position: absolute;
+  top: 25px;
 }
 
 .dashboard-header {
   position: absolute;
   width: 222px;
   left: 320px;
-  top: 40px;
   font-weight: 500;
   font-size: 24px;
   line-height: 36px;
@@ -17,13 +17,13 @@
   left: 320px;
   width: 200px;
   height: 40px;
-  top: 110px;
+  top: 70px;
 }
 
 .add-row {
   position: absolute;
   left: 536px;
-  top: 110px;
+  top: 70px;
   width: 120px;
   height: 40px;
   display: inline-flex;
@@ -40,6 +40,7 @@
   height: 40px;
   background: #05204a;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .dashboard.add-icon-svg {
@@ -62,9 +63,9 @@
   font-size: 16px;
   line-height: 24px;
   color: #949494;
-  top: 110px;
+  top: 70px;
   left: 892px;
-  width: 363px;
+  width: 393px;
   height: 40px;
   padding-left: 48px;
   border: 0px;
@@ -75,12 +76,14 @@
 .dashboard-search-icon {
   position: absolute;
   left: 908px;
-  top: 121px;
+  top: 81px;
 }
+
 .toggle-csv-menu {
   position: absolute;
-  left: 1320px;
-  top: 123px;
+  left: 1350px;
+  top: 83px;
   border: 0px;
   background: transparent;
+  cursor: pointer;
 }

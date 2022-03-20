@@ -1,0 +1,45 @@
+.group-field-row {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.group-field-name-input {
+  width: 52%;
+  height: 40px;
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #c4c4c4;
+  padding: 0px 10px;
+  font-size: 16px;
+}
+
+.group-field-type-select {
+  width: 30%;
+  height: 43px;
+  margin-left: 14px;
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #c4c4c4;
+  color: #626262;
+  font-size: 16px;
+}
+
+.group-field-delete {
+  width: 21px;
+  height: 27px;
+  padding: 0px;
+  padding-top: 4px;
+  margin-left: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #fff;
+}
+
+.invalid {
+  border-color: #f00;
+}
