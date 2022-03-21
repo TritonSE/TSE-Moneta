@@ -72,6 +72,29 @@ body {
     border: 0px;
 }
 
+#button-container {
+    display: grid;
+    align-items: center;
+    font-weight: 500;
+    font-size: 24px;
+    color: #949494;
+    grid-template-columns: 25px auto;
+    position: absolute;
+    top: 0;
+}
+
+#button-container p, img {
+    display: inline-block;
+}
+
+#back-button img {
+    margin-right: 20px;
+}
+
+#button-container:hover {
+    cursor: pointer;
+}
+
 #nonprofit-email {
     background: url("../images/EmailIcon.svg") no-repeat 15px center;
 }

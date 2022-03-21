@@ -7,13 +7,12 @@ const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
+const port = process.env.PORT || 8082;
 const app = express();
 
 connectDB();
 
 app.get("/", (req, res) => res.send("Hello world!"));
-
-const port = process.env.PORT || 8082;
 
 app.use(cors());
 app.use(bodyParser.json());

@@ -31,7 +31,7 @@ const OrganizationSchema = new mongoose.Schema(
   {
     Name: { type: String, required: true, index: true },
     Email: { type: String, required: true },
-    Password: { type: String, required: true },
+    Password: { type: String, required: false },
     ApprovedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -39,7 +39,7 @@ const OrganizationSchema = new mongoose.Schema(
         required: false,
       },
     ],
-    status: { type: String, required: true, default: "pending" },
+    Status: { type: String, required: true, default: "pending" },
   },
   { timestamps: true }
 );
@@ -47,36 +47,40 @@ const OrganizationSchema = new mongoose.Schema(
 /**
  * Encrypts passwords to prevent plain text storage
  */
-OrganizationSchema.pre("save", function (next) {
-  const organization = this;
+// OrganizationSchema.pre("save", function (next) {
+//   const organization = this;
 
-  // generate a salt
-  return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
-    if (salt_err) return next(salt_err);
+//   if(organization.Password) {
+//     // generate a salt
+//     return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
+//       if (salt_err) return next(salt_err);
 
-    // hash the password with salt
-    return bcrypt.hash(organization.Password, salt, function (hash_err, hash) {
-      if (hash_err) return next(hash_err);
+//       // hash the password with salt
+//       return bcrypt.hash(organization.Password, salt, function (hash_err, hash) {
+//         if (hash_err) return next(hash_err);
 
-      // replace password with hashed password
-      organization.Password = hash;
-      return next();
-    });
-  });
-});
+//         // replace password with hashed password
+//         organization.Password = hash;
+//         return next();
+//       });
+//     });
+//   }
+
+//   return;
+// });
 
 /**
  * Makes sure passwords are encrypted on update
  */
-OrganizationSchema.pre("findOneAndUpdate", async function () {
-  const update = { ...this.getUpdate() };
+// OrganizationSchema.pre("findOneAndUpdate", async function () {
+//   const update = { ...this.getUpdate() };
 
-  if (update.Password) {
-    const salt = bcrypt.genSaltSync();
-    update.Password = await bcrypt.hash(update.Password, salt);
-    this.setUpdate(update);
-  }
-});
+//   if (update.Password) {
+//     const salt = bcrypt.genSaltSync();
+//     update.Password = await bcrypt.hash(update.Password, salt);
+//     this.setUpdate(update);
+//   }
+// });
 
 /**
  * Verifies that entered password matches ecnrypted password in the db
@@ -84,12 +88,12 @@ OrganizationSchema.pre("findOneAndUpdate", async function () {
  * @param {*} enteredPassword - entered password
  * @return matchBool - whether the entered password matches the hash stored in the database
  */
-OrganizationSchema.methods.verifyPassword = function (enteredPassword) {
-  bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
-    if (err) return err;
-    return matchBool;
-  });
-};
+// OrganizationSchema.methods.verifyPassword = function (enteredPassword) {
+//   bcrypt.compare(enteredPassword, this.password, (err, matchBool) => {
+//     if (err) return err;
+//     return matchBool;
+//   });
+// };
 
 const Organization = mongoose.model("organizations", OrganizationSchema);
 
