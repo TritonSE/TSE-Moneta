@@ -103,6 +103,10 @@ body {
     background: url("../images/GroupIcon.svg") no-repeat 15px center;
 }
 
+#nonprofit-password {
+    background: url("../images/PasswordIcon.svg") no-repeat 15px center;
+}
+
 #account-submit {
     background-color: #05204A;
     border: 0px;
