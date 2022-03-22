@@ -32,7 +32,7 @@ const OrganizationSchema = new mongoose.Schema(
     Name: { type: String, required: true, index: true },
     Email: { type: String, required: true },
     Password: { type: String, required: false },
-    OrganizationID: {type: String, required: false},
+    OrganizationId: {type: String, required: false},
     ApprovedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -56,7 +56,7 @@ OrganizationSchema.pre("save", function (next) {
         if (hash_err) return next(hash_err);
     
       // replace password with hashed password
-      organization.OrganizationID = hash;
+      organization.OrganizationId = hash;
       return next();
     });
   });

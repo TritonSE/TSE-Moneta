@@ -6,15 +6,23 @@ import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebaseConfig";
 
 export default function App() {
+  const [user, setUser] = React.useState(); 
+  
+  const authState = onAuthStateChanged(auth, user => {
+    setUser(user);
+  })
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setUser={setUser} authState={authState} />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>

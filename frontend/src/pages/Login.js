@@ -1,15 +1,13 @@
 import React from "react";
-import emailjs from "emailjs-com";
 import { Snackbar, Alert } from "@mui/material";
 import Logo from "../images/Logo.svg";
-import Back from "../images/BackButton.svg";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth, authCheck } from "../firebaseConfig";
 
 import "../css/Account.css";
 import "../css/Login.css";
 
-export default function Login() {
+export default function Login({authState, setUser}) {
     const registerForm = React.useRef();
     const [snackbar, setSnackbar] = React.useState({
       open: false,
@@ -37,15 +35,28 @@ export default function Login() {
         });
 
         const json = await response.json();
+        const status = json.getCompany[0].Status;
 
-        if(response.ok) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    console.log(userCredential)
-                })
+        if(response.ok && status == "accepted") {
+            signInWithEmailAndPassword(auth, email, password);
+            authState(auth);
         }
         else {
-            if(response.status == 409)
+            if(status == "pending") {
+                setSnackbar({      
+                    open: true,
+                    message: "The registration status of your account is still pending. Please check back later.",
+                    severity: "error",
+                })
+            }
+            else if(status == "denied") {
+                setSnackbar({      
+                    open: true,
+                    message: "Your registration application has been denied.",
+                    severity: "error",
+                })
+            }
+            else if(response.status == 409)
                 setSnackbar({      
                     open: true,
                     message: json.msg,
