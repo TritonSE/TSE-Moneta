@@ -22,7 +22,7 @@ const organizations = require("../models/Organizations");
  */
 router.post("/organizations", async (req, res) => {
   try {
-    const { Name, Email } = req.body;
+    const { Name, Email, Password} = req.body;
     const matched = await organizations.find({ Email: Email });
 
     if (matched.length > 0) {
@@ -31,7 +31,8 @@ router.post("/organizations", async (req, res) => {
 
     const company = {
       Name: Name,
-      Email: Email
+      Email: Email,
+      Password: Password
     };
 
     const addCompany = await organizations.create(company);
@@ -121,16 +122,16 @@ router.delete("/organizations/:id", async (req, res) => {
  * @params mongoose id
  * @return returns company information. Else, returns 500 errors.
  */
-router.get("/organizations/:id", async (req, res) => {
+router.get("/organizations/:email", async (req, res) => {
   try {
-    const companyExists = await organizations.exists({ _id: req.params.id });
+    const companyExists = await organizations.exists({ Email: req.params.email });
     if (!companyExists) {
       return res.status(400).json({
         msg: "This company does not exist",
       });
     }
 
-    const getCompany = await organizations.findById(req.params.id);
+    const getCompany = await organizations.find({Email: req.params.email});
     if (getCompany) {
       return res.status(200).json({
         getCompany,

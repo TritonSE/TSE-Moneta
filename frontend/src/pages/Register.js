@@ -3,6 +3,8 @@ import emailjs from "emailjs-com";
 import { Snackbar, Alert } from "@mui/material";
 import Logo from "../images/Logo.svg";
 import Back from "../images/BackButton.svg";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
 import "../css/Account.css";
 import "../css/Register.css";
@@ -29,11 +31,19 @@ export default function Register() {
 
         const email = registerForm.current[0].value;
         const name = registerForm.current[1].value;
+        const password = registerForm.current[2].value;
+
+        if(password.length < 8) 
+            return setSnackbar({      
+                open: true,
+                message: "Password must be at least 8 characters long",
+                severity: "error",
+            })
 
         const response = await fetch("http://localhost:8082/organizations", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ Name: name, Email: email }),
+            body: JSON.stringify({ Name: name, Email: email, Password: password }),
         });
 
         const json = await response.json();
@@ -41,6 +51,7 @@ export default function Register() {
         if(response.ok) {
             sendEmail(e);
             setRegistered(true);
+            createUserWithEmailAndPassword(auth, email, password);
         }
         else {
             if(response.status == 409)
@@ -84,12 +95,14 @@ export default function Register() {
                         {!registered ? (
                             <>
                                 <h2>Create An Account</h2>
-                                <p>Already have an account? <a href="#">Log In</a></p>
+                                <p>Already have an account? <a href="/login">Log In</a></p>
                                 <form ref={registerForm} onSubmit={formCheck}>
                                     <label for="nonprofit-email">Email address</label><br />
-                                    <input name="nonprofit-email" id="nonprofit-email" type="email"placeholder="Enter Email" /><br />
+                                    <input required name="nonprofit-email" id="nonprofit-email" type="email"placeholder="Enter Email" /><br />
                                     <label for="nonprofit-name">Name of nonprofit</label><br />
-                                    <input name="nonprofit-name" id="nonprofit-name" type="text" placeholder="Enter Nonprofit" /><br />
+                                    <input required name="nonprofit-name" id="nonprofit-name" type="text" placeholder="Enter Nonprofit" /><br />
+                                    <label for="nonprofit-password">Create Password</label><br />
+                                    <input required name="nonprofit-password" id="nonprofit-password" type="password" placeholder="Enter Password" /><br />
                                     <input type="submit" id="account-submit" value="Continue" />
                                 </form>
                             </>
