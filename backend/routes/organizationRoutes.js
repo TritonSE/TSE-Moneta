@@ -22,17 +22,19 @@ const organizations = require("../models/Organizations");
  */
 router.post("/organizations", async (req, res) => {
   try {
-    const { Name, Email, Password} = req.body;
-    const matched = await organizations.find({ Email: Email });
+    const { Name, Email, Password } = req.body;
+    const matched = await organizations.find({ Email });
 
     if (matched.length > 0) {
-      return res.status(409).json({ msg: `Email already registered! Status: ${matched[0].Status}` });
+      return res
+        .status(409)
+        .json({ msg: `Email already registered! Status: ${matched[0].Status}` });
     }
 
     const company = {
-      Name: Name,
-      Email: Email,
-      Password: Password
+      Name,
+      Email,
+      Password,
     };
 
     const addCompany = await organizations.create(company);
@@ -131,7 +133,7 @@ router.get("/organizations/:email", async (req, res) => {
       });
     }
 
-    const getCompany = await organizations.find({Email: req.params.email});
+    const getCompany = await organizations.find({ Email: req.params.email });
     if (getCompany) {
       return res.status(200).json({
         getCompany,

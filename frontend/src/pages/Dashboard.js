@@ -26,7 +26,7 @@ import "../css/Dashboard.css";
  *
  * @returns Contents of the dashboard page
  */
-function Dashboard({orgInfo}) {
+function Dashboard({ orgInfo }) {
   /**
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
@@ -40,8 +40,6 @@ function Dashboard({orgInfo}) {
     message: "",
     severity: "",
   });
-
-  console.log(orgInfo)
 
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);

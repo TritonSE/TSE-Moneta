@@ -31,8 +31,8 @@ const OrganizationSchema = new mongoose.Schema(
   {
     Name: { type: String, required: true, index: true },
     Email: { type: String, required: true },
-    Password: { type: String, required: false },
-    OrganizationId: {type: String, required: false},
+    Password: { type: String, required: true },
+    OrganizationId: { type: String, required: false },
     ApprovedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -49,18 +49,18 @@ OrganizationSchema.pre("save", function (next) {
   const organization = this;
 
   return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
-      if (salt_err) return next(salt_err);
-    
-          // hash the password with salt
-      return bcrypt.hash(organization.Email, salt, function (hash_err, hash) {
-        if (hash_err) return next(hash_err);
-    
+    if (salt_err) return next(salt_err);
+
+    // hash the password with salt
+    return bcrypt.hash(organization.Email, salt, function (hash_err, hash) {
+      if (hash_err) return next(hash_err);
+
       // replace password with hashed password
       organization.OrganizationId = hash;
       return next();
     });
   });
-})
+});
 
 /**
  * Encrypts passwords to prevent plain text storage
@@ -68,23 +68,19 @@ OrganizationSchema.pre("save", function (next) {
 OrganizationSchema.pre("save", function (next) {
   const organization = this;
 
-  if(organization.Password) {
-    // generate a salt
-    return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
-      if (salt_err) return next(salt_err);
+  // generate a salt
+  return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
+    if (salt_err) return next(salt_err);
 
-      // hash the password with salt
-      return bcrypt.hash(organization.Password, salt, function (hash_err, hash) {
-        if (hash_err) return next(hash_err);
+    // hash the password with salt
+    return bcrypt.hash(organization.Password, salt, function (hash_err, hash) {
+      if (hash_err) return next(hash_err);
 
-        // replace password with hashed password
-        organization.Password = hash;
-        return next();
-      });
+      // replace password with hashed password
+      organization.Password = hash;
+      return next();
     });
-  }
-
-  return;
+  });
 });
 
 /**
