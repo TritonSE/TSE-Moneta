@@ -3,17 +3,20 @@ import { Snackbar, Alert } from "@mui/material";
 import Logo from "../images/Logo.svg";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, authCheck } from "../firebaseConfig";
+import { useNavigate } from "react-router";
 
 import "../css/Account.css";
 import "../css/Login.css";
 
-export default function Login() {
+export default function Login({setOrgInfo}) {
     const registerForm = React.useRef();
     const [snackbar, setSnackbar] = React.useState({
       open: false,
       message: "",
       severity: "",
     });
+
+    const navigate = useNavigate();
 
     const handleSnackClose = () => {
         setSnackbar({
@@ -35,11 +38,30 @@ export default function Login() {
         });
 
         const json = await response.json();
-        const status = json.getCompany[0].Status;
+        let status = "";
+
+        if(json.getCompany)
+            status = json.getCompany[0].Status;
 
         if(response.ok && status == "accepted") {
-            signInWithEmailAndPassword(auth, email, password);
-            console.log(auth.currentUser);
+            const org = json.getCompany[0];
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    setOrgInfo({
+                        name: org.Name,
+                        email: org.Email,
+                        organizationId: org.OrganizationID,
+                        approvedUsers: org.ApprovedUsers,
+                        id: org._id
+                    })},
+                    navigate("/dashboard")
+                )
+                .catch(() => setSnackbar({      
+                    open: true,
+                    message: "Incorrect password.",
+                    severity: "error",
+                }))
         }
         else {
             if(status == "pending") {
@@ -56,6 +78,12 @@ export default function Login() {
                     severity: "error",
                 })
             }
+            else if(response.status == 400)
+                setSnackbar({      
+                    open: true,
+                    message: "This email is not registered with Moneta.",
+                    severity: "error",
+                })
             else if(response.status == 409)
                 setSnackbar({      
                     open: true,

@@ -26,7 +26,7 @@ import "../css/Dashboard.css";
  *
  * @returns Contents of the dashboard page
  */
-function Dashboard() {
+function Dashboard({orgInfo}) {
   /**
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
@@ -40,6 +40,8 @@ function Dashboard() {
     message: "",
     severity: "",
   });
+
+  console.log(orgInfo)
 
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -239,7 +241,7 @@ function Dashboard() {
     <>
       <SideNavigation currentPage="/" />
       <div className="dashboard-div">
-        <h1 className="dashboard-header">Name of Nonprofit</h1>
+        <h1 className="dashboard-header">{orgInfo.name}</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
