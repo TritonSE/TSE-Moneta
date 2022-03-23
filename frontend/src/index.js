@@ -11,7 +11,6 @@ import Register from "./pages/Register";
 
 export default function App() {
   const [user, setUser] = React.useState(null);
-  const [orgInfo, setOrgInfo] = React.useState({});
 
   onAuthStateChanged(auth, (currUser) => {
     if (currUser) {
@@ -24,10 +23,10 @@ export default function App() {
   return user ? (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard orgInfo={orgInfo} />} />
-        <Route path="/login" element={<Login setOrgInfo={setOrgInfo} />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard orgInfo={orgInfo} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Dashboard />} />

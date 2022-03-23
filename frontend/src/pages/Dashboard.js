@@ -26,7 +26,7 @@ import "../css/Dashboard.css";
  *
  * @returns Contents of the dashboard page
  */
-function Dashboard({ orgInfo }) {
+function Dashboard() {
   /**
    * State stores if the csv menu options should be displayed or not
    * Toggles if the three dots in the top left is clicked.
@@ -43,8 +43,9 @@ function Dashboard({ orgInfo }) {
 
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
+
+  const orgInfo = JSON.parse(window.localStorage.getItem("orgInfo"));
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.

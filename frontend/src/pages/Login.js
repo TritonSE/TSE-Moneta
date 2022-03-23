@@ -15,7 +15,7 @@ import Logo from "../images/Logo.svg";
 import "../css/Account.css";
 import "../css/Login.css";
 
-export default function Login({ setOrgInfo }) {
+export default function Login() {
   const registerForm = React.useRef();
   const [snackbar, setSnackbar] = React.useState({
     open: false,
@@ -59,15 +59,13 @@ export default function Login({ setOrgInfo }) {
       const org = json.getCompany[0];
 
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          setOrgInfo({
+        .then(() => window.localStorage.setItem("orgInfo", JSON.stringify({
             name: org.Name,
             email: org.Email,
             organizationId: org.OrganizationID,
             approvedUsers: org.ApprovedUsers,
             id: org._id,
-          });
-        }, navigate("/dashboard"))
+          })), navigate("/dashboard"))
         .catch(() =>
           // org is found but the password is incorrect
           setSnackbar({
