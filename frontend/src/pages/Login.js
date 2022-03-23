@@ -108,7 +108,7 @@ export default function Login() {
           <div className="account-form">
             <h2>Log Into Your Account</h2>
             <p>
-              Don&apost have an account? <a href="/register">Sign Up</a>
+              Don&apos;t have an account? <a href="/register">Sign Up</a>
             </p>
             <form ref={registerForm} onSubmit={formCheck}>
               <label htmlFor="nonprofit-email">
