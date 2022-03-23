@@ -7,7 +7,7 @@ import { auth, authCheck } from "../firebaseConfig";
 import "../css/Account.css";
 import "../css/Login.css";
 
-export default function Login({authState, setUser}) {
+export default function Login() {
     const registerForm = React.useRef();
     const [snackbar, setSnackbar] = React.useState({
       open: false,
@@ -39,7 +39,7 @@ export default function Login({authState, setUser}) {
 
         if(response.ok && status == "accepted") {
             signInWithEmailAndPassword(auth, email, password);
-            authState(auth);
+            console.log(auth.currentUser);
         }
         else {
             if(status == "pending") {
@@ -85,9 +85,9 @@ export default function Login({authState, setUser}) {
                         <h2>Log Into Your Account</h2>
                         <p>Don't have an account? <a href="/register">Sign Up</a></p>
                         <form ref={registerForm} onSubmit={formCheck}>
-                            <label for="nonprofit-email">Email address</label><br />
+                            <label htmlFor="nonprofit-email">Email address</label><br />
                             <input required name="nonprofit-email" id="nonprofit-email" type="email"placeholder="Enter Email" /><br />
-                            <label for="nonprofit-password">Password</label><br />
+                            <label htmlFor="nonprofit-password">Password</label><br />
                             <input required name="nonprofit-password" id="nonprofit-password" type="password" placeholder="Enter Password" /><br />
                             <input type="submit" id="account-submit" value="Continue" />
                         </form>  

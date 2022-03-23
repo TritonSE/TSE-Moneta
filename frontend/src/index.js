@@ -6,24 +6,40 @@ import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function App() {
-  const [user, setUser] = React.useState(); 
-  
-  const authState = onAuthStateChanged(auth, user => {
-    setUser(user);
-  })
+  const [user, setUser] = React.useState(null); 
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser(user)
+    } else {
+      setUser(null)
+    }
+  });
 
   return (
+    user ?
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/login" element={<Login setUser={setUser} authState={authState} />} />
+        <Route path="*" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+    :
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

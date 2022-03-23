@@ -97,11 +97,11 @@ export default function Register() {
                                 <h2>Create An Account</h2>
                                 <p>Already have an account? <a href="/login">Log In</a></p>
                                 <form ref={registerForm} onSubmit={formCheck}>
-                                    <label for="nonprofit-email">Email address</label><br />
+                                    <label htmlFor="nonprofit-email">Email address</label><br />
                                     <input required name="nonprofit-email" id="nonprofit-email" type="email"placeholder="Enter Email" /><br />
-                                    <label for="nonprofit-name">Name of nonprofit</label><br />
+                                    <label htmlFor="nonprofit-name">Name of nonprofit</label><br />
                                     <input required name="nonprofit-name" id="nonprofit-name" type="text" placeholder="Enter Nonprofit" /><br />
-                                    <label for="nonprofit-password">Create Password</label><br />
+                                    <label htmlFor="nonprofit-password">Create Password</label><br />
                                     <input required name="nonprofit-password" id="nonprofit-password" type="password" placeholder="Enter Password" /><br />
                                     <input type="submit" id="account-submit" value="Continue" />
                                 </form>
