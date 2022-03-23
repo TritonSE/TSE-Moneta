@@ -1,3 +1,10 @@
+/**
+ * Login page for orgs/approved users.
+ *
+ * @summary Login page.
+ * @author Navid Boloorian
+ */
+
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -26,9 +33,13 @@ export default function Login({ setOrgInfo }) {
     });
   };
 
+  /**
+   * Check validity of sign in credentials.
+   */
   const formCheck = async (e) => {
     e.preventDefault();
 
+    // form information
     const email = registerForm.current[0].value;
     const password = registerForm.current[1].value;
 
@@ -40,8 +51,10 @@ export default function Login({ setOrgInfo }) {
     const json = await response.json();
     let status = "";
 
+    // if org associated with email has successfully been found
     if (json.getCompany) status = json.getCompany[0].Status;
 
+    // org is found and they've been approved
     if (response.ok && status === "accepted") {
       const org = json.getCompany[0];
 
@@ -56,6 +69,7 @@ export default function Login({ setOrgInfo }) {
           });
         }, navigate("/dashboard"))
         .catch(() =>
+          // org is found but the password is incorrect
           setSnackbar({
             open: true,
             message: "Incorrect password.",
@@ -65,12 +79,15 @@ export default function Login({ setOrgInfo }) {
     } else {
       let errorMsg = "";
 
+      // still pending
       if (status === "pending")
         errorMsg =
           "The registration status of your account is still pending. Please check back later.";
+      // denied
       else if (status === "denied") errorMsg = "Your registration application has been denied.";
+      // not registered
       else if (response.status === 400) errorMsg = "This email is not registered with Moneta.";
-      else if (response.status === 409) errorMsg = json.msg;
+      // unexpected error
       else errorMsg = "Server error. Try again later";
 
       setSnackbar({

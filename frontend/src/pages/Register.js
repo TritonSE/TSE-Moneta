@@ -1,3 +1,10 @@
+/**
+ * Register page for singing up new orgs. When an org signs up, an email is sent to the specified address and a manual review is initiated.
+ *
+ * @summary Register page.
+ * @author Navid Boloorian
+ */
+
 import React from "react";
 import emailjs from "emailjs-com";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -26,6 +33,9 @@ export default function Register() {
     });
   };
 
+  /**
+   * Sends email with org information to email
+   */
   const sendEmail = (e) => {
     e.preventDefault();
 
@@ -37,9 +47,15 @@ export default function Register() {
     );
   };
 
+  /**
+   * Checks if the sign up credentials are correct
+   * 
+   * @returns true if successful, false otherwise
+   */
   const formCheck = async (e) => {
     e.preventDefault();
 
+    // form information
     const email = registerForm.current[0].value;
     const name = registerForm.current[1].value;
     const password = registerForm.current[2].value;
@@ -59,16 +75,22 @@ export default function Register() {
 
     const json = await response.json();
 
+    // if email is not already in db
     if (response.ok) {
       sendEmail(e);
       setRegistered(true);
+
+      // use firebase to sign up user
       createUserWithEmailAndPassword(auth, email, password);
-    } else if (response.status === 409)
+    } 
+    // if email is already in db
+    else if (response.status === 409)
       setSnackbar({
         open: true,
         message: json.msg,
         severity: "error",
       });
+    // some unexpected error 
     else
       setSnackbar({
         open: true,
