@@ -32,9 +32,11 @@ function Dashboard() {
    * Toggles if the three dots in the top left is clicked.
    */
   const [visible, setVisibility] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [Search, setSearch] = useState("");
+  const [orgInfo, setOrgInfo] = useState({});
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -44,8 +46,6 @@ function Dashboard() {
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
-
-  const orgInfo = JSON.parse(window.localStorage.getItem("orgInfo"));
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -139,6 +139,12 @@ function Dashboard() {
     },
     [fetchGroups]
   );
+
+  useEffect(() => {
+    setIsLoading(true);
+    setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
+    setIsLoading(false);
+  }, [window.localStorage])
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -235,6 +241,9 @@ function Dashboard() {
     indicatorSeparator: () => null,
     closeMenuOnSelect: false,
   };
+
+  if(isLoading)
+    return <>Loading</>;
 
   return (
     <>

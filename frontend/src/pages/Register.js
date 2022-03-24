@@ -25,6 +25,13 @@ export default function Register() {
     severity: "",
   });
 
+  /**
+   * Make sure a user is not logged in during registration
+   */
+  React.useEffect(() => {
+      window.localStorage.clear();
+  }, [])
+
   const handleSnackClose = () => {
     setSnackbar({
       open: false,

@@ -59,13 +59,20 @@ export default function Login() {
       const org = json.getCompany[0];
 
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => window.localStorage.setItem("orgInfo", JSON.stringify({
-            name: org.Name,
-            email: org.Email,
-            organizationId: org.OrganizationID,
-            approvedUsers: org.ApprovedUsers,
-            id: org._id,
-          })), navigate("/dashboard"))
+        .then(() => {
+            // make sure there is not a double log in
+            window.localStorage.clear();
+
+            window.localStorage.setItem("orgInfo", JSON.stringify({
+                name: org.Name,
+                email: org.Email,
+                organizationId: org.OrganizationID,
+                approvedUsers: org.ApprovedUsers,
+                id: org._id,
+            }));
+
+            navigate("/dashboard");
+        })
         .catch(() =>
           // org is found but the password is incorrect
           setSnackbar({
