@@ -28,7 +28,7 @@ export default function TableRow({ id, newRow, forceUpdate, createTableData, upd
 
         setCellDatas(cellData);
         setIsLoading(false);
-    }, [])
+    }, [cellData])
 
     React.useEffect(() => {
         if(editActivated) {

@@ -109,7 +109,6 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
       });
 
       const json = await resp.json();
-      console.log("HERE")
       console.log(resp);
       console.log(json);
     }

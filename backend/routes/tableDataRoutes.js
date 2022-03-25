@@ -33,9 +33,9 @@ const TableData = require("../models/TableData");
  * If neither of the above is true return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.post("/rows", [body("group").exists(), body("data").exists(), body("organizationId").exists()], async (req, res) => {
+router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
-    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
+    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {  
       res.status(409).json({error: "The first column is the primary column and must be included"})
       return;
     }
@@ -79,17 +79,11 @@ router.post("/rows", [body("group").exists(), body("data").exists(), body("organ
     //  return;
     // }
 
-    return await TableData.find({ group: req.body.group, data: req.body.data, organizationId: req.body.organizationId })
+    return await TableData.find({ group: req.body.group, data: req.body.data })
       .then(async (data) => {
-
-        if (data.length) {
-          // check if inserting duplicate
-          return res.status(409).json({ error: "Duplicate data" });
-        }
         const tableData = new TableData({
           group: req.body.group,
-          data: req.body.data,
-          organizationId: req.body.organizationId
+          data: req.body.data
         });
 
         await tableData.save().catch((err) => res.status(500).json("Error: " + err));
@@ -136,7 +130,7 @@ router.put("/rows/:id", async (req, res) => {
  */
 router.get("/rows", (req, res) => {
   try {
-    TableData.find(req.query).sort({createdAt: -1})
+    TableData.find(req.query).sort({createdAt: 1})
       .exec()
       .then((data) => {
         if (!data.length) {
@@ -183,7 +177,7 @@ router.delete("/rows", (req, res) => {
  */
 router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
   try {
-    const tableData = await TableData.find({"group": {$eq: req.body.group}});
+    const tableData = await TableData.find({"group": {$eq: req.body.group}}).sort({createdAt: -1});
 
     const ret = [];
     for (const row of tableData) {

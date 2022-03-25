@@ -29,6 +29,8 @@
         rowTemplate[value] = "";
       }
     }
+
+    setCurrentPage(1);
   }, [group])
 
   const createTableData = async (data) => {
@@ -161,7 +163,6 @@
           {data
             .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
             .map((entry) => (
-              console.log(entry.data),
               <TableRow 
                 id={entry._id}
                 newRow={false}
