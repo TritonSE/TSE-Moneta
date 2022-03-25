@@ -75,7 +75,7 @@ function Dashboard() {
       });
       return [];
     }
-  }, []);
+  }, [orgInfo]);
 
   /**
    * Fetches the rows in the given group which contain the given search string
@@ -142,7 +142,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups]
+    [fetchGroups, orgInfo]
   );
 
   const loadOrgInfo = () => {
