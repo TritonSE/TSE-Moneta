@@ -11,6 +11,7 @@
  */
 
 const express = require("express");
+const bcrypt = require("bcrypt");
 const User = require("../models/Users");
 
 const router = express.Router();
@@ -177,6 +178,29 @@ router.get("/users", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err });
+  }
+});
+
+/**
+ * Verifies login info
+ * @returns 404 if email not found, 400 if invalid password, 500 is error, 200 if valid
+ */
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Email not registered" });
+    }
+
+    const validatePass = await bcrypt.compare(password, user.password);
+    if (!validatePass) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+    return res.status(200).json({ message: "Login Successful!" });
+  } catch (error) {
+    return res.status(500).json(error);
   }
 });
 

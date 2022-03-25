@@ -32,11 +32,13 @@ function Dashboard() {
    * Toggles if the three dots in the top left is clicked.
    */
   const [visible, setVisibility] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [addingRow, setAddingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [Search, setSearch] = useState("");
   const [tableChanged, setTableChanged] = useState(false);
+  const [orgInfo, setOrgInfo] = useState({});
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -45,7 +47,6 @@ function Dashboard() {
 
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
 
   /**
@@ -141,6 +142,16 @@ function Dashboard() {
     },
     [fetchGroups]
   );
+
+  const loadOrgInfo = () => {
+    setIsLoading(true);
+    setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadOrgInfo();
+  }, [window.localStorage.getItem("orgInfo")])
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -238,12 +249,16 @@ function Dashboard() {
     indicatorSeparator: () => null,
     closeMenuOnSelect: false,
   };
-  
+
+  if(isLoading || !orgInfo) {
+    return <>Loading</>;
+  }
+
   return (
     <>
       <SideNavigation currentPage="/" />
       <div className="dashboard-div">
-        <h1 className="dashboard-header">Name of Nonprofit</h1>
+        <h1 className="dashboard-header">{orgInfo.name}</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
@@ -282,6 +297,7 @@ function Dashboard() {
             setCSVUploaded={setCSVUploaded}
             snackbar={snackbar}
             setSnackbar={setSnackbar}
+            selectedGroup={selectedGroup}
           />
         ) : null}
       </div>
