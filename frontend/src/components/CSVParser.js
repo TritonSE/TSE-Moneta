@@ -19,11 +19,11 @@ import "../css/CSVParser.css";
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
+function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
-  const group = "1";
+  const group = selectedGroup;
 
   React.useEffect(async () => {
     await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
@@ -40,17 +40,10 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar }) {
    * @param values - Array of objects representing a row in the CSV
    */
   function validateCSV(values) {
-    const schemaColumns = [
-      { name: "id", type: "Number" },
-      { name: "name", type: "Text" },
-      { name: "age", type: "Number" },
-      { name: "gender", type: "Text" },
-      { name: "email", type: "Email" },
-      { name: "alternateEmail", type: "Email" },
-    ]; // temporary dummy data, should be determined by group selected by drop-down menu
+    const schemaColumns = group.values;
 
     for (const row of values) {
-      if (Object.keys(row).length < schemaColumns.length) return 1; // check if sufficient columns are present
+      if (Object.keys(row).length < (schemaColumns.length - 1)) return 1; // check if sufficient columns are present
       for (const key of Object.keys(row)) {
         const field = schemaColumns.find((obj) => obj.name === key);
         if (field == null) continue; // skip if col is not present in schema

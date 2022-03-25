@@ -20,7 +20,9 @@ export default function App() {
     }
   });
 
-  return user ? (
+  const orgInfo = window.localStorage.getItem("orgInfo");
+
+  return user || orgInfo ? (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />

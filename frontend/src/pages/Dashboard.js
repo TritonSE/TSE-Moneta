@@ -293,6 +293,7 @@ function Dashboard() {
             setCSVUploaded={setCSVUploaded}
             snackbar={snackbar}
             setSnackbar={setSnackbar}
+            selectedGroup={selectedGroup}
           />
         ) : null}
       </div>
