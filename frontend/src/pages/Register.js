@@ -14,7 +14,6 @@ import Logo from "../images/Logo.svg";
 import Back from "../images/BackButton.svg";
 
 import "../css/Account.css";
-import "../css/Register.css";
 
 export default function Register() {
   const registerForm = React.useRef();

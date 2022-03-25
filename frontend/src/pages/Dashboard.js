@@ -140,11 +140,15 @@ function Dashboard() {
     [fetchGroups]
   );
 
-  useEffect(() => {
+  const loadOrgInfo = () => {
     setIsLoading(true);
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setIsLoading(false);
-  }, [window.localStorage])
+  }
+
+  useEffect(() => {
+    loadOrgInfo();
+  }, [window.localStorage.getItem("orgInfo")])
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -242,8 +246,9 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
-  if(isLoading)
+  if(isLoading || !orgInfo) {
     return <>Loading</>;
+  }
 
   return (
     <>

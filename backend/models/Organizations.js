@@ -45,17 +45,20 @@ const OrganizationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+/**
+ * Creates orgId based on email
+ */
 OrganizationSchema.pre("save", function (next) {
   const organization = this;
 
   return bcrypt.genSalt(SALT_WORK_FACTOR, function (salt_err, salt) {
     if (salt_err) return next(salt_err);
 
-    // hash the password with salt
+    // hash email with salt
     return bcrypt.hash(organization.Email, salt, function (hash_err, hash) {
       if (hash_err) return next(hash_err);
 
-      // replace password with hashed password
+      // create an organizationId based on the hash
       organization.OrganizationId = hash;
       return next();
     });

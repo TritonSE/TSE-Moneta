@@ -13,7 +13,6 @@ import { auth } from "../firebaseConfig";
 import Logo from "../images/Logo.svg";
 
 import "../css/Account.css";
-import "../css/Login.css";
 
 export default function Login() {
   const registerForm = React.useRef();
