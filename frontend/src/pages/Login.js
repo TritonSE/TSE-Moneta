@@ -65,7 +65,6 @@ export default function Login() {
             window.localStorage.setItem("orgInfo", JSON.stringify({
                 name: org.Name,
                 email: org.Email,
-                organizationId: org.OrganizationID,
                 approvedUsers: org.ApprovedUsers,
                 id: org._id,
             }));

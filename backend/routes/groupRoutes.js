@@ -22,7 +22,7 @@ const groups = require("../models/Groups");
  */
 router.post("/groups", async (req, res) => {
   try {
-    const { Name, Values } = req.body;
+    const { Name, Values, OrganizationId } = req.body;
     const numMatched = await groups.count({ Name });
 
     if (numMatched > 0) {
@@ -32,6 +32,7 @@ router.post("/groups", async (req, res) => {
     const group = {
       Name,
       Values,
+      OrganizationId,
     };
 
     const addGroup = await groups.create(group);
@@ -120,37 +121,37 @@ router.delete("/groups/:id", async (req, res) => {
  * @params mongoose id
  * @return returns group information. Else, returns 500 errors.
  */
-router.get("/groups/:id", async (req, res) => {
-  try {
-    const groupExists = await groups.exists({ _id: req.params.id });
-    if (!groupExists) {
-      return res.status(400).json({
-        msg: "This group does not exist",
-      });
-    }
+// router.get("/groups/:id", async (req, res) => {
+//   try {
+//     const groupExists = await groups.exists({ _id: req.params.id });
+//     if (!groupExists) {
+//       return res.status(400).json({
+//         msg: "This group does not exist",
+//       });
+//     }
 
-    const getGroup = await groups.findById(req.params.id);
-    if (getGroup) {
-      return res.status(200).json({
-        getGroup,
-      });
-    }
+//     const getGroup = await groups.findById(req.params.id);
+//     if (getGroup) {
+//       return res.status(200).json({
+//         getGroup,
+//       });
+//     }
 
-    return res.status(500).json({
-      Error: "Error",
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: err });
-  }
-});
+//     return res.status(500).json({
+//       Error: "Error",
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({ message: err });
+//   }
+// });
 
-/** gets all groups from database.
+/** gets all groups from database with the given orgId.
  * @return returns list of all groups. Else, returns 500 errors.
  */
-router.get("/groups", async (req, res) => {
+router.get("/groups/:orgId", async (req, res) => {
   try {
-    const listOfGroups = await groups.find();
+    const listOfGroups = await groups.find({OrganizationId: req.params.orgId});
     if (listOfGroups) {
       return res.status(200).json({
         listOfGroups,

@@ -55,13 +55,17 @@ function Dashboard() {
    */
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8082/groups");
+      const response = await fetch(`http://localhost:8082/groups/${orgInfo.id}`);
       const { listOfGroups } = await response.json();
       const options = [{ id: "", value: "create-new", values: [], label: "Create New", isCreate: true }];
-      for (const group of listOfGroups) {
-        const { Name, _id, GroupId, Values } = group;
-        options.push({ id: _id, value: GroupId, values: Values, label: Name, isCreate: false });
+      
+      if(listOfGroups) {
+        for (const group of listOfGroups) {
+          const { Name, _id, GroupId, Values } = group;
+          options.push({ id: _id, value: GroupId, values: Values, label: Name, isCreate: false });
+        }
       }
+
       setGroupOptions(options);
       if (selectedGroup === null && options.length > 1) {
         setSelectedGroup(options[1]);
@@ -110,12 +114,12 @@ function Dashboard() {
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
       try {
-        const response = await fetch("http://localhost:8082/groups", {
+        const response = await fetch(`http://localhost:8082/groups`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ Name: groupName, Values: groupFields }),
+          body: JSON.stringify({ Name: groupName, Values: groupFields, OrganizationId: orgInfo.id }),
         });
         const json = await response.json();
         if (!response.ok) {
@@ -301,7 +305,7 @@ function Dashboard() {
             snackbar={snackbar}
             setSnackbar={setSnackbar}
             selectedGroup={selectedGroup}
-            orgId={orgInfo.organizationId}
+            orgId={orgInfo.id}
           />
         ) : null}
       </div>

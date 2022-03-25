@@ -18,10 +18,6 @@ const tableDataSchema = mongoose.Schema(
       type: JSON,
       required: true,
     },
-    organizationId: {
-      type: String,
-      required: true,
-    },
   },
   { timestamps: true }
 );

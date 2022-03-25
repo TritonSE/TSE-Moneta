@@ -17,7 +17,7 @@
   *
   * @returns Table display for dashboard.
   */
- function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage }) {
+ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage, orgId }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
@@ -36,7 +36,7 @@
 
     const tempData = {
       group: group.id, 
-      data: data
+      data: data,
     }
 
     const response = await fetch(`http://localhost:8082/rows`, {

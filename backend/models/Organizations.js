@@ -16,7 +16,6 @@
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const { nanoid } = require("nanoid");
 
 const SALT_WORK_FACTOR = 10;
 /**
@@ -33,7 +32,6 @@ const OrganizationSchema = new mongoose.Schema(
     Name: { type: String, required: true, index: true },
     Email: { type: String, required: true },
     Password: { type: String, required: true },
-    OrganizationId: { type: String, required: true, default: () => nanoid() },
     ApprovedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
