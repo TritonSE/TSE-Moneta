@@ -19,17 +19,21 @@ import "../css/CSVParser.css";
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
+function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, orgId}) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
 
+  console.log(tableData);
+
   React.useEffect(async () => {
-    await fetch("http://localhost:8082/rows?group=" + group).then(async (response) => {
-      let json = await response.json();
-      json = json.map((row) => row.data);
-      setTableData(json);
+    await fetch("http://localhost:8082/rows?group=" + group.id).then(async (response) => {
+      if(response.ok) {
+        let json = await response.json();
+        json = json.map((row) => row.data);
+        setTableData(json);
+      }
     });
   }, [CSVUploaded]);
 
@@ -42,7 +46,10 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
   function validateCSV(values) {
     const schemaColumns = group.values;
 
+    console.log(schemaColumns);
+
     for (const row of values) {
+      console.log(row)
       if (Object.keys(row).length < (schemaColumns.length - 1)) return 1; // check if sufficient columns are present
       for (const key of Object.keys(row)) {
         const field = schemaColumns.find((obj) => obj.name === key);
@@ -60,6 +67,8 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
    * @author Kevin Fu
    */
   async function importToDB(values, CSVUploadedArg, setUploadedCSV) {
+    console.log(values)
+
     switch (validateCSV(values)) {
       case 1:
         setSnackbar({
@@ -78,18 +87,19 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
     }
 
     // should ask user to confirm before clearing
-    await fetch("http://localhost:8082/rows?group=" + group, {
+    await fetch("http://localhost:8082/rows?group=" + group.id, {
       method: "DELETE",
       mode: "cors",
     });
 
     for (const row of values) {
       const data = {
-        group,
+        group: group.id,
         data: row,
+        organizationId: orgId
       };
-
-      await fetch("http://localhost:8082/rows", {
+      
+      const resp = await fetch("http://localhost:8082/rows", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,6 +107,11 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup}) {
         body: JSON.stringify(data),
         mode: "cors",
       });
+
+      const json = await resp.json();
+      console.log("HERE")
+      console.log(resp);
+      console.log(json);
     }
     setUploadedCSV(!CSVUploadedArg); // tell table to reload
     setSnackbar({

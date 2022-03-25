@@ -33,23 +33,14 @@ const TableData = require("../models/TableData");
  * If neither of the above is true return 200
  * Return 500 in a catch if something else goes wrong
  */
-router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
+router.post("/rows", [body("group").exists(), body("data").exists(), body("organizationId").exists()], async (req, res) => {
   try {
-    // check if all required fields are present
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(500).json(errors);
-    }
-
     if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
       res.status(409).json({error: "The first column is the primary column and must be included"})
       return;
     }
 
     const group = await Group.findById(req.body.group).distinct("Values");
-
-    console.log(group);
-    console.log(req.body.data)
 
     if (group.length < Object.keys(req.body.data).length) {
       return res.status(409).json({
@@ -88,8 +79,9 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
     //  return;
     // }
 
-    return await TableData.find({ group: req.body.group, data: req.body.data })
+    return await TableData.find({ group: req.body.group, data: req.body.data, organizationId: req.body.organizationId })
       .then(async (data) => {
+
         if (data.length) {
           // check if inserting duplicate
           return res.status(409).json({ error: "Duplicate data" });
@@ -97,13 +89,15 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
         const tableData = new TableData({
           group: req.body.group,
           data: req.body.data,
+          organizationId: req.body.organizationId
         });
+
         await tableData.save().catch((err) => res.status(500).json("Error: " + err));
         return res.status(200).json("Posted TableData!");
       })
       .catch((error) => res.status(500).json({error: "Server error"}));
   } catch (error) {
-    return res.status(500).json({error: "Server error"});
+    return false;
   }
 });
 
@@ -146,7 +140,7 @@ router.get("/rows", (req, res) => {
       .exec()
       .then((data) => {
         if (!data.length) {
-          res.status(500).json({ error: "No matching results" });
+          res.status(409).json({ error: "No matching results" });
           return;
         }
         res.json(data);
@@ -170,7 +164,7 @@ router.delete("/rows", (req, res) => {
       .exec()
       .then((data) => {
         if (data.deletedCount === 0) {
-          res.status(500).json({ error: "No matching results" });
+          res.status(204).json({ error: "No matching results" });
           return;
         }
         res.json(data);

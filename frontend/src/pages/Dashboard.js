@@ -90,6 +90,8 @@ function Dashboard() {
       const response = await fetch("http://localhost:8082/search", requestOptions);
       const json = await response.json();
 
+      console.log(json)
+
       setTableData(json);
     } catch (error) {
       setSnackbar({
@@ -273,6 +275,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
+        {console.log(tableData)}
         <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} />
         <input
           type="text"
@@ -298,6 +301,7 @@ function Dashboard() {
             snackbar={snackbar}
             setSnackbar={setSnackbar}
             selectedGroup={selectedGroup}
+            orgId={orgInfo.organizationId}
           />
         ) : null}
       </div>
