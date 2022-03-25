@@ -17,7 +17,7 @@
   *
   * @returns Table display for dashboard.
   */
- function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage, orgId }) {
+ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage, rerender }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
@@ -31,7 +31,7 @@
     }
 
     setCurrentPage(1);
-  }, [group])
+  }, [group, data])
 
   const createTableData = async (data) => {
     setTableChanged(true);

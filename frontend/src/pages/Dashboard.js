@@ -268,7 +268,7 @@ function Dashboard() {
         <Select
           className="group-select"
           classNamePrefix="select"
-          options={groupOptions}
+          options={groupOptions}  
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
@@ -280,7 +280,7 @@ function Dashboard() {
           Add row
         </button>
         {console.log(tableData)}
-        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} />
+        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} rerender={tableChanged} />
         <input
           type="text"
           className="dashboard-search"
