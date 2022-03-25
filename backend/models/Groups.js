@@ -17,6 +17,7 @@ const GroupSchema = new mongoose.Schema(
     Name: { type: String, required: true, index: true },
     Values: [{ name: { type: String, required: true }, type: { type: String, required: true } }],
     GroupId: { type: Number, required: true, index: true, default: 0 },
+    OrganizationId: { type: String, required: true },
   },
   { timestamps: true }
 );

@@ -6,7 +6,10 @@
  * @author Kevin Fu
  */
 import React from "react";
+import { signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
+import { auth } from "../firebaseConfig";
 import Logo from "../images/Logo.svg";
 import DatabaseIcon from "../images/DatabaseIcon";
 import AdminIcon from "../images/AdminIcon";
@@ -19,6 +22,8 @@ import "../css/SideNavigation.css";
  * @returns side navigation content
  */
 function SideNavigation(props) {
+  const navigate = useNavigate();
+
   let databaseClassName = "sidenav-button database";
   let adminClassName = "sidenav-button admin";
   let settingsClassName = "sidenav-button settings";
@@ -29,6 +34,12 @@ function SideNavigation(props) {
     settingsClassName = "sidenav-button settings active";
   } else {
     databaseClassName = "sidenav-button database active";
+  }
+
+  const signOutUser = () => {
+    signOut(auth);
+    window.localStorage.clear();
+    navigate("/login");
   }
 
   return (
@@ -61,7 +72,7 @@ function SideNavigation(props) {
         <p className="sidenav-description settings">Settings</p>
       </Link>
 
-      <button type="button" className="sidenav-logout">
+      <button type="button" onClick={signOutUser} className="sidenav-logout">
         <img src={LogOut} className="sidenav-icon-logout" alt="Log Out" />
         Log Out
       </button>

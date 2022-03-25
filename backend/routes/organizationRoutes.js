@@ -23,10 +23,12 @@ const organizations = require("../models/Organizations");
 router.post("/organizations", async (req, res) => {
   try {
     const { Name, Email, Password } = req.body;
-    const numMatched = await organizations.count({ Email });
+    const matched = await organizations.find({ Email });
 
-    if (numMatched > 0) {
-      return res.status(409).json({ msg: "Email already registered!" });
+    if (matched.length > 0) {
+      return res
+        .status(409)
+        .json({ msg: `Email already registered! Status: ${matched[0].Status}` });
     }
 
     const company = {
@@ -48,7 +50,7 @@ router.post("/organizations", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ message: err });
+    return res.status(500).json({ msg: err });
   }
 });
 
@@ -122,16 +124,16 @@ router.delete("/organizations/:id", async (req, res) => {
  * @params mongoose id
  * @return returns company information. Else, returns 500 errors.
  */
-router.get("/organizations/:id", async (req, res) => {
+router.get("/organizations/:email", async (req, res) => {
   try {
-    const companyExists = await organizations.exists({ _id: req.params.id });
+    const companyExists = await organizations.exists({ Email: req.params.email });
     if (!companyExists) {
       return res.status(400).json({
         msg: "This company does not exist",
       });
     }
 
-    const getCompany = await organizations.findById(req.params.id);
+    const getCompany = await organizations.find({ Email: req.params.email });
     if (getCompany) {
       return res.status(200).json({
         getCompany,
