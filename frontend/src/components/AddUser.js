@@ -105,6 +105,7 @@
             })
 
         sendEmail(e);
+        setAddUserVisible(false);
     };
 
    return (

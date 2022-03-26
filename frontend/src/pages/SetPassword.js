@@ -7,7 +7,7 @@
 
  import React from "react";
  import { Snackbar, Alert } from "@mui/material";
- import { createUserWithEmailAndPassword } from "firebase/auth";
+ import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
  import { useNavigate } from "react-router";
  import { useParams } from "react-router";
  import { auth } from "../firebaseConfig";
@@ -32,11 +32,14 @@
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-
-      if(selectedUser.status == 400)
-        navigate("/login");
   
       const json = await selectedUser.json();
+      const signInMethods = await fetchSignInMethodsForEmail(auth, json.getUser[0].email);
+      const registered = signInMethods.length != 0;
+
+      if(selectedUser.status == 400 || registered)
+        navigate("/login");
+
       setUser(json.getUser[0]);
    }, [userId])
  

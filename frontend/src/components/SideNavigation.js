@@ -51,6 +51,7 @@ function SideNavigation(props) {
         </button>
       </Link>
 
+      <div className="side-navigation-tabs">
       <Link to="/">
         <button type="button" className={databaseClassName}>
           <DatabaseIcon className="sidenav-icon" />
@@ -58,19 +59,21 @@ function SideNavigation(props) {
         <p className="sidenav-description database">Database</p>
       </Link>
 
-      <Link to="/admin">
+      {!props.userInfo ? <Link to="/admin">
         <button type="button" className={adminClassName}>
           <AdminIcon className="sidenav-icon" />
         </button>
         <p className="sidenav-description admin">Admin</p>
-      </Link>
+      </Link> : ""}
 
-      <Link to="/settings">
-        <button type="button" className={settingsClassName}>
-          <SettingsIcon className="sidenav-icon" />
-        </button>
-        <p className="sidenav-description settings">Settings</p>
-      </Link>
+      { !props.userInfo ? <Link to="/settings">
+          <button type="button" className={settingsClassName}>
+            <SettingsIcon className="sidenav-icon" />
+          </button>
+          <p className="sidenav-description settings">Settings</p>
+        </Link> : ""
+      }
+      </div>
 
       <button type="button" onClick={signOutUser} className="sidenav-logout">
         <img src={LogOut} className="sidenav-icon-logout" alt="Log Out" />

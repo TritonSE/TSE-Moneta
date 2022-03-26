@@ -52,7 +52,6 @@ export default function Login() {
       headers: { "Content-Type": "application/json" },
     });
 
-
     if(orgResponse.status === 200) {
       const orgJson = await orgResponse.json();
       let status = "";
@@ -150,7 +149,7 @@ export default function Login() {
           })
         );
     }
-    else {
+    else if(orgResponse.status !== 200) {
       let errorMsg = "Email or password is incorrect";
 
       setSnackbar({

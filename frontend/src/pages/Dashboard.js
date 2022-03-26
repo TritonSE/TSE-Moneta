@@ -39,6 +39,7 @@ function Dashboard() {
   const [Search, setSearch] = useState("");
   const [tableChanged, setTableChanged] = useState(false);
   const [orgInfo, setOrgInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({});
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -149,15 +150,16 @@ function Dashboard() {
     [fetchGroups, orgInfo]
   );
 
-  const loadOrgInfo = () => {
+  const loadInfo = () => {
     setIsLoading(true);
+    setUserInfo(JSON.parse(window.localStorage.getItem("userInfo")));
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setIsLoading(false);
   }
 
   useEffect(() => {
-    loadOrgInfo();
-  }, [window.localStorage.getItem("orgInfo")])
+    loadInfo();
+  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")])
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -258,15 +260,17 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
-  if(isLoading || !orgInfo) {
+  if(isLoading || (!orgInfo && !userInfo)) {
     return <>Loading</>;
   }
 
   return (
     <>
-      <SideNavigation currentPage="/" />
+      <SideNavigation currentPage="/" userInfo={userInfo} />
       <div className="dashboard-div">
-        <h1 className="dashboard-header">{orgInfo.name}</h1>
+        <h1 className="dashboard-header">{
+          orgInfo ? orgInfo.name : userInfo.orgName
+        }</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
