@@ -79,6 +79,20 @@ export default function Register() {
       body: JSON.stringify({ Name: name, Email: email, Password: password }),
     });
 
+    const userCheck = await fetch(`http://localhost:8082/users?email=${email}`, {
+      method: "GET"
+    })
+
+    if(userCheck.status == 200) {
+      setSnackbar({
+        open: true,
+        message: "Email already in use",
+        severity: "error",
+      });
+
+      return false;
+    }
+
     const json = await response.json();
 
     // if email is not already in db

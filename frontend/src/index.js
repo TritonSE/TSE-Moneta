@@ -22,8 +22,10 @@ export default function App() {
   });
 
   const orgInfo = window.localStorage.getItem("orgInfo");
+  const userInfo = window.localStorage.getItem("userInfo");
 
-  return user || orgInfo ? (
+  if(orgInfo) {
+    return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
@@ -32,7 +34,19 @@ export default function App() {
         <Route path="*" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
-  ) : (
+    )
+  } else if(userInfo) {
+    return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="*" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+    )
+  }
+  else {
+    return  (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -42,7 +56,8 @@ export default function App() {
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>
-  );
+    )
+  }
 }
 
 ReactDOM.render(

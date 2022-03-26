@@ -1,4 +1,4 @@
-.modal-background {
+.user-modal-background {
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -12,7 +12,7 @@
     align-items: center;
 }
   
-.modal-view {
+.user-modal-view {
     position: fixed;
     background-color: #ffffff;
     padding: 27px 37px;

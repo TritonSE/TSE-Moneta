@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { Snackbar, Alert } from "@mui/material";
 import AddIcon from "../images/AddIcon.svg";
 import SideNavigation from "../components/SideNavigation";
 import AddUser from "../components/AddUser";
@@ -21,6 +22,19 @@ function Admin() {
   const [orgInfo, setOrgInfo] = React.useState({});
   const [addUserVisible, setAddUserVisible] = React.useState(false);
   const [employees, setEmployees] = React.useState([]);
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
+
+  const handleSnackClose = () => {
+    setSnackbar({
+      open: false,
+      message: "",
+      severity: "",
+    });
+  };
 
   React.useEffect(() => {
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
@@ -41,26 +55,39 @@ function Admin() {
   }
 
   const deleteEmployee = async (id) => {
-    await fetch(`http://localhost:8082/users/${id}`, {
+    const response = await fetch(`http://localhost:8082/users/${id}`, {
       method: "DELETE",
       mode: "cors",
     });
 
+    if(response.ok)
+      setSnackbar({
+        open: true,
+        message:  "User deleted!",
+        severity: "success"
+      })
+    else 
+      setSnackbar({
+        open: true,
+        message: "Something went wrong",
+        severity: "error"
+      })
+
     getEmployees();
   }
 
-  if(!orgInfo || !employees)
+  if(!orgInfo)
     return <>Loading</>
 
   return (
     <>
       <SideNavigation currentPage="/admin" />
-      {addUserVisible && <AddUser orgId={orgInfo.id} setAddUserVisible={setAddUserVisible} />}
+      {addUserVisible && <AddUser setSnackbar={setSnackbar} orgId={orgInfo.id} setAddUserVisible={setAddUserVisible} />}
       <div>
         <div className="admin-div">
           <h1 className="admin-header">Employees with Access</h1>
           <table className="admin-table">
-            {employees.map((entry) => (
+            {employees && employees.map((entry) => (
               <tr className="admin-row" key={entry.email}>
                 <td className="name">
                   {entry.fullName}
@@ -82,6 +109,21 @@ function Admin() {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackClose}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      >
+        <Alert
+          onClose={handleSnackClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

@@ -7,8 +7,9 @@
 
  import React from "react";
  import { Snackbar, Alert } from "@mui/material";
- import { signInWithEmailAndPassword } from "firebase/auth";
+ import { createUserWithEmailAndPassword } from "firebase/auth";
  import { useNavigate } from "react-router";
+ import { useParams } from "react-router";
  import { auth } from "../firebaseConfig";
  import Logo from "../images/Logo.svg";
  
@@ -16,13 +17,28 @@
  
  export default function SetPassword() {
    const registerForm = React.useRef();
+   const [user, setUser] = React.useState({});
    const [snackbar, setSnackbar] = React.useState({
      open: false,
      message: "",
      severity: "",
    });
- 
+
+   const {userId} = useParams();
    const navigate = useNavigate();
+
+   React.useEffect(async () => {
+    const selectedUser = await fetch(`http://localhost:8082/users?_id=${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if(selectedUser.status == 400)
+        navigate("/login");
+  
+      const json = await selectedUser.json();
+      setUser(json.getUser[0]);
+   }, [userId])
  
    const handleSnackClose = () => {
      setSnackbar({
@@ -39,66 +55,45 @@
      e.preventDefault();
  
      // form information
-     const email = registerForm.current[0].value;
-     const password = registerForm.current[1].value;
- 
-     const response = await fetch(`http://localhost:8082/organizations/${email}`, {
-       method: "GET",
-       headers: { "Content-Type": "application/json" },
-     });
- 
-     const json = await response.json();
-     let status = "";
- 
-     // if org associated with email has successfully been found
-     if (json.getCompany) status = json.getCompany[0].Status;
- 
-     // org is found and they've been approved
-     if (response.ok && status === "accepted") {
-       const org = json.getCompany[0];
- 
-       signInWithEmailAndPassword(auth, email, password)
-         .then(() => {
-             // make sure there is not a double log in
-             window.localStorage.clear();
- 
-             window.localStorage.setItem("orgInfo", JSON.stringify({
-                 name: org.Name,
-                 email: org.Email,
-                 approvedUsers: org.ApprovedUsers,
-                 id: org._id,
-             }));
- 
-             navigate("/dashboard");
-         })
-         .catch(() =>
-           // org is found but the password is incorrect
-           setSnackbar({
+     const password = registerForm.current[0].value;
+     const confPassword = registerForm.current[1].value;
+
+     if(password !== confPassword) {
+         setSnackbar({
              open: true,
-             message: "Incorrect password.",
+             message: "Passwords do not match",
              severity: "error",
-           })
-         );
-     } else {
-       let errorMsg = "";
- 
-       // still pending
-       if (status === "pending")
-         errorMsg =
-           "The registration status of your account is still pending. Please check back later.";
-       // denied
-       else if (status === "denied") errorMsg = "Your registration application has been denied.";
-       // not registered
-       else if (response.status === 204) errorMsg = "This email is not registered with Moneta.";
-       // unexpected error
-       else errorMsg = "Server error. Try again later";
- 
-       setSnackbar({
-         open: true,
-         message: errorMsg,
-         severity: "error",
-       });
+         })
+
+         return;
      }
+
+     if(password.length < 8) {
+        setSnackbar({
+            open: true,
+            message: "Password must be at least 8 characters long.",
+            severity: "error",
+        })
+
+        return;
+    }
+
+     const res = await fetch(`http://localhost:8082/users/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({password: password}),
+        mode: "cors"
+     })
+
+     createUserWithEmailAndPassword(auth, user.email, password);
+
+     setSnackbar({
+        open: true,
+        message: "Password set! Redirecting to login...",
+        severity: "success",
+    })
+
+    navigate("/login");
    };
  
    return (
@@ -111,7 +106,7 @@
              <h1>Moneta</h1>
            </div>
            <div className="account-form">
-             <h2>Set a password for your account</h2>
+             <h2>Hi {user.fullName}, <br /> Create Your Password</h2>
              <form ref={registerForm} onSubmit={formCheck}>
                <label htmlFor="user-password">
                  Password <br />

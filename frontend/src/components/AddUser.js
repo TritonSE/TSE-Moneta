@@ -17,7 +17,7 @@
   *
   * @return jsx for create group module
   */
- export default function AddUser({orgId, setAddUserVisible}) {
+ export default function AddUser({orgId, setAddUserVisible, setSnackbar}) {
     const addUserForm = React.useRef();
 
     /**
@@ -48,18 +48,26 @@
             headers: { "Content-Type": "application/json" },
         });
 
-        const orgExists = await fetch(`http://localhost:8082/organizations/${email}`, {
+        const orgExists = await fetch(`http://localhost:8082/organizations?Email=${email}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         });
 
         if(userExists.status === 200) {
-            console.log("A user with the provided email already exists.");
+            setSnackbar({
+                open: true,
+                message:  "A user with the provided email already exists.",
+                severity: "error"
+            })
             return;
         }
 
         if(orgExists.status === 200) {
-            console.log("An organization with the provided email already exists");
+            setSnackbar({
+                open: true,
+                message:  "An organization with the provided email already exists",
+                severity: "error"
+            })
             return;
         }
 
@@ -83,13 +91,26 @@
 
         addUserForm.current[2].value = userId;
 
+        if(response.ok)
+            setSnackbar({
+                open: true,
+                message:  "User added!",
+                severity: "success"
+            })
+        else 
+            setSnackbar({
+                open: true,
+                message: "Something went wrong",
+                severity: "error"
+            })
+
         sendEmail(e);
     };
 
    return (
     <>
-     <div onClick={()=>setAddUserVisible(false)} className="modal-background"></div>
-    <div className="modal-view">
+     <div onClick={()=>setAddUserVisible(false)} className="user-modal-background"></div>
+    <div className="user-modal-view">
         <div className="user-header">
             <h2>Add Employee</h2>
             <p>Added employees will receive an email notification about their new access.</p>
