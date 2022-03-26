@@ -209,7 +209,9 @@ function Dashboard() {
     return (
       <components.Option {...props} className="clickable">
         {props.data.label}
-        <Pencil className="Pencil" />
+        <button className="pencil-button">
+          <Pencil className="Pencil" />
+        </button>
       </components.Option>
     );
   };

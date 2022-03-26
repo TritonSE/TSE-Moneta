@@ -21,29 +21,29 @@ const UserSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true, index: true },
     email: { type: String, required: true, index: true },
-    companyID: { type: String, required: true },
-    password: { type: String, required: true },
+    organizationId: { type: String, required: true },
+    password: { type: String, required: false },
   },
   { timestamps: true }
 );
 
-UserSchema.pre("save", function (next) {
-  const user = this;
+// UserSchema.pre("save", function (next) {
+//   const user = this;
 
-  // generate a salt
-  return bcrypt.genSalt(SALT_WORK_FACTOR, (salt_err, salt) => {
-    if (salt_err) return next(salt_err);
+//   // generate a salt
+//   return bcrypt.genSalt(SALT_WORK_FACTOR, (salt_err, salt) => {
+//     if (salt_err) return next(salt_err);
 
-    // hash the password with salt
-    return bcrypt.hash(user.password, salt, (hash_err, hash) => {
-      if (hash_err) return next(hash_err);
+//     // hash the password with salt
+//     return bcrypt.hash(user.password, salt, (hash_err, hash) => {
+//       if (hash_err) return next(hash_err);
 
-      // replace password with hashed password
-      user.password = hash;
-      return next();
-    });
-  });
-});
+//       // replace password with hashed password
+//       user.password = hash;
+//       return next();
+//     });
+//   });
+// });
 
 UserSchema.pre("findOneAndUpdate", async function () {
   const update = { ...this.getUpdate() };

@@ -52,6 +52,16 @@
   margin-right: 8px;
 }
 
+.pencil-button {
+  background: none;
+  border: 0px;
+  float: right;
+}
+
+.pencil-button:hover {
+  cursor: pointer;
+}
+
 .Pencil {
   float: right;
   margin-right: 14px;

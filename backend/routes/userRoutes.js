@@ -25,7 +25,7 @@ const Users = require("../models/Users");
 
 router.post("/users", async (req, res) => {
   try {
-    const { fullName, email, companyID, password } = req.body;
+    const { fullName, email, organizationId } = req.body;
 
     const numMatched = await Users.count({ email });
 
@@ -36,9 +36,11 @@ router.post("/users", async (req, res) => {
     const user = {
       fullName,
       email,
-      companyID,
-      password,
+      organizationId,
     };
+
+    console.log(req.body)
+    console.log(user);
 
     const addUser = await Users.create(user);
 
@@ -102,12 +104,12 @@ router.put("/users/:id", async (req, res) => {
       });
     }
 
-    const { fullName, email, companyID, password } = req.body;
+    const { fullName, email, organizationId, password } = req.body;
 
     const user = {
       fullName,
       email,
-      companyID,
+      organizationId,
       password,
     };
 
@@ -132,17 +134,17 @@ router.put("/users/:id", async (req, res) => {
  * @params mongoose id
  * @return returns user object. Else, returns 400 or 500 errors.
  */
-router.get("/users/:id", async (req, res) => {
+router.get("/users", async (req, res) => {
   try {
-    const userExists = await User.exists({ _id: req.params.id });
+    const userExists = await User.exists(req.query);
 
     if (!userExists) {
-      return res.status(400).json({
-        msg: "_id does not exist!",
+      return res.status(204).json({
+        msg: "User does not exist!",
       });
     }
 
-    const getUser = await Users.findById(req.params.id);
+    const getUser = await Users.find(req.query);
 
     if (getUser) {
       return res.status(200).json({

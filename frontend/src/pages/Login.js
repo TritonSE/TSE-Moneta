@@ -89,7 +89,7 @@ export default function Login() {
       // denied
       else if (status === "denied") errorMsg = "Your registration application has been denied.";
       // not registered
-      else if (response.status === 400) errorMsg = "This email is not registered with Moneta.";
+      else if (response.status === 204) errorMsg = "This email is not registered with Moneta.";
       // unexpected error
       else errorMsg = "Server error. Try again later";
 

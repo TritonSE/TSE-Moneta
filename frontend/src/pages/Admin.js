@@ -9,6 +9,7 @@
 import React from "react";
 import AddIcon from "../images/AddIcon.svg";
 import SideNavigation from "../components/SideNavigation";
+import AddUser from "../components/AddUser";
 import "../css/Admin.css";
 
 const entries = [
@@ -45,9 +46,17 @@ const entries = [
  * @returns Contents of the admin page
  */
 function Admin() {
+  const [orgInfo, setOrgInfo] = React.useState({});
+
+  React.useEffect(() => {
+    setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
+  }, [window.localStorage.getItem("orgInfo")])
+
+
   return (
     <>
       <SideNavigation currentPage="/admin" />
+      <AddUser orgId={orgInfo.id} />
       <div>
         <div className="admin-div">
           <h1 className="admin-header">Employees with Access</h1>

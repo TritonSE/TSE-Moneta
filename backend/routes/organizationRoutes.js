@@ -128,7 +128,7 @@ router.get("/organizations/:email", async (req, res) => {
   try {
     const companyExists = await organizations.exists({ Email: req.params.email });
     if (!companyExists) {
-      return res.status(400).json({
+      return res.status(204).json({
         msg: "This company does not exist",
       });
     }
