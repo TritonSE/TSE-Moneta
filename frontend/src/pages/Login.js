@@ -133,6 +133,7 @@ export default function Login() {
         .then(() => {
             window.localStorage.setItem("userInfo", JSON.stringify({
                 orgName: org.Name,
+                orgId: org._id,
                 email: user.email,
                 name: user.fullName,
                 id: user._id

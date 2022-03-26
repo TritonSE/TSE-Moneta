@@ -39,6 +39,7 @@ function Dashboard() {
   const [Search, setSearch] = useState("");
   const [tableChanged, setTableChanged] = useState(false);
   const [orgInfo, setOrgInfo] = useState({});
+  const [orgId, setOrgId] = useState();
   const [userInfo, setUserInfo] = useState({});
   const [snackbar, setSnackbar] = React.useState({
     open: false,
@@ -56,7 +57,7 @@ function Dashboard() {
    */
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8082/groups/${orgInfo.id}`);
+      const response = await fetch(`http://localhost:8082/groups/${orgId}`);
       const { listOfGroups } = await response.json();
       const options = [{ id: "", value: "create-new", values: [], label: "Create New", isCreate: true }];
       
@@ -80,7 +81,7 @@ function Dashboard() {
       });
       return [];
     }
-  }, [orgInfo]);
+  }, [orgId]);
 
   /**
    * Fetches the rows in the given group which contain the given search string
@@ -120,7 +121,7 @@ function Dashboard() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ Name: groupName, Values: groupFields, OrganizationId: orgInfo.id }),
+          body: JSON.stringify({ Name: groupName, Values: groupFields, OrganizationId: orgId }),
         });
         const json = await response.json();
         if (!response.ok) {
@@ -147,7 +148,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgInfo]
+    [fetchGroups, orgId]
   );
 
   const loadInfo = () => {
@@ -160,6 +161,10 @@ function Dashboard() {
   useEffect(() => {
     loadInfo();
   }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")])
+
+  useEffect(() => {
+    setOrgId(orgInfo ? orgInfo.id : userInfo.orgId);
+  }, [orgInfo, userInfo])
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -311,7 +316,7 @@ function Dashboard() {
             snackbar={snackbar}
             setSnackbar={setSnackbar}
             selectedGroup={selectedGroup}
-            orgId={orgInfo.id}
+            orgId={orgId}
           />
         ) : null}
       </div>
