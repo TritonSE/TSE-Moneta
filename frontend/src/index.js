@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import SetPassword from "./pages/SetPassword";
 
 export default function App() {
   const [user, setUser] = React.useState(null);
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/setPassword/:userId" element={<SetPassword />} />
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>

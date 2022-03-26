@@ -12,34 +12,6 @@ import SideNavigation from "../components/SideNavigation";
 import AddUser from "../components/AddUser";
 import "../css/Admin.css";
 
-const entries = [
-  {
-    firstName: "First name,",
-    lastName: "last name",
-    email: "abc@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@outlook.com",
-  },
-  {
-    firstName: "First",
-    lastName: "Last",
-    email: "emailaddress@organization.com",
-  },
-  {
-    firstName: "Bartholemew",
-    lastName: "Jingleheimer Jameson Jimothy",
-    email: "bartholemewjingleheimerjamesonjimothy@gmail.com",
-  },
-  {
-    firstName: "Alex",
-    lastName: "Zhang",
-    email: "alexzhang1618@gmail.com",
-  },
-];
-
 /**
  * Renders the admin page
  *
@@ -47,28 +19,55 @@ const entries = [
  */
 function Admin() {
   const [orgInfo, setOrgInfo] = React.useState({});
+  const [addUserVisible, setAddUserVisible] = React.useState(false);
+  const [employees, setEmployees] = React.useState([]);
 
   React.useEffect(() => {
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
-  }, [window.localStorage.getItem("orgInfo")])
 
+  }, [window.localStorage.getItem("orgInfo")]);
+
+  React.useEffect(async () => {
+    getEmployees();
+  }, [orgInfo]);
+
+  const getEmployees = async () => {
+    if(orgInfo) {
+      const response = await fetch(`http://localhost:8082/users?organizationId=${orgInfo.id}`);
+      const json = await response.json();
+
+      setEmployees(json.getUser);
+    }
+  }
+
+  const deleteEmployee = async (id) => {
+    await fetch(`http://localhost:8082/users/${id}`, {
+      method: "DELETE",
+      mode: "cors",
+    });
+
+    getEmployees();
+  }
+
+  if(!orgInfo || !employees)
+    return <>Loading</>
 
   return (
     <>
       <SideNavigation currentPage="/admin" />
-      <AddUser orgId={orgInfo.id} />
+      {addUserVisible && <AddUser orgId={orgInfo.id} setAddUserVisible={setAddUserVisible} />}
       <div>
         <div className="admin-div">
           <h1 className="admin-header">Employees with Access</h1>
           <table className="admin-table">
-            {entries.map((entry) => (
+            {employees.map((entry) => (
               <tr className="admin-row" key={entry.email}>
                 <td className="name">
-                  {entry.firstName} {entry.lastName}
+                  {entry.fullName}
                 </td>
                 <td className="email">{entry.email}</td>
                 <td className="remove">
-                  <button className="remove-button" type="button">
+                  <button onClick={() => {deleteEmployee(entry._id)}} className="remove-button" type="button">
                     Remove
                   </button>
                 </td>
@@ -76,7 +75,7 @@ function Admin() {
             ))}
           </table>
           <div className="add-div">
-            <button className="add" type="button">
+            <button onClick={() => setAddUserVisible(true)} className="add" type="button">
               <img src={AddIcon} className="admin add-icon-svg" alt="plus icon on add button" />
               Add
             </button>

@@ -13,11 +13,15 @@
 }
   
 .modal-view {
+    position: fixed;
     background-color: #ffffff;
     padding: 27px 37px;
     border-radius: 5px;
     width: 450px;
     height: 350px;
+    z-index: 1001;
+    top: calc(50vh - 175px);
+    left: calc(50% - 225px);
 }
 
 .user-header h2 {

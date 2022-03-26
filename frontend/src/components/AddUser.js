@@ -17,7 +17,7 @@
   *
   * @return jsx for create group module
   */
- export default function AddUser({orgId}) {
+ export default function AddUser({orgId, setAddUserVisible}) {
     const addUserForm = React.useRef();
 
     /**
@@ -28,8 +28,8 @@
   
       emailjs.sendForm(
         "service_2qqpih5",
-        "template_oz3hlxd",
-        registerForm.current,
+        "template_a354xvs",
+        addUserForm.current,
         "Gi5qKcyxH5m4iCECW"
       );
     };
@@ -40,6 +40,8 @@
         // form information
         const fullName = addUserForm.current[0].value;
         const email = addUserForm.current[1].value;
+
+        console.log(addUserForm.current);
     
         const userExists = await fetch(`http://localhost:8082/users?email=${email}`, {
             method: "GET",
@@ -76,31 +78,38 @@
             body: JSON.stringify(data)
         }) 
 
-        console.log(response);
+        const json = await response.json();
+        const userId = json.addUser._id;
+
+        addUserForm.current[2].value = userId;
+
+        sendEmail(e);
     };
 
    return (
-     <div className="modal-background">
-       <div className="modal-view">
-            <div className="user-header">
-                <h2>Add Employee</h2>
-                <p>Added employees will receive an email notification about their new access.</p>
-            </div>
-            <div className="user-form-wrapper">
-                <form ref={addUserForm} onSubmit={formCheck}>
-                    <label htmlFor="form-full-name">
-                        Employee Name<br />
-                        <input type="text" placeholder="Full name" name="form-full-name" required /><br />
-                    </label>
-                    <label htmlFor="form-email">
-                        Employee Email<br />
-                        <input type="email" placeholder="abc@email.com" name="form-full-name" required /><br />
-                    </label>
-                    <input type="submit" value="Add" />
-                </form>
-            </div>
-       </div>
+    <>
+     <div onClick={()=>setAddUserVisible(false)} className="modal-background"></div>
+    <div className="modal-view">
+        <div className="user-header">
+            <h2>Add Employee</h2>
+            <p>Added employees will receive an email notification about their new access.</p>
+        </div>
+        <div className="user-form-wrapper">
+            <form ref={addUserForm} onSubmit={formCheck}>
+                <label htmlFor="form-full-name">
+                    Employee Name<br />
+                    <input type="text" placeholder="Full name" name="user-full-name" required /><br />
+                </label>
+                <label htmlFor="form-email">
+                    Employee Email<br />
+                    <input type="email" placeholder="abc@email.com" name="user-email" required /><br />
+                </label>
+                <input type="hidden" name="user-id" />
+                <input type="submit" value="Add" />
+            </form>
+        </div>
      </div>
+     </>
    );
  }
  
