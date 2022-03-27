@@ -25,7 +25,6 @@ function Admin() {
   const [addUserVisible, setAddUserVisible] = React.useState(false);
   const [employees, setEmployees] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [reloadCounter, setReloadCounter] = React.useState(0);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",

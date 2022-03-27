@@ -15,6 +15,7 @@ const express = require("express");
 const router = express.Router();
 
 const groups = require("../models/Groups");
+const TableData = require("../models/TableData");
 
 /** adds new group to database.
  * @params Name, and atleast one value
@@ -58,8 +59,6 @@ router.post("/groups/:orgId", async (req, res) => {
  */
 router.put("/groups/:id", async (req, res) => {
   try {
-    console.log(req.params.id);
-    console.log("___________________");
     const id = new ObjectId(req.params.id);
     const groupExists = await groups.exists({ _id: id });
 
@@ -74,8 +73,34 @@ router.put("/groups/:id", async (req, res) => {
     };
 
     const editGroup = await groups.findOneAndUpdate({_id: id}, group);
+    const tableData = await TableData.find({group: req.params.id});
 
-    console.log(editGroup);
+    let groupColumns = [];
+
+    editGroup.Values.map((column, index) => {
+      groupColumns[index] = column.name;
+    })
+
+    // update table data to align with new group info
+    for(let row of tableData) {
+      const columns = Object.keys(row.data);
+      let newTableData = {};
+
+      for(let column of columns) {
+        if(groupColumns.includes(column)) {
+          newTableData[column] = row.data[column];
+        }
+      }
+
+      if(Object.keys(newTableData).length === 0) {
+        const resp = await TableData.deleteOne({_id: row._id});
+        console.log(resp);
+      }
+      else {
+        const resp = await TableData.updateOne({_id: row._id}, {data: newTableData});
+        console.log(resp);
+      }
+    }
 
     if (editGroup) {
       return res.status(200).json({

@@ -71,7 +71,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
    * To update this state, call `dispatch` and pass in an object with the action's `type` and
    * `payload` as described for the `fieldsReducer` function above.
    */
-  const [fields, dispatch] = useReducer(fieldsReducer, !editGroup ? [{ name: "", type: "" }] : []);
+  const [fields, dispatch] = useReducer(fieldsReducer, !editGroup ? [{ name: "", type: "Email" }] : []);
   const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
   useEffect(() => {
@@ -167,11 +167,11 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
           </button>
           <div className="group-submit-div">
             <button className="group-modal-submit" type="submit">
-              Save
+              {editGroup ? "Save" : "Create"}
             </button>
-            <button className="group-modal-cancel" type="button" onClick={() => onDelete(editGroup.id)} style={{marginLeft: "20px"}}>
+            {editGroup && <button className="group-modal-cancel" type="button" onClick={() => onDelete(editGroup.id)} style={{marginLeft: "20px"}}>
               Delete
-            </button>
+            </button>}
             <button className="group-modal-cancel" type="button" onClick={onCancel}>
               Cancel
             </button>

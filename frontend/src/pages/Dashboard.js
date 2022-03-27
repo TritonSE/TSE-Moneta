@@ -161,7 +161,7 @@ function Dashboard() {
    const submitEditGroup = useCallback(
     async (groupName, groupFields, editGroupId) => {
       try {
-        console.log(editGroupId);
+
         const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
           method: "PUT",
           headers: {
@@ -171,13 +171,13 @@ function Dashboard() {
           type: "cors"
         });
 
+        setGroupEditVisible(false);
+
         const json = await response.json();
 
         if (!response.ok) {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
         }
-
-        setGroupEditVisible(false);
 
         setSnackbar({
           open: true,
