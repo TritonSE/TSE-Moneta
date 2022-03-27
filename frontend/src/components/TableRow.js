@@ -47,7 +47,7 @@ export default function TableRow({
     }
   }, [editActivated]);
 
-  if (isLoading) return;
+  if (isLoading) return <></>;
 
   return (
     <tr className="table-body-row" key={cellData.email}>

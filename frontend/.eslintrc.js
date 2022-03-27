@@ -15,6 +15,8 @@ const generalRules = {
   "no-unused-expressions": "off",
   "jsx-a11y/click-events-have-key-events": "off",
   "jsx-a11y/no-noninteractive-element-interactions": "off",
+  "consistent-return": "off",
+  "react/jsx-no-useless-fragment": "off",
 
   // Allow leading underscores in identifiers (e.g. _id in MongoDB).
   "no-underscore-dangle": "off",
