@@ -139,7 +139,7 @@ router.get("/users", async (req, res) => {
     const userExists = await User.exists(req.query);
 
     if (!userExists) {
-      return res.status(204).json({
+      return res.status(400).json({
         msg: "User does not exist!",
       });
     }
@@ -149,28 +149,6 @@ router.get("/users", async (req, res) => {
     if (getUser) {
       return res.status(200).json({
         getUser,
-      });
-    }
-
-    return res.status(500).json({
-      Error: "Error",
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: err });
-  }
-});
-
-/** gets all users from data base
- * @return list of users. Else, returns 500 errors.
- */
-router.get("/users", async (req, res) => {
-  try {
-    const allUsers = await Users.find();
-
-    if (allUsers) {
-      return res.status(200).json({
-        allUsers,
       });
     }
 

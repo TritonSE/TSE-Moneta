@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useCallback, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState, useRef} from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -26,6 +26,7 @@ import "../css/CreateGroup.css";
 const fieldsReducer = (prevFields, { type, payload }) => {
   const { index, value } = payload ?? {};
   const newFields = [...prevFields];
+
   newFields[index] = { ...prevFields[index] };
   switch (type) {
     case "SET_NAME":
@@ -35,7 +36,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
       newFields[index].type = value;
       break;
     case "ADD_ROW":
-      newFields.push({ name: "", type: "" });
+      value ? newFields.push({ name: value.name, type: value.type }) : newFields.push({ name: "", type: "" });
       break;
     case "DELETE_ROW":
       newFields.splice(index, 1);
@@ -57,9 +58,11 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  *
  * @return jsx for create group module
  */
-function CreateGroup({ onConfirm, onCancel }) {
+function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
+  const groupForm = useRef();
+
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
    * a `type`, both strings. Each object may also have a boolean `invalid` field, denoting whether
@@ -68,8 +71,23 @@ function CreateGroup({ onConfirm, onCancel }) {
    * To update this state, call `dispatch` and pass in an object with the action's `type` and
    * `payload` as described for the `fieldsReducer` function above.
    */
-  const [fields, dispatch] = useReducer(fieldsReducer, [{ name: "", type: "" }]);
+  const [fields, dispatch] = useReducer(fieldsReducer, !editGroup ? [{ name: "", type: "" }] : []);
   const [fieldsInvalid, setFieldsInvalid] = useState(false);
+
+  useEffect(() => {
+    if(editGroup) {
+      setGroupName(editGroup.label);
+
+      console.log(editGroup.id);
+
+      editGroup.values.map((value) => {
+        dispatch({type: "ADD_ROW", payload: {value: value}});
+      })
+    }
+    else {
+      setGroupName("");
+    }
+  }, [editGroup]);
 
   const tryConfirm = useCallback(
     (groupName_, fields_) => {
@@ -93,7 +111,7 @@ function CreateGroup({ onConfirm, onCancel }) {
       }
 
       if (valid) {
-        onConfirm(groupName_, fields_);
+        !editGroup ? onConfirm(groupName_, fields_) : onConfirm(groupName_, fields_, editGroup.id);
       }
     },
     [onConfirm]
@@ -106,13 +124,16 @@ function CreateGroup({ onConfirm, onCancel }) {
     <div className="modal-background">
       <div className="modal-view">
         <form
+          ref={groupForm}
           className="group-form"
           onSubmit={(event) => {
             tryConfirm(groupName, fields);
             event.preventDefault();
           }}
         >
-          <h1 className="group-first-header">Create New Group</h1>
+          <h1 className="group-first-header">
+            {!editGroup ? "Create New Group" : "Edit Group"}
+          </h1>
           <h2 className="group-second-header">Group Name</h2>
           <input
             className={nameInputClass}
@@ -146,7 +167,10 @@ function CreateGroup({ onConfirm, onCancel }) {
           </button>
           <div className="group-submit-div">
             <button className="group-modal-submit" type="submit">
-              Create
+              Save
+            </button>
+            <button className="group-modal-cancel" type="button" onClick={() => onDelete(editGroup.id)} style={{marginLeft: "20px"}}>
+              Delete
             </button>
             <button className="group-modal-cancel" type="button" onClick={onCancel}>
               Cancel

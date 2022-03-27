@@ -49,7 +49,9 @@ function Dashboard() {
 
   const [groupOptions, setGroupOptions] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
+  const [groupEditVisible, setGroupEditVisible] = useState(false);
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -96,8 +98,6 @@ function Dashboard() {
       const response = await fetch("http://localhost:8082/search", requestOptions);
       const json = await response.json();
 
-      console.log(json)
-
       setTableData(json);
     } catch (error) {
       setSnackbar({
@@ -106,7 +106,7 @@ function Dashboard() {
         severity: "error",
       });
     }
-  }, []);
+  }, [selectedGroup]);
 
   /**
    * Callback which receives new group info from the create group module and sends a request to the
@@ -116,13 +116,14 @@ function Dashboard() {
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
       try {
-        const response = await fetch(`http://localhost:8082/groups`, {
+        const response = await fetch(`http://localhost:8082/groups/${orgId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ Name: groupName, Values: groupFields, OrganizationId: orgId }),
         });
+        
         const json = await response.json();
         if (!response.ok) {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
@@ -140,6 +141,107 @@ function Dashboard() {
             return;
           }
         }
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message,
+          severity: "error",
+        });
+      }
+    },
+    [fetchGroups, orgId]
+  );
+
+  /**
+   * Callback which receives new group info from the create group module and sends a request to the
+   * backend to create the group. If the creation succeeds, then the newly created group gets
+   * displayed and the module gets closed.
+   */
+   const submitEditGroup = useCallback(
+    async (groupName, groupFields, editGroupId) => {
+      try {
+        console.log(editGroupId);
+        const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ Name: groupName, Values: groupFields }),
+          type: "cors"
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          throw new Error(json.msg ?? json.Error ?? json.message.message);
+        }
+
+        setGroupEditVisible(false);
+
+        setSnackbar({
+          open: true,
+          message: "Group updated!",
+          severity: "success",
+        });
+
+        const options = await fetchGroups();
+        for (const option of options) {
+          if (option.id === editGroupId) {
+            setSelectedGroup(option);
+            return;
+          }
+        }
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message,
+          severity: "error",
+        });
+      }
+    },
+    [fetchGroups, orgId]
+  );
+
+  /**
+   * Callback which receives new group info from the create group module and sends a request to the
+   * backend to create the group. If the creation succeeds, then the newly created group gets
+   * displayed and the module gets closed.
+   */
+   const submitDeleteGroup = useCallback(
+    async (editGroupId) => {
+      try {
+        const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          type: "cors"
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          throw new Error(json.msg ?? json.Error ?? json.message.message);
+        }
+
+        await fetch(`http://localhost:8082/rows?group=${editGroupId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          type: "cors"
+        });
+
+        setGroupEditVisible(false);
+        const options = await fetchGroups();
+
+        options.length > 1 ? setSelectedGroup(options[1]) : setSelectedGroup(groupOptions[0]);
+
+        setSnackbar({
+          open: true,
+          message: "Group deleted!",
+          severity: "success",
+        });
       } catch (error) {
         setSnackbar({
           open: true,
@@ -216,7 +318,7 @@ function Dashboard() {
     return (
       <components.Option {...props} className="clickable">
         {props.data.label}
-        <button className="pencil-button">
+        <button className="pencil-button" onClick={() => {setGroupEditVisible(true); setEditGroup(props.data)}}>
           <Pencil className="Pencil" />
         </button>
       </components.Option>
@@ -290,7 +392,6 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        {console.log(tableData)}
         <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} rerender={tableChanged} />
         <input
           type="text"
@@ -322,6 +423,9 @@ function Dashboard() {
       </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+      )}
+      {groupEditVisible && (
+        <CreateGroup onConfirm={submitEditGroup} editGroup={editGroup} onDelete={submitDeleteGroup} onCancel={() => setGroupEditVisible(false)} />
       )}
       <div className="snackbar">
         <Snackbar

@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema(
     fullName: { type: String, required: true, index: true },
     email: { type: String, required: true, index: true },
     organizationId: { type: String, required: true },
-    password: { type: String, required: false },
+    password: { type: String, required: true, default: "plainText" },
   },
   { timestamps: true }
 );

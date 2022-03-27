@@ -4,6 +4,7 @@
  *
  * @summary Settings page that allows users to change their password.
  * @author Elias Fang
+ * @author Navid Boloorian
  */
 
 import React from "react";
@@ -47,10 +48,6 @@ function Settings() {
     const oldPass = passwordForm.current[0].value;
     const newPass = passwordForm.current[1].value;
     const confPass = passwordForm.current[2].value;
-
-    console.log(oldPass);
-    console.log(newPass);
-    console.log(confPass);
 
     const email = orgInfo ? orgInfo.email : userInfo.email;
 

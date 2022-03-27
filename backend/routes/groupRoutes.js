@@ -10,8 +10,8 @@
  * @author Ainesh Arumugam
  */
 
+const ObjectId = require('mongodb').ObjectId;
 const express = require("express");
-
 const router = express.Router();
 
 const groups = require("../models/Groups");
@@ -20,10 +20,10 @@ const groups = require("../models/Groups");
  * @params Name, and atleast one value
  * @return returns new group object if successfully created. Else, returns 409 or 500 errors.
  */
-router.post("/groups", async (req, res) => {
+router.post("/groups/:orgId", async (req, res) => {
   try {
     const { Name, Values, OrganizationId } = req.body;
-    const numMatched = await groups.count({ Name });
+    const numMatched = await groups.count({ Name, OrganizationId: req.params.orgId });
 
     if (numMatched > 0) {
       return res.status(409).json({ msg: "Group name already registered!" });
@@ -58,7 +58,10 @@ router.post("/groups", async (req, res) => {
  */
 router.put("/groups/:id", async (req, res) => {
   try {
-    const groupExists = await groups.exists({ _id: req.params.id });
+    console.log(req.params.id);
+    console.log("___________________");
+    const id = new ObjectId(req.params.id);
+    const groupExists = await groups.exists({ _id: id });
 
     if (!groupExists) {
       return res.status(400).json({ msg: "This group does not exist!" });
@@ -70,7 +73,10 @@ router.put("/groups/:id", async (req, res) => {
       Values,
     };
 
-    const editGroup = await groups.findOneAndUpdate(req.params.id, group);
+    const editGroup = await groups.findOneAndUpdate({_id: id}, group);
+
+    console.log(editGroup);
+
     if (editGroup) {
       return res.status(200).json({
         msg: "Group edited succesfully!",
@@ -92,7 +98,8 @@ router.put("/groups/:id", async (req, res) => {
  */
 router.delete("/groups/:id", async (req, res) => {
   try {
-    const groupExists = await groups.exists({ _id: req.params.id });
+    const id = new ObjectId(req.params.id);
+    const groupExists = await groups.exists({ _id: id });
 
     if (!groupExists) {
       return res.status(400).json({

@@ -6,6 +6,7 @@
  */
 const express = require("express");
 
+const ObjectId = require('mongodb').ObjectId;
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const Group = require("../models/Groups");
@@ -104,7 +105,8 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
  */
 router.put("/rows/:id", async (req, res) => {
   try {
-    const tableData = await TableData.find({ _id: req.params.id });
+    const id = new ObjectId(req.params.id);
+    const tableData = await TableData.find({ _id: id });
 
     if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
       res.status(409).json({error: "The first column is the primary column and must be included"})
@@ -113,7 +115,7 @@ router.put("/rows/:id", async (req, res) => {
       // if .find returns empty array
       res.status(500).json({ error: "Row not found" });
     } else {
-      await TableData.updateOne({ _id: req.params.id }, req.body).catch((error) => {
+      await TableData.updateOne({ _id: id }, req.body).catch((error) => {
         res.status(500).json({error: "Server error"});
       });
       res.json(tableData);

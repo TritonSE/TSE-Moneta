@@ -10,8 +10,8 @@
  * @author Pratyush Chand
  */
 
+const ObjectId = require('mongodb').ObjectId;
 const express = require("express");
-
 const router = express.Router();
 
 const organizations = require("../models/Organizations");
@@ -60,7 +60,8 @@ router.post("/organizations", async (req, res) => {
  */
 router.put("/organizations/:id", async (req, res) => {
   try {
-    const companyExists = await organizations.exists({ _id: req.params.id });
+    const id = new ObjectId(req.params.id);
+    const companyExists = await organizations.exists({ _id: id });
 
     if (!companyExists) {
       return res.status(400).json({ msg: "This company does not exist!" });
@@ -73,7 +74,7 @@ router.put("/organizations/:id", async (req, res) => {
       Password,
     };
 
-    const editCompany = await organizations.findOneAndUpdate(req.params.id, company);
+    const editCompany = await organizations.findOneAndUpdate(id, company);
     if (editCompany) {
       return res.status(200).json({
         msg: "Company edited succesfully!",
@@ -95,7 +96,8 @@ router.put("/organizations/:id", async (req, res) => {
  */
 router.delete("/organizations/:id", async (req, res) => {
   try {
-    const companyExists = await organizations.exists({ _id: req.params.id });
+    const id = new ObjectId(req.params.id);
+    const companyExists = await organizations.exists({ _id: id });
 
     if (!companyExists) {
       return res.status(400).json({
@@ -124,40 +126,19 @@ router.delete("/organizations/:id", async (req, res) => {
  * @params mongoose id
  * @return returns company information. Else, returns 500 errors.
  */
-router.get("/organizations/:email", async (req, res) => {
+router.get("/organizations", async (req, res) => {
   try {
-    const companyExists = await organizations.exists({ Email: req.params.email });
+    const companyExists = await organizations.exists(req.query);
     if (!companyExists) {
       return res.status(204).json({
         msg: "This company does not exist",
       });
     }
 
-    const getCompany = await organizations.find({ Email: req.params.email });
+    const getCompany = await organizations.find(req.query);
     if (getCompany) {
       return res.status(200).json({
         getCompany,
-      });
-    }
-
-    return res.status(500).json({
-      Error: "Error",
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: err });
-  }
-});
-
-/** gets all organizations from database.
- * @return returns list of all organizations. Else, returns 500 errors.
- */
-router.get("/organizations", async (req, res) => {
-  try {
-    const listOfOrganizations = await organizations.find();
-    if (listOfOrganizations) {
-      return res.status(200).json({
-        listOfOrganizations,
       });
     }
 
