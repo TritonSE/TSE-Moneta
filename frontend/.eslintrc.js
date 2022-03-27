@@ -12,6 +12,8 @@ const generalRules = {
   "prefer-arrow-callback": "off",
   "func-names": "off",
   "no-restricted-syntax": "off",
+  "no-unused-expressions": "off",
+  "jsx-a11y/click-events-have-key-events": "off",
 
   // Allow leading underscores in identifiers (e.g. _id in MongoDB).
   "no-underscore-dangle": "off",

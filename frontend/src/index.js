@@ -13,43 +13,34 @@ import SetPassword from "./pages/SetPassword";
 import "./css/index.css";
 
 export default function App() {
-  const [user, setUser] = React.useState(null);
-
-  onAuthStateChanged(auth, (currUser) => {
-    if (currUser) {
-      setUser(currUser);
-    } else {
-      setUser(null);
-    }
-  });
-
   const orgInfo = window.localStorage.getItem("orgInfo");
   const userInfo = window.localStorage.getItem("userInfo");
 
-  if(orgInfo) {
+  if (orgInfo) {
     return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="*" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
-    )
-  } else if(userInfo) {
-    return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="*" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
-    )
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    );
   }
-  else {
-    return  (
+  if (userInfo) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -59,8 +50,7 @@ export default function App() {
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>
-    )
-  }
+  );
 }
 
 ReactDOM.render(

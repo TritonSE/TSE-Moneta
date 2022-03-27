@@ -6,40 +6,47 @@
  * @author Alex Zhang
  */
 
- import React, { useEffect, useState } from "react";
- import TableRow from "./TableRow";
- import PrevPage from "../images/PrevPageIcon.svg";
- import NextPage from "../images/NextPageIcon.svg";
- import "../css/Table.css";
- 
- /**
-  * Renders the table display.
-  *
-  * @returns Table display for dashboard.
-  */
- function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage, rerender }) {
+import React, { useEffect, useState } from "react";
+import TableRow from "./TableRow";
+import PrevPage from "../images/PrevPageIcon.svg";
+import NextPage from "../images/NextPageIcon.svg";
+import "../css/Table.css";
+
+/**
+ * Renders the table display.
+ *
+ * @returns Table display for dashboard.
+ */
+function Table({
+  setTableChanged,
+  setSnackbar,
+  addingRow,
+  data,
+  group,
+  elementsPerPage,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
-  let rowTemplate = {};
+  const rowTemplate = {};
 
   useEffect(() => {
-    if(group && group.values) {
-      for(let value of group.values) {
+    if (group && group.values) {
+      for (const value of group.values) {
         rowTemplate[value] = "";
       }
     }
 
     setCurrentPage(1);
-  }, [group, data])
+  }, [group, data]);
 
-  const createTableData = async (data) => {
+  const createTableData = async (dataArg) => {
     setTableChanged(true);
 
     const tempData = {
-      group: group.id, 
-      data: data,
-    }
+      group: group.id,
+      dataArg,
+    };
 
     const response = await fetch(`http://localhost:8082/rows`, {
       method: "POST",
@@ -47,37 +54,36 @@
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(tempData)
-    }) 
+      body: JSON.stringify(tempData),
+    });
 
-    if(response.ok) {
+    if (response.ok) {
       setSnackbar({
         open: true,
         message: "Row added!",
-        severity: "success"
-      })
-    }
-    else {
+        severity: "success",
+      });
+    } else {
       const json = await response.json();
       const error = json.error;
 
       setSnackbar({
         open: true,
         message: error,
-        severity: "error"
-      })
+        severity: "error",
+      });
     }
 
     setTableChanged(false);
-  }
+  };
 
-  const updateTableData = async (id, data) => {
+  const updateTableData = async (id, dataArg) => {
     setTableChanged(true);
 
     const tempData = {
-      group: group.id, 
-      data: data
-    }
+      group: group.id,
+      dataArg,
+    };
 
     const response = await fetch(`http://localhost:8082/rows/${id}`, {
       method: "PUT",
@@ -85,61 +91,59 @@
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(tempData)
-    }) 
+      body: JSON.stringify(tempData),
+    });
 
-    if(response.ok) {
+    if (response.ok) {
       setSnackbar({
         open: true,
         message: "Row updated!",
-        severity: "success"
-      })
-    }
-    else {
+        severity: "success",
+      });
+    } else {
       const json = await response.json();
       const error = json.error;
 
       setSnackbar({
         open: true,
         message: error,
-        severity: "error"
-      })
+        severity: "error",
+      });
     }
 
     setTableChanged(false);
-  }
+  };
 
   const deleteTableData = async (id) => {
     setTableChanged(true);
 
     const response = await fetch(`http://localhost:8082/rows?_id=${id}`, {
       method: "DELETE",
-    }) 
+    });
 
-    if(response.ok) {
+    if (response.ok) {
       setSnackbar({
         open: true,
         message: "Row deleted!",
-        severity: "success"
-      })
-    }
-    else {
+        severity: "success",
+      });
+    } else {
       const json = await response.json();
       const error = json.error;
 
       setSnackbar({
         open: true,
         message: error,
-        severity: "error"
-      })
+        severity: "error",
+      });
     }
 
     setTableChanged(false);
-  }
+  };
 
   if (!group || Object.keys(group).length === 0) {
     /** Handle no groups selected table here */
-    return <></>;
+    return;
   }
 
   return (
@@ -153,17 +157,20 @@
               </th>
             ))}
           </tr>
-          {addingRow ? 
-          <TableRow 
-            newRow
-            createTableData={createTableData}
-            cellData={rowTemplate}
-            groupFields={group.values}
-          /> : ""}
+          {addingRow ? (
+            <TableRow
+              newRow
+              createTableData={createTableData}
+              cellData={rowTemplate}
+              groupFields={group.values}
+            />
+          ) : (
+            ""
+          )}
           {data
             .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
             .map((entry) => (
-              <TableRow 
+              <TableRow
                 id={entry._id}
                 newRow={false}
                 updateTableData={updateTableData}
@@ -198,6 +205,6 @@
       )}
     </div>
   );
- }
- 
- export default Table;
+}
+
+export default Table;

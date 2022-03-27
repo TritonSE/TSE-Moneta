@@ -28,8 +28,8 @@ export default function Register() {
    * Make sure a user is not logged in during registration
    */
   React.useEffect(() => {
-      window.localStorage.clear();
-  }, [])
+    window.localStorage.clear();
+  }, []);
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -55,7 +55,7 @@ export default function Register() {
 
   /**
    * Checks if the sign up credentials are correct
-   * 
+   *
    * @returns true if successful, false otherwise
    */
   const formCheck = async (e) => {
@@ -80,10 +80,10 @@ export default function Register() {
     });
 
     const userCheck = await fetch(`http://localhost:8082/users?email=${email}`, {
-      method: "GET"
-    })
+      method: "GET",
+    });
 
-    if(userCheck.status == 200) {
+    if (userCheck.status === 200) {
       setSnackbar({
         open: true,
         message: "Email already in use",
@@ -102,7 +102,7 @@ export default function Register() {
 
       // use firebase to sign up user
       createUserWithEmailAndPassword(auth, email, password);
-    } 
+    }
     // if email is already in db
     else if (response.status === 409)
       setSnackbar({
@@ -110,7 +110,7 @@ export default function Register() {
         message: json.msg,
         severity: "error",
       });
-    // some unexpected error 
+    // some unexpected error
     else
       setSnackbar({
         open: true,

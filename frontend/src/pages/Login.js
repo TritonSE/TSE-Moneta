@@ -21,7 +21,6 @@ export default function Login() {
     severity: "",
   });
 
-
   const handleSnackClose = () => {
     setSnackbar({
       open: false,
@@ -50,7 +49,7 @@ export default function Login() {
       headers: { "Content-Type": "application/json" },
     });
 
-    if(orgResponse.status === 200) {
+    if (orgResponse.status === 200) {
       const orgJson = await orgResponse.json();
       let status = "";
 
@@ -63,14 +62,17 @@ export default function Login() {
 
         signInWithEmailAndPassword(auth, email, password)
           .then(() => {
-              window.localStorage.setItem("orgInfo", JSON.stringify({
-                  name: org.Name,
-                  email: org.Email,
-                  approvedUsers: org.ApprovedUsers,
-                  id: org._id,
-              }));
-  
-              location.href="/dashboard";
+            window.localStorage.setItem(
+              "orgInfo",
+              JSON.stringify({
+                name: org.Name,
+                email: org.Email,
+                approvedUsers: org.ApprovedUsers,
+                id: org._id,
+              })
+            );
+
+            window.location.href = "/dashboard";
           })
           .catch(() =>
             // org is found but the password is incorrect
@@ -80,27 +82,25 @@ export default function Login() {
               severity: "error",
             })
           );
+      } else {
+        let errorMsg = "";
+
+        // still pending
+        if (status === "pending")
+          errorMsg =
+            "The registration status of your account is still pending. Please check back later.";
+        // denied
+        else if (status === "denied") errorMsg = "Your registration application has been denied.";
+        // unexpected error
+        else errorMsg = "Server error. Try again later";
+
+        setSnackbar({
+          open: true,
+          message: errorMsg,
+          severity: "error",
+        });
       }
-      else {
-      let errorMsg = "";
-
-      // still pending
-      if (status === "pending")
-        errorMsg =
-          "The registration status of your account is still pending. Please check back later.";
-      // denied
-      else if (status === "denied") errorMsg = "Your registration application has been denied.";
-      // unexpected error
-      else errorMsg = "Server error. Try again later";
-
-      setSnackbar({
-        open: true,
-        message: errorMsg,
-        severity: "error",
-      });
-    }
-    }
-    else if(userResponse.status !== 200) {
+    } else if (userResponse.status !== 200) {
       let errorMsg = "";
 
       // not registered
@@ -116,28 +116,34 @@ export default function Login() {
       return false;
     }
 
-    if(userResponse.status === 200) {
+    if (userResponse.status === 200) {
       const userJson = await userResponse.json();
-        const user = userJson.getUser[0];
-        const orgCheckResponse = await fetch(`http://localhost:8082/organizations?_id=${user.organizationId}`, {
+      const user = userJson.getUser[0];
+      const orgCheckResponse = await fetch(
+        `http://localhost:8082/organizations?_id=${user.organizationId}`,
+        {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-        });
+        }
+      );
 
-        const orgCheckJson = await orgCheckResponse.json();
-        const org = orgCheckJson.getCompany[0];
+      const orgCheckJson = await orgCheckResponse.json();
+      const org = orgCheckJson.getCompany[0];
 
-        signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-            window.localStorage.setItem("userInfo", JSON.stringify({
-                orgName: org.Name,
-                orgId: org._id,
-                email: user.email,
-                name: user.fullName,
-                id: user._id
-            }));
+          window.localStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              orgName: org.Name,
+              orgId: org._id,
+              email: user.email,
+              name: user.fullName,
+              id: user._id,
+            })
+          );
 
-            location.href="/dashboard";
+          window.location.href = "/dashboard";
         })
         .catch(() =>
           // org is found but the password is incorrect
@@ -147,9 +153,8 @@ export default function Login() {
             severity: "error",
           })
         );
-    }
-    else if(orgResponse.status !== 200) {
-      let errorMsg = "Email or password is incorrect";
+    } else if (orgResponse.status !== 200) {
+      const errorMsg = "Email or password is incorrect";
 
       setSnackbar({
         open: true,

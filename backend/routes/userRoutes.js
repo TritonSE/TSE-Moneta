@@ -39,7 +39,7 @@ router.post("/users", async (req, res) => {
       organizationId,
     };
 
-    console.log(req.body)
+    console.log(req.body);
     console.log(user);
 
     const addUser = await Users.create(user);

@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useCallback, useEffect, useReducer, useState, useRef} from "react";
+import React, { useCallback, useEffect, useReducer, useState, useRef } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -36,7 +36,9 @@ const fieldsReducer = (prevFields, { type, payload }) => {
       newFields[index].type = value;
       break;
     case "ADD_ROW":
-      value ? newFields.push({ name: value.name, type: value.type }) : newFields.push({ name: "", type: "" });
+      value
+        ? newFields.push({ name: value.name, type: value.type })
+        : newFields.push({ name: "", type: "" });
       break;
     case "DELETE_ROW":
       newFields.splice(index, 1);
@@ -58,7 +60,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  *
  * @return jsx for create group module
  */
-function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
+function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
   const groupForm = useRef();
@@ -71,20 +73,21 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
    * To update this state, call `dispatch` and pass in an object with the action's `type` and
    * `payload` as described for the `fieldsReducer` function above.
    */
-  const [fields, dispatch] = useReducer(fieldsReducer, !editGroup ? [{ name: "", type: "Email" }] : []);
+  const [fields, dispatch] = useReducer(
+    fieldsReducer,
+    !editGroup ? [{ name: "", type: "Email" }] : []
+  );
   const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
   useEffect(() => {
-    if(editGroup) {
+    if (editGroup) {
       setGroupName(editGroup.label);
 
-      console.log(editGroup.id);
-
       editGroup.values.map((value) => {
-        dispatch({type: "ADD_ROW", payload: {value: value}});
-      })
-    }
-    else {
+        dispatch({ type: "ADD_ROW", payload: { value } });
+        return value;
+      });
+    } else {
       setGroupName("");
     }
   }, [editGroup]);
@@ -131,9 +134,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
             event.preventDefault();
           }}
         >
-          <h1 className="group-first-header">
-            {!editGroup ? "Create New Group" : "Edit Group"}
-          </h1>
+          <h1 className="group-first-header">{!editGroup ? "Create New Group" : "Edit Group"}</h1>
           <h2 className="group-second-header">Group Name</h2>
           <input
             className={nameInputClass}
@@ -169,9 +170,16 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete}) {
             <button className="group-modal-submit" type="submit">
               {editGroup ? "Save" : "Create"}
             </button>
-            {editGroup && <button className="group-modal-cancel" type="button" onClick={() => onDelete(editGroup.id)} style={{marginLeft: "20px"}}>
-              Delete
-            </button>}
+            {editGroup && (
+              <button
+                className="group-modal-cancel"
+                type="button"
+                onClick={() => onDelete(editGroup.id)}
+                style={{ marginLeft: "20px" }}
+              >
+                Delete
+              </button>
+            )}
             <button className="group-modal-cancel" type="button" onClick={onCancel}>
               Cancel
             </button>

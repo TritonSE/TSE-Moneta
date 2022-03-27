@@ -21,7 +21,6 @@ import "../css/SideNavigation.css";
  * @returns side navigation content
  */
 function SideNavigation(props) {
-
   let databaseClassName = "sidenav-button database";
   let adminClassName = "sidenav-button admin";
   let settingsClassName = "sidenav-button settings";
@@ -37,8 +36,8 @@ function SideNavigation(props) {
   const signOutUser = () => {
     signOut(auth);
     window.localStorage.clear();
-    location.href="/login";
-  }
+    window.location.href = "/login";
+  };
 
   return (
     <div className="side-navigation">
@@ -49,22 +48,26 @@ function SideNavigation(props) {
         </button>
       </Link>
 
-      <div className="side-navigation-tabs" style={props.userInfo && {height: "40vh"}}>
-      <Link to="/">
-        <button type="button" className={databaseClassName}>
-          <DatabaseIcon className="sidenav-icon" />
-        </button>
-        <p className="sidenav-description database">Database</p>
-      </Link>
+      <div className="side-navigation-tabs" style={props.userInfo && { height: "40vh" }}>
+        <Link to="/">
+          <button type="button" className={databaseClassName}>
+            <DatabaseIcon className="sidenav-icon" />
+          </button>
+          <p className="sidenav-description database">Database</p>
+        </Link>
 
-      {!props.userInfo ? <Link to="/admin">
-        <button type="button" className={adminClassName}>
-          <AdminIcon className="sidenav-icon" />
-        </button>
-        <p className="sidenav-description admin">Admin</p>
-      </Link> : ""}
+        {!props.userInfo ? (
+          <Link to="/admin">
+            <button type="button" className={adminClassName}>
+              <AdminIcon className="sidenav-icon" />
+            </button>
+            <p className="sidenav-description admin">Admin</p>
+          </Link>
+        ) : (
+          ""
+        )}
 
-      <Link to="/settings">
+        <Link to="/settings">
           <button type="button" className={settingsClassName}>
             <SettingsIcon className="sidenav-icon" />
           </button>

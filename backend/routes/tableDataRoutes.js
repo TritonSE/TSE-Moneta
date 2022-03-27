@@ -6,9 +6,10 @@
  */
 const express = require("express");
 
-const ObjectId = require('mongodb').ObjectId;
+const ObjectId = require("mongodb").ObjectId;
+
 const router = express.Router();
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 const Group = require("../models/Groups");
 const TableData = require("../models/TableData");
 
@@ -36,9 +37,10 @@ const TableData = require("../models/TableData");
  */
 router.post("/rows", [body("group").exists(), body("data").exists()], async (req, res) => {
   try {
-    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {  
-      res.status(409).json({error: "The first column is the primary column and must be included"})
-      return;
+    if (req.body.data[Object.keys(req.body.data)[0]] === "") {
+      return res
+        .status(409)
+        .json({ error: "The first column is the primary column and must be included" });
     }
 
     const group = await Group.findById(req.body.group).distinct("Values");
@@ -84,15 +86,15 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       .then(async (data) => {
         const tableData = new TableData({
           group: req.body.group,
-          data: req.body.data
+          data: req.body.data,
         });
 
         await tableData.save().catch((err) => res.status(500).json("Error: " + err));
         return res.status(200).json("Posted TableData!");
       })
-      .catch((error) => res.status(500).json({error: "Server error"}));
+      .catch((error) => res.status(500).json({ error: "Server error" }));
   } catch (error) {
-    return false;
+    return res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -108,20 +110,21 @@ router.put("/rows/:id", async (req, res) => {
     const id = new ObjectId(req.params.id);
     const tableData = await TableData.find({ _id: id });
 
-    if(req.body.data[(Object.keys(req.body.data)[0])] === "") {
-      res.status(409).json({error: "The first column is the primary column and must be included"})
-    }
-    else if (!tableData.length) {
+    if (req.body.data[Object.keys(req.body.data)[0]] === "") {
+      res
+        .status(409)
+        .json({ error: "The first column is the primary column and must be included" });
+    } else if (!tableData.length) {
       // if .find returns empty array
       res.status(500).json({ error: "Row not found" });
     } else {
-      await TableData.updateOne({ _id: id }, req.body).catch((error) => {
-        res.status(500).json({error: "Server error"});
+      await TableData.updateOne({ _id: id }, req.body).catch(() => {
+        res.status(500).json({ error: "Server error" });
       });
       res.json(tableData);
     }
   } catch (error) {
-    res.status(500).json({error: "Server error"});
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -132,7 +135,8 @@ router.put("/rows/:id", async (req, res) => {
  */
 router.get("/rows", (req, res) => {
   try {
-    TableData.find(req.query).sort({createdAt: 1})
+    TableData.find(req.query)
+      .sort({ createdAt: 1 })
       .exec()
       .then((data) => {
         if (!data.length) {
@@ -179,7 +183,9 @@ router.delete("/rows", (req, res) => {
  */
 router.post("/search", [body("group").exists(), body("search").exists()], async (req, res) => {
   try {
-    const tableData = await TableData.find({"group": {$eq: req.body.group}}).sort({createdAt: -1});
+    const tableData = await TableData.find({ group: { $eq: req.body.group } }).sort({
+      createdAt: -1,
+    });
 
     const ret = [];
     for (const row of tableData) {

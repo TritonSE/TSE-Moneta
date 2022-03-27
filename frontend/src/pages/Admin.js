@@ -9,10 +9,10 @@
 
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
+import ReactLoading from "react-loading";
 import AddIcon from "../images/AddIcon.svg";
 import SideNavigation from "../components/SideNavigation";
 import AddUser from "../components/AddUser";
-import ReactLoading from 'react-loading';
 import "../css/Admin.css";
 
 /**
@@ -43,23 +43,22 @@ function Admin() {
     setIsLoading(true);
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setIsLoading(false);
-
   }, [window.localStorage.getItem("orgInfo")]);
-
-  React.useEffect(async () => {
-    getEmployees();
-  }, [orgInfo, addUserVisible]);
 
   const getEmployees = async () => {
     setIsLoading(true);
-    if(orgInfo) {
+    if (orgInfo) {
       const response = await fetch(`http://localhost:8082/users?organizationId=${orgInfo.id}`);
       const json = await response.json();
 
       setEmployees(json.getUser);
     }
     setIsLoading(false);
-  }
+  };
+
+  React.useEffect(async () => {
+    getEmployees();
+  }, [orgInfo, addUserVisible]);
 
   const deleteEmployee = async (id) => {
     setIsLoading(true);
@@ -69,46 +68,61 @@ function Admin() {
     });
     setIsLoading(false);
 
-    if(response.ok)
+    if (response.ok)
       setSnackbar({
         open: true,
-        message:  "User deleted!",
-        severity: "success"
-      })
-    else 
+        message: "User deleted!",
+        severity: "success",
+      });
+    else
       setSnackbar({
         open: true,
         message: "Something went wrong",
-        severity: "error"
-      })
+        severity: "error",
+      });
 
     getEmployees();
-  }
+  };
 
-  if(isLoading || !orgInfo)
-    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>
+  if (isLoading || !orgInfo)
+    return (
+      <div className="loading">
+        <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+      </div>
+    );
 
   return (
     <>
       <SideNavigation currentPage="/admin" />
-      {addUserVisible && <AddUser setSnackbar={setSnackbar} orgId={orgInfo.id} setAddUserVisible={setAddUserVisible} />}
+      {addUserVisible && (
+        <AddUser
+          setSnackbar={setSnackbar}
+          orgId={orgInfo.id}
+          setAddUserVisible={setAddUserVisible}
+        />
+      )}
       <div>
         <div className="admin-div">
           <h1 className="admin-header">Employees with Access</h1>
           <table className="admin-table">
-            {employees && employees.map((entry) => (
-              <tr className="admin-row" key={entry.email}>
-                <td className="name">
-                  {entry.fullName}
-                </td>
-                <td className="email">{entry.email}</td>
-                <td className="remove">
-                  <button onClick={() => {deleteEmployee(entry._id)}} className="remove-button" type="button">
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {employees &&
+              employees.map((entry) => (
+                <tr className="admin-row" key={entry.email}>
+                  <td className="name">{entry.fullName}</td>
+                  <td className="email">{entry.email}</td>
+                  <td className="remove">
+                    <button
+                      onClick={() => {
+                        deleteEmployee(entry._id);
+                      }}
+                      className="remove-button"
+                      type="button"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </table>
           <div className="add-div">
             <button onClick={() => setAddUserVisible(true)} className="add" type="button">

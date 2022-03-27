@@ -105,7 +105,9 @@ img {
   background: url("../images/GroupIcon.svg") no-repeat 15px center;
 }
 
-#nonprofit-password, #user-password, #conf-user-password {
+#nonprofit-password,
+#user-password,
+#conf-user-password {
   background: url("../images/PasswordIcon.svg") no-repeat 15px center;
 }
 

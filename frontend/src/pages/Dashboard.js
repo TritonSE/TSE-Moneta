@@ -10,6 +10,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select, { components } from "react-select";
 import { Snackbar, Alert } from "@mui/material";
+import ReactLoading from "react-loading";
 import SideNavigation from "../components/SideNavigation";
 import Table from "../components/Table";
 import AddIcon from "../images/AddIcon.svg";
@@ -19,7 +20,6 @@ import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
-import ReactLoading from 'react-loading';
 
 import "../css/Dashboard.css";
 
@@ -64,9 +64,11 @@ function Dashboard() {
     try {
       const response = await fetch(`http://localhost:8082/groups/${orgId}`);
       const { listOfGroups } = await response.json();
-      const options = [{ id: "", value: "create-new", values: [], label: "Create New", isCreate: true }];
-      
-      if(listOfGroups) {
+      const options = [
+        { id: "", value: "create-new", values: [], label: "Create New", isCreate: true },
+      ];
+
+      if (listOfGroups) {
         for (const group of listOfGroups) {
           const { Name, _id, GroupId, Values } = group;
           options.push({ id: _id, value: GroupId, values: Values, label: Name, isCreate: false });
@@ -91,25 +93,28 @@ function Dashboard() {
   /**
    * Fetches the rows in the given group which contain the given search string
    */
-  const fetchRows = useCallback(async (groupID, searchString = "") => {
-    try {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ group: groupID, search: searchString }),
-      };
-      const response = await fetch("http://localhost:8082/search", requestOptions);
-      const json = await response.json();
+  const fetchRows = useCallback(
+    async (groupID, searchString = "") => {
+      try {
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ group: groupID, search: searchString }),
+        };
+        const response = await fetch("http://localhost:8082/search", requestOptions);
+        const json = await response.json();
 
-      setTableData(json);
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.message,
-        severity: "error",
-      });
-    }
-  }, [selectedGroup]);
+        setTableData(json);
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message,
+          severity: "error",
+        });
+      }
+    },
+    [selectedGroup]
+  );
 
   /**
    * Callback which receives new group info from the create group module and sends a request to the
@@ -126,7 +131,7 @@ function Dashboard() {
           },
           body: JSON.stringify({ Name: groupName, Values: groupFields, OrganizationId: orgId }),
         });
-        
+
         const json = await response.json();
         if (!response.ok) {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
@@ -158,17 +163,16 @@ function Dashboard() {
   /**
    * Callback for editing groups.
    */
-   const submitEditGroup = useCallback(
+  const submitEditGroup = useCallback(
     async (groupName, groupFields, editGroupId) => {
       try {
-
         const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ Name: groupName, Values: groupFields }),
-          type: "cors"
+          type: "cors",
         });
 
         setGroupEditVisible(false);
@@ -204,9 +208,9 @@ function Dashboard() {
   );
 
   /**
-   * Callback for deleting groups. 
+   * Callback for deleting groups.
    */
-   const submitDeleteGroup = useCallback(
+  const submitDeleteGroup = useCallback(
     async (editGroupId) => {
       try {
         const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
@@ -214,7 +218,7 @@ function Dashboard() {
           headers: {
             "Content-Type": "application/json",
           },
-          type: "cors"
+          type: "cors",
         });
 
         const json = await response.json();
@@ -228,7 +232,7 @@ function Dashboard() {
           headers: {
             "Content-Type": "application/json",
           },
-          type: "cors"
+          type: "cors",
         });
 
         setGroupEditVisible(false);
@@ -260,18 +264,18 @@ function Dashboard() {
     setUserInfo(JSON.parse(window.localStorage.getItem("userInfo")));
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     loadInfo();
-  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")])
+  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")]);
 
   /**
    * If user use user obj, otherwise use org obj
    */
   useEffect(() => {
     setOrgId(orgInfo ? orgInfo.id : userInfo.orgId);
-  }, [orgInfo, userInfo])
+  }, [orgInfo, userInfo]);
 
   /**
    * Initial group retrieval to populate group selection dropdown
@@ -323,7 +327,14 @@ function Dashboard() {
     return (
       <components.Option {...props} className="clickable">
         {props.data.label}
-        <button className="pencil-button" onClick={() => {setGroupEditVisible(true); setEditGroup(props.data)}}>
+        <button
+          type="button"
+          className="pencil-button"
+          onClick={() => {
+            setGroupEditVisible(true);
+            setEditGroup(props.data);
+          }}
+        >
           <Pencil className="Pencil" />
         </button>
       </components.Option>
@@ -372,32 +383,53 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
-  if(isLoading || (!orgInfo && !userInfo)) {
-    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>;
+  if (isLoading || (!orgInfo && !userInfo)) {
+    return (
+      <div className="loading">
+        <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+      </div>
+    );
   }
 
   return (
     <>
       <SideNavigation currentPage="/" userInfo={userInfo} />
       <div className="dashboard-div">
-        <h1 className="dashboard-header">{
-          orgInfo ? orgInfo.name : userInfo.orgName
-        }</h1>
+        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
-          options={groupOptions}  
+          options={groupOptions}
           placeholder="Select Group"
           styles={selectStyles}
           components={{ Option: iconOption }}
           value={selectedGroup}
           onChange={handleSelectGroup}
         />
-        <button className="add-row clickable" type="button" onClick={()=>setAddingRow(!addingRow)}>
+        <button
+          className="add-row clickable"
+          type="button"
+          onClick={() => setAddingRow(!addingRow)}
+        >
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        {dataLoading ? <div className="data-loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div> : <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} rerender={tableChanged} />}
+        {dataLoading ? (
+          <div className="data-loading">
+            <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+          </div>
+        ) : (
+          <Table
+            CSVUploaded={CSVUploaded}
+            setSnackbar={setSnackbar}
+            addingRow={addingRow}
+            group={selectedGroup}
+            data={tableData}
+            elementsPerPage={25}
+            setTableChanged={setTableChanged}
+            rerender={tableChanged}
+          />
+        )}
         <input
           type="text"
           className="dashboard-search"
@@ -431,7 +463,12 @@ function Dashboard() {
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
       {groupEditVisible && (
-        <CreateGroup onConfirm={submitEditGroup} editGroup={editGroup} onDelete={submitDeleteGroup} onCancel={() => setGroupEditVisible(false)} />
+        <CreateGroup
+          onConfirm={submitEditGroup}
+          editGroup={editGroup}
+          onDelete={submitDeleteGroup}
+          onCancel={() => setGroupEditVisible(false)}
+        />
       )}
       <div className="snackbar">
         <Snackbar

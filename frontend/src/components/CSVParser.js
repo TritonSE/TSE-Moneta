@@ -19,17 +19,22 @@ import "../css/CSVParser.css";
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, orgId, setDataLoading}) {
+function CSVParser({
+  CSVUploaded,
+  setCSVUploaded,
+  setSnackbar,
+  selectedGroup,
+  orgId,
+  setDataLoading,
+}) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
 
-  console.log(tableData);
-
   React.useEffect(async () => {
     await fetch("http://localhost:8082/rows?group=" + group.id).then(async (response) => {
-      if(response.ok) {
+      if (response.ok) {
         let json = await response.json();
         json = json.map((row) => row.data);
         setTableData(json);
@@ -46,11 +51,8 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
   function validateCSV(values) {
     const schemaColumns = group.values;
 
-    console.log(schemaColumns);
-
     for (const row of values) {
-      console.log(row)
-      if (Object.keys(row).length < (schemaColumns.length - 1)) return 1; // check if sufficient columns are present
+      if (Object.keys(row).length < schemaColumns.length - 1) return 1; // check if sufficient columns are present
       for (const key of Object.keys(row)) {
         const field = schemaColumns.find((obj) => obj.name === key);
         if (field == null) continue; // skip if col is not present in schema
@@ -67,8 +69,6 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
    * @author Kevin Fu
    */
   async function importToDB(values, CSVUploadedArg, setUploadedCSV) {
-    console.log(values)
-
     switch (validateCSV(values)) {
       case 1:
         setSnackbar({
@@ -97,9 +97,9 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
       const data = {
         group: group.id,
         data: row,
-        organizationId: orgId
+        organizationId: orgId,
       };
-      
+
       const resp = await fetch("http://localhost:8082/rows", {
         method: "POST",
         headers: {
@@ -110,8 +110,6 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
       });
 
       const json = await resp.json();
-      console.log(resp);
-      console.log(json);
     }
     setDataLoading(false);
 

@@ -8,11 +8,11 @@
  */
 
 import React from "react";
-import SideNavigation from "../components/SideNavigation";
 import { Snackbar, Alert } from "@mui/material";
 import { updatePassword, signInWithEmailAndPassword } from "firebase/auth";
+import ReactLoading from "react-loading";
 import { auth } from "../firebaseConfig";
-import ReactLoading from 'react-loading';
+import SideNavigation from "../components/SideNavigation";
 import "../css/Settings.css";
 
 /**
@@ -33,7 +33,7 @@ function Settings() {
   React.useEffect(() => {
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setUserInfo(JSON.parse(window.localStorage.getItem("userInfo")));
-  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")])
+  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")]);
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -52,70 +52,77 @@ function Settings() {
 
     const email = orgInfo ? orgInfo.email : userInfo.email;
 
-    if(newPass !== confPass) {
+    if (newPass !== confPass) {
       setSnackbar({
         open: true,
         message: "New password and confirmation do not match.",
-        severity: "error"
-      })
+        severity: "error",
+      });
 
       return;
     }
 
-    if(newPass.length < 8) {
+    if (newPass.length < 8) {
       setSnackbar({
         open: true,
         message: "Password must be at least 8 characters long.",
-        severity: "error"
-      })
+        severity: "error",
+      });
 
       return;
     }
 
     signInWithEmailAndPassword(auth, email, oldPass)
-    .then(() => {
-      const currUser = auth.currentUser;
+      .then(() => {
+        const currUser = auth.currentUser;
 
-      updatePassword(currUser, newPass).then(() => {
-        setSnackbar({
-          open: true,
-          message: "Password changed!",
-          severity: "success"
-        })
-  
-        passwordForm.current.reset();
-      }).catch((error) => {
-        setSnackbar({
-          open: true,
-          message: "Something went wrong, try again later.",
-          severity: "error"
-        })
+        updatePassword(currUser, newPass)
+          .then(() => {
+            setSnackbar({
+              open: true,
+              message: "Password changed!",
+              severity: "success",
+            });
+
+            passwordForm.current.reset();
+          })
+          .catch((error) => {
+            setSnackbar({
+              open: true,
+              message: "Something went wrong, try again later.",
+              severity: "error",
+            });
+          });
+      })
+      .catch((error) => {
+        if (error.code === "auth/too-many-requests")
+          setSnackbar({
+            open: true,
+            message:
+              "Password change is temporarily disabled due to too many incorrect password entries. Try again later.",
+            severity: "error",
+          });
+        else if (error.code === "auth/wrong-password")
+          setSnackbar({
+            open: true,
+            message: "Current password is incorrect",
+            severity: "error",
+          });
+        else
+          setSnackbar({
+            open: true,
+            message: "Something went wrong, try again later.",
+            severity: "error",
+          });
       });
-    })
-    .catch((error) => {
-      if(error.code === "auth/too-many-requests")
-        setSnackbar({
-          open: true,
-          message: "Password change is temporarily disabled due to too many incorrect password entries. Try again later.",
-          severity: "error"
-        })
-      else if(error.code === "auth/wrong-password")
-        setSnackbar({
-          open: true,
-          message: "Current password is incorrect",
-          severity: "error"
-        })
-        else 
-        setSnackbar({
-          open: true,
-          message: "Something went wrong, try again later.",
-          severity: "error"
-        })
-    });
-  }
+  };
 
-  if(!orgInfo && !userInfo)
-    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>
+  if (!orgInfo && !userInfo)
+    return (
+      <div className="loading">
+        <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+      </div>
+    );
 
   return (
     <>
@@ -124,53 +131,59 @@ function Settings() {
         <h1 className="settings-header">Change Password</h1>
         <form onSubmit={formCheck} ref={passwordForm} className="settings-form">
           <label htmlFor="current-password" className="settings-form-label current">
-            Current Password<br/>
+            Current Password
+            <br />
             <input
               type="password"
               id="current-password"
               name="current-password"
               className="settings-form-field current"
               required
-            /><br />
+            />
+            <br />
           </label>
           <label htmlFor="new-password" className="settings-form-label new">
-            New Password<br/>
+            New Password
+            <br />
             <input
               type="password"
               id="new-password"
               name="new-password"
               className="settings-form-field new"
               required
-            /><br />
+            />
+            <br />
           </label>
           <label htmlFor="confirm-password" className="settings-form-label confirm">
-            Confirm New Password<br/>
+            Confirm New Password
+            <br />
             <input
               type="password"
               id="confirm-password"
               name="confirm-password"
               className="settings-form-field confirm"
               required
-            /><br />
+            />
+            <br />
           </label>
           <input type="submit" value="Save" className="settings-save-button" />
         </form>
       </div>
       <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackClose}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      >
+        <Alert
           onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+          variant="filled"
         >
-          <Alert
-            onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
