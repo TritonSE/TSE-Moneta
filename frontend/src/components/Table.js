@@ -143,7 +143,7 @@ function Table({
 
   if (!group || Object.keys(group).length === 0) {
     /** Handle no groups selected table here */
-    return;
+    return <></>;
   }
 
   return (
