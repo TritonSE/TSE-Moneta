@@ -1,7 +1,7 @@
 /**
- * Login page for orgs/approved users.
+ * Set password page for approved users. Users are sent links to this page in their emails once signed up.
  *
- * @summary Login page.
+ * @summary Set password page.
  * @author Navid Boloorian
  */
 
@@ -27,15 +27,19 @@
    const {userId} = useParams();
 
    React.useEffect(async () => {
+     // get selected user's information from the id
     const selectedUser = await fetch(`http://localhost:8082/users?_id=${userId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
   
       const json = await selectedUser.json();
+
+      // attempt a sign in through firebase
       const signInMethods = await fetchSignInMethodsForEmail(auth, json.getUser[0].email);
       const registered = signInMethods.length != 0;
 
+      // if sign in is successful (user's password is already set) or the user is not found in our db then redirect to login
       if(selectedUser.status == 400 || registered)
         location.href="/login";
 
@@ -97,6 +101,7 @@
       severity: "success",
       })
 
+      // give enough time ot read the snackbar
      setTimeout(()=>{
       setDisabled(false);
       location.href="/login"}, 1000);

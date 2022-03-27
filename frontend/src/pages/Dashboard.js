@@ -4,6 +4,7 @@
  * @summary Dashboard page.
  * @author Alex Zhang
  * @author William Wu
+ * @author Navid Boloorian
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -155,9 +156,7 @@ function Dashboard() {
   );
 
   /**
-   * Callback which receives new group info from the create group module and sends a request to the
-   * backend to create the group. If the creation succeeds, then the newly created group gets
-   * displayed and the module gets closed.
+   * Callback for editing groups.
    */
    const submitEditGroup = useCallback(
     async (groupName, groupFields, editGroupId) => {
@@ -205,9 +204,7 @@ function Dashboard() {
   );
 
   /**
-   * Callback which receives new group info from the create group module and sends a request to the
-   * backend to create the group. If the creation succeeds, then the newly created group gets
-   * displayed and the module gets closed.
+   * Callback for deleting groups. 
    */
    const submitDeleteGroup = useCallback(
     async (editGroupId) => {
@@ -255,6 +252,9 @@ function Dashboard() {
     [fetchGroups, orgId]
   );
 
+  /**
+   * Load information, finds out if user or org
+   */
   const loadInfo = () => {
     setIsLoading(true);
     setUserInfo(JSON.parse(window.localStorage.getItem("userInfo")));
@@ -266,6 +266,9 @@ function Dashboard() {
     loadInfo();
   }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")])
 
+  /**
+   * If user use user obj, otherwise use org obj
+   */
   useEffect(() => {
     setOrgId(orgInfo ? orgInfo.id : userInfo.orgId);
   }, [orgInfo, userInfo])

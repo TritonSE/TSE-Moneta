@@ -4,6 +4,7 @@
  *
  * @summary Admin page that allows users to view and edit employees with access.
  * @author Alex Zhang
+ * @author Navid Boloorian
  */
 
 import React from "react";
