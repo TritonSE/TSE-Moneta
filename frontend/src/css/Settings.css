@@ -1,37 +1,20 @@
 .settings-div {
   position: absolute;
   left: 320px;
+  top: 25px;
 }
 
 .settings-header {
-  position: absolute;
-  top: 184px;
   width: 221px;
   font-weight: 500;
   font-size: 24px;
   line-height: 36px;
-  margin: 0px;
 }
 
 .settings-form-label {
   font-size: 14px;
   line-height: 21px;
   width: 170px;
-}
-
-.settings-form-label.current {
-  position: absolute;
-  top: 242px;
-}
-
-.settings-form-label.new {
-  position: absolute;
-  top: 343px;
-}
-
-.settings-form-label.confirm {
-  position: absolute;
-  top: 444px;
 }
 
 .settings-form-field {
@@ -49,10 +32,9 @@
 }
 
 .settings-save-button {
-  position: absolute;
+  margin-top: 10px;
   width: 119px;
   height: 40px;
-  top: 564px;
   background: #05204a;
   border-radius: 5px;
   border: 0px;

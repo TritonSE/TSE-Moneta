@@ -8,7 +8,6 @@
 import React from "react";
 import { signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
 import { auth } from "../firebaseConfig";
 import Logo from "../images/Logo.svg";
 import DatabaseIcon from "../images/DatabaseIcon";
@@ -22,7 +21,6 @@ import "../css/SideNavigation.css";
  * @returns side navigation content
  */
 function SideNavigation(props) {
-  const navigate = useNavigate();
 
   let databaseClassName = "sidenav-button database";
   let adminClassName = "sidenav-button admin";
@@ -39,7 +37,7 @@ function SideNavigation(props) {
   const signOutUser = () => {
     signOut(auth);
     window.localStorage.clear();
-    navigate("/login");
+    location.href="/login";
   }
 
   return (

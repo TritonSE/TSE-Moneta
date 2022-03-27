@@ -19,7 +19,7 @@ import "../css/CSVParser.css";
  * Renders the CSV parser
  * @returns CSV parser content
  */
-function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, orgId}) {
+function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, orgId, setDataLoading}) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
@@ -92,6 +92,7 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
       mode: "cors",
     });
 
+    setDataLoading(true);
     for (const row of values) {
       const data = {
         group: group.id,
@@ -112,6 +113,8 @@ function CSVParser({ CSVUploaded, setCSVUploaded, setSnackbar, selectedGroup, or
       console.log(resp);
       console.log(json);
     }
+    setDataLoading(false);
+
     setUploadedCSV(!CSVUploadedArg); // tell table to reload
     setSnackbar({
       open: true,

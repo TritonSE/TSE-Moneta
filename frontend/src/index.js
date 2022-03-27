@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SetPassword from "./pages/SetPassword";
 
+import "./css/index.css";
+
 export default function App() {
   const [user, setUser] = React.useState(null);
 

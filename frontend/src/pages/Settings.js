@@ -12,6 +12,7 @@ import SideNavigation from "../components/SideNavigation";
 import { Snackbar, Alert } from "@mui/material";
 import { updatePassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import ReactLoading from 'react-loading';
 import "../css/Settings.css";
 
 /**
@@ -114,7 +115,7 @@ function Settings() {
   }
 
   if(!orgInfo && !userInfo)
-    return <>Loading</>
+    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>
 
   return (
     <>
@@ -123,34 +124,34 @@ function Settings() {
         <h1 className="settings-header">Change Password</h1>
         <form onSubmit={formCheck} ref={passwordForm} className="settings-form">
           <label htmlFor="current-password" className="settings-form-label current">
-            Current Password
+            Current Password<br/>
             <input
               type="password"
               id="current-password"
               name="current-password"
               className="settings-form-field current"
               required
-            />
+            /><br />
           </label>
           <label htmlFor="new-password" className="settings-form-label new">
-            New Password
+            New Password<br/>
             <input
               type="password"
               id="new-password"
               name="new-password"
               className="settings-form-field new"
               required
-            />
+            /><br />
           </label>
           <label htmlFor="confirm-password" className="settings-form-label confirm">
-            Confirm New Password
+            Confirm New Password<br/>
             <input
               type="password"
               id="confirm-password"
               name="confirm-password"
               className="settings-form-field confirm"
               required
-            />
+            /><br />
           </label>
           <input type="submit" value="Save" className="settings-save-button" />
         </form>

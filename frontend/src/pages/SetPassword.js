@@ -8,7 +8,6 @@
  import React from "react";
  import { Snackbar, Alert } from "@mui/material";
  import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
- import { useNavigate } from "react-router";
  import { useParams } from "react-router";
  import { auth } from "../firebaseConfig";
  import Logo from "../images/Logo.svg";
@@ -18,6 +17,7 @@
  export default function SetPassword() {
    const registerForm = React.useRef();
    const [user, setUser] = React.useState({});
+   const [disabled, setDisabled] = React.useState(false);
    const [snackbar, setSnackbar] = React.useState({
      open: false,
      message: "",
@@ -25,7 +25,6 @@
    });
 
    const {userId} = useParams();
-   const navigate = useNavigate();
 
    React.useEffect(async () => {
     const selectedUser = await fetch(`http://localhost:8082/users?_id=${userId}`, {
@@ -38,7 +37,7 @@
       const registered = signInMethods.length != 0;
 
       if(selectedUser.status == 400 || registered)
-        navigate("/login");
+        location.href="/login";
 
       setUser(json.getUser[0]);
    }, [userId])
@@ -56,6 +55,7 @@
     */
    const formCheck = async (e) => {
      e.preventDefault();
+     setDisabled(true);
  
      // form information
      const password = registerForm.current[0].value;
@@ -68,6 +68,7 @@
              severity: "error",
          })
 
+         setDisabled(false);
          return;
      }
 
@@ -78,6 +79,7 @@
             severity: "error",
         })
 
+        setDisabled(false);
         return;
     }
 
@@ -89,14 +91,15 @@
      })
 
      createUserWithEmailAndPassword(auth, user.email, password);
-
      setSnackbar({
-        open: true,
-        message: "Password set! Redirecting to login...",
-        severity: "success",
-    })
+      open: true,
+      message: "Password set! Redirecting to login...",
+      severity: "success",
+      })
 
-    navigate("/login");
+     setTimeout(()=>{
+      setDisabled(false);
+      location.href="/login"}, 1000);
    };
  
    return (
@@ -110,7 +113,7 @@
            </div>
            <div className="account-form">
              <h2>Hi {user.fullName}, <br /> Create Your Password</h2>
-             <form ref={registerForm} onSubmit={formCheck}>
+             <form disabled={disabled} ref={registerForm} onSubmit={formCheck}>
                <label htmlFor="user-password">
                  Password <br />
                  <input

@@ -8,7 +8,6 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router";
 import { auth } from "../firebaseConfig";
 import Logo from "../images/Logo.svg";
 
@@ -22,7 +21,6 @@ export default function Login() {
     severity: "",
   });
 
-  const navigate = useNavigate();
 
   const handleSnackClose = () => {
     setSnackbar({
@@ -72,7 +70,7 @@ export default function Login() {
                   id: org._id,
               }));
   
-              navigate("/dashboard");
+              location.href="/dashboard";
           })
           .catch(() =>
             // org is found but the password is incorrect
@@ -139,7 +137,7 @@ export default function Login() {
                 id: user._id
             }));
 
-            navigate("/");
+            location.href="/dashboard";
         })
         .catch(() =>
           // org is found but the password is incorrect

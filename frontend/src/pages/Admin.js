@@ -11,6 +11,7 @@ import { Snackbar, Alert } from "@mui/material";
 import AddIcon from "../images/AddIcon.svg";
 import SideNavigation from "../components/SideNavigation";
 import AddUser from "../components/AddUser";
+import ReactLoading from 'react-loading';
 import "../css/Admin.css";
 
 /**
@@ -22,6 +23,8 @@ function Admin() {
   const [orgInfo, setOrgInfo] = React.useState({});
   const [addUserVisible, setAddUserVisible] = React.useState(false);
   const [employees, setEmployees] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [reloadCounter, setReloadCounter] = React.useState(0);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -37,28 +40,34 @@ function Admin() {
   };
 
   React.useEffect(() => {
+    setIsLoading(true);
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
+    setIsLoading(false);
 
   }, [window.localStorage.getItem("orgInfo")]);
 
   React.useEffect(async () => {
     getEmployees();
-  }, [orgInfo]);
+  }, [orgInfo, addUserVisible]);
 
   const getEmployees = async () => {
+    setIsLoading(true);
     if(orgInfo) {
       const response = await fetch(`http://localhost:8082/users?organizationId=${orgInfo.id}`);
       const json = await response.json();
 
       setEmployees(json.getUser);
     }
+    setIsLoading(false);
   }
 
   const deleteEmployee = async (id) => {
+    setIsLoading(true);
     const response = await fetch(`http://localhost:8082/users/${id}`, {
       method: "DELETE",
       mode: "cors",
     });
+    setIsLoading(false);
 
     if(response.ok)
       setSnackbar({
@@ -76,8 +85,8 @@ function Admin() {
     getEmployees();
   }
 
-  if(!orgInfo)
-    return <>Loading</>
+  if(isLoading || !orgInfo)
+    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>
 
   return (
     <>

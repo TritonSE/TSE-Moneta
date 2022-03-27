@@ -18,6 +18,7 @@ import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
+import ReactLoading from 'react-loading';
 
 import "../css/Dashboard.css";
 
@@ -33,6 +34,7 @@ function Dashboard() {
    */
   const [visible, setVisibility] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const [CSVUploaded, setCSVUploaded] = useState(false);
   const [addingRow, setAddingRow] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -368,7 +370,7 @@ function Dashboard() {
   };
 
   if(isLoading || (!orgInfo && !userInfo)) {
-    return <>Loading</>;
+    return <div className="loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div>;
   }
 
   return (
@@ -392,7 +394,7 @@ function Dashboard() {
           <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
           Add row
         </button>
-        <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} rerender={tableChanged} />
+        {dataLoading ? <div className="data-loading"><ReactLoading type={"spin"} color={"#05204a"} height={100} width={100} /></div> : <Table CSVUploaded={CSVUploaded} setSnackbar={setSnackbar} addingRow={addingRow} group={selectedGroup} data={tableData} elementsPerPage={25} setTableChanged={setTableChanged} rerender={tableChanged} />}
         <input
           type="text"
           className="dashboard-search"
@@ -418,6 +420,7 @@ function Dashboard() {
             setSnackbar={setSnackbar}
             selectedGroup={selectedGroup}
             orgId={orgId}
+            setDataLoading={setDataLoading}
           />
         ) : null}
       </div>
