@@ -41,8 +41,6 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
     const fullName = addUserForm.current[0].value;
     const email = addUserForm.current[1].value;
 
-    console.log(addUserForm.current);
-
     const userExists = await fetch(`http://localhost:8082/users?email=${email}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },

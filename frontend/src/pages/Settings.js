@@ -86,7 +86,7 @@ function Settings() {
 
             passwordForm.current.reset();
           })
-          .catch((error) => {
+          .catch(() => {
             setSnackbar({
               open: true,
               message: "Something went wrong, try again later.",

@@ -108,8 +108,6 @@ function CSVParser({
         body: JSON.stringify(data),
         mode: "cors",
       });
-
-      const json = await resp.json();
     }
     setDataLoading(false);
 
