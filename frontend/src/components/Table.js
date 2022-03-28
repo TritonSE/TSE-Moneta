@@ -48,7 +48,7 @@ function Table({
       data: dataArg,
     };
 
-    const response = await fetch(`http://localhost:8082/rows`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -85,7 +85,7 @@ function Table({
       data: dataArg,
     };
 
-    const response = await fetch(`http://localhost:8082/rows/${id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -117,7 +117,7 @@ function Table({
   const deleteTableData = async (id) => {
     setTableChanged(true);
 
-    const response = await fetch(`http://localhost:8082/rows?_id=${id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?_id=${id}`, {
       method: "DELETE",
     });
 

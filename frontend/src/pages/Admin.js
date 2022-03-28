@@ -48,7 +48,7 @@ function Admin() {
   const getEmployees = async () => {
     setIsLoading(true);
     if (orgInfo) {
-      const response = await fetch(`http://localhost:8082/users?organizationId=${orgInfo.id}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?organizationId=${orgInfo.id}`);
       const json = await response.json();
 
       setEmployees(json.getUser);
@@ -62,7 +62,7 @@ function Admin() {
 
   const deleteEmployee = async (id) => {
     setIsLoading(true);
-    const response = await fetch(`http://localhost:8082/users/${id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users/${id}`, {
       method: "DELETE",
       mode: "cors",
     });

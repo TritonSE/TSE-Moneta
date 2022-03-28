@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -7,10 +9,10 @@ const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
-const port = process.env.PORT || 8082;
-const app = express();
-
 connectDB();
+
+const port = process.env.BACKEND_PORT || 8082;
+const app = express();
 
 app.get("/", (req, res) => res.send("Hello world!"));
 

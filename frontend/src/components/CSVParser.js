@@ -33,7 +33,7 @@ function CSVParser({
   const group = selectedGroup;
 
   React.useEffect(async () => {
-    await fetch("http://localhost:8082/rows?group=" + group.id).then(async (response) => {
+    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(async (response) => {
       if (response.ok) {
         let json = await response.json();
         json = json.map((row) => row.data);
@@ -87,7 +87,7 @@ function CSVParser({
     }
 
     // should ask user to confirm before clearing
-    await fetch("http://localhost:8082/rows?group=" + group.id, {
+    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id, {
       method: "DELETE",
       mode: "cors",
     });
@@ -100,7 +100,7 @@ function CSVParser({
         organizationId: orgId,
       };
 
-      const resp = await fetch("http://localhost:8082/rows", {
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

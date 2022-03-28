@@ -62,11 +62,13 @@ function Dashboard() {
    */
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8082/groups/${orgId}`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`);
       const { listOfGroups } = await response.json();
       const options = [
         { id: "", value: "create-new", values: [], label: "Create New", isCreate: true },
       ];
+
+      console.log(response)
 
       if (listOfGroups) {
         for (const group of listOfGroups) {
@@ -101,7 +103,7 @@ function Dashboard() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ group: groupID, search: searchString }),
         };
-        const response = await fetch("http://localhost:8082/search", requestOptions);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
         const json = await response.json();
 
         setTableData(json);
@@ -124,7 +126,7 @@ function Dashboard() {
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
       try {
-        const response = await fetch(`http://localhost:8082/groups/${orgId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -166,7 +168,7 @@ function Dashboard() {
   const submitEditGroup = useCallback(
     async (groupName, groupFields, editGroupId) => {
       try {
-        const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${editGroupId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +215,7 @@ function Dashboard() {
   const submitDeleteGroup = useCallback(
     async (editGroupId) => {
       try {
-        const response = await fetch(`http://localhost:8082/groups/${editGroupId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${editGroupId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -227,7 +229,7 @@ function Dashboard() {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
         }
 
-        await fetch(`http://localhost:8082/rows?group=${editGroupId}`, {
+        await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=${editGroupId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

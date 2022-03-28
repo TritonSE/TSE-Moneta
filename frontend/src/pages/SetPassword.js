@@ -28,7 +28,7 @@ export default function SetPassword() {
 
   React.useEffect(async () => {
     // get selected user's information from the id
-    const selectedUser = await fetch(`http://localhost:8082/users?_id=${userId}`, {
+    const selectedUser = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?_id=${userId}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -86,7 +86,7 @@ export default function SetPassword() {
       return;
     }
 
-    await fetch(`http://localhost:8082/users/${userId}`, {
+    await fetch(`${process.env.REACT_APP_BACKEND_URI}/users/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),

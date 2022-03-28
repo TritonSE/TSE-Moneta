@@ -27,10 +27,10 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
     e.preventDefault();
 
     emailjs.sendForm(
-      "service_2qqpih5",
-      "template_a354xvs",
+      process.env.REACT_APP_EMAILJS_SERVICE,
+      process.env.REACT_APP_EMAILJS_ADD_USER_TEMPLATE,
       addUserForm.current,
-      "Gi5qKcyxH5m4iCECW"
+      process.env.REACT_APP_EMAILJS_UID
     );
   };
 
@@ -41,12 +41,12 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
     const fullName = addUserForm.current[0].value;
     const email = addUserForm.current[1].value;
 
-    const userExists = await fetch(`http://localhost:8082/users?email=${email}`, {
+    const userExists = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?email=${email}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
 
-    const orgExists = await fetch(`http://localhost:8082/organizations?Email=${email}`, {
+    const orgExists = await fetch(`${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -75,7 +75,7 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
       organizationId: orgId,
     };
 
-    const response = await fetch(`http://localhost:8082/users`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users`, {
       method: "POST",
       mode: "cors",
       headers: {

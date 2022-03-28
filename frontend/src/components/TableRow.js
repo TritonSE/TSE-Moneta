@@ -99,6 +99,7 @@ export default function TableRow({
               <img
                 src={CheckMark}
                 onClick={() => {
+                  /* eslint-disable */
                   newRow
                     ? createTableData(cellDatas)
                       ? setEditActivated(!editActivated)
@@ -106,6 +107,7 @@ export default function TableRow({
                     : updateTableData(id, cellDatas)
                     ? setEditActivated(!editActivated)
                     : "";
+                  /* eslint-enable */
                 }}
                 className="checkmark-svg clickable"
                 alt="checkmark icon on table row"

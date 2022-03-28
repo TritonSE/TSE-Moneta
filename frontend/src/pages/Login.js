@@ -39,12 +39,12 @@ export default function Login() {
     const email = registerForm.current[0].value;
     const password = registerForm.current[1].value;
 
-    const orgResponse = await fetch(`http://localhost:8082/organizations?Email=${email}`, {
+    const orgResponse = await fetch(`${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
 
-    const userResponse = await fetch(`http://localhost:8082/users?email=${email}`, {
+    const userResponse = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?email=${email}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -120,7 +120,7 @@ export default function Login() {
       const userJson = await userResponse.json();
       const user = userJson.getUser[0];
       const orgCheckResponse = await fetch(
-        `http://localhost:8082/organizations?_id=${user.organizationId}`,
+        `${process.env.REACT_APP_BACKEND_URI}/organizations?_id=${user.organizationId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

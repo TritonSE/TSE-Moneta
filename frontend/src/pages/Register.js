@@ -46,10 +46,10 @@ export default function Register() {
     e.preventDefault();
 
     emailjs.sendForm(
-      "service_2qqpih5",
-      "template_oz3hlxd",
+      process.env.REACT_APP_EMAILJS_SERVICE,
+      process.env.REACT_APP_EMAILJS_REGISTER_TEMPLATE,
       registerForm.current,
-      "Gi5qKcyxH5m4iCECW"
+      process.env.REACT_APP_EMAILJS_UID
     );
   };
 
@@ -73,13 +73,13 @@ export default function Register() {
         severity: "error",
       });
 
-    const response = await fetch("http://localhost:8082/organizations", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/organizations`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ Name: name, Email: email, Password: password }),
     });
 
-    const userCheck = await fetch(`http://localhost:8082/users?email=${email}`, {
+    const userCheck = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?email=${email}`, {
       method: "GET",
     });
 
