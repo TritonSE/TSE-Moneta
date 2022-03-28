@@ -63,7 +63,6 @@ const fieldsReducer = (prevFields, { type, payload }) => {
 function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
-  const groupForm = useRef();
 
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
@@ -127,7 +126,6 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     <div className="modal-background">
       <div className="modal-view">
         <form
-          ref={groupForm}
           className="group-form"
           onSubmit={(event) => {
             tryConfirm(groupName, fields);
