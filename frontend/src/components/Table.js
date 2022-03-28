@@ -45,7 +45,7 @@ function Table({
 
     const tempData = {
       group: group.id,
-      dataArg,
+      data: dataArg,
     };
 
     const response = await fetch(`http://localhost:8082/rows`, {
@@ -82,7 +82,7 @@ function Table({
 
     const tempData = {
       group: group.id,
-      dataArg,
+      data: dataArg,
     };
 
     const response = await fetch(`http://localhost:8082/rows/${id}`, {

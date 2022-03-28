@@ -118,7 +118,7 @@ router.put("/rows/:id", async (req, res) => {
       // if .find returns empty array
       res.status(500).json({ error: "Row not found" });
     } else {
-      await TableData.updateOne({ _id: id }, req.body).catch(() => {
+      await TableData.updateOne({ _id: id }, req.body).catch((error) => {
         res.status(500).json({ error: "Server error" });
       });
       res.json(tableData);
