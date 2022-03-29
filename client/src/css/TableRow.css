@@ -1,0 +1,84 @@
+.table-body-row {
+  border-radius: 5px;
+  max-height: 55px;
+  position: relative;
+  width: 100%;
+}
+
+.table-body-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table-body-row:hover {
+  box-shadow: 0px 0px 0px 1px #334a88 inset;
+}
+
+.table-body-row:hover .pencil-svg {
+  visibility: visible;
+}
+
+.table-body-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  padding-left: 17px;
+  padding-top: 16px;
+  padding-bottom: 15px;
+  padding-right: 50px;
+  color: #353535;
+}
+
+.pencil-svg {
+  padding-right: 22px;
+  visibility: hidden;
+}
+
+.input-resizer {
+  display: inline-grid;
+  max-height: 36px;
+}
+
+.input-resizer::after,
+.edit-cell-input {
+  width: auto;
+  font: inherit;
+  margin: 0;
+  resize: none;
+  background: none;
+  appearance: none;
+  border: none;
+}
+
+.input-resizer::after {
+  content: attr(data-value) " ";
+  visibility: hidden;
+  white-space: pre-wrap;
+}
+
+.edit-cell-input {
+  font-size: 16px;
+  margin-left: -3px;
+  border: #334a88 solid 2px;
+  border-radius: 5px;
+  height: 31px;
+}
+
+.edit-cell-input:focus {
+  outline: none;
+}
+
+.cell-aligner {
+  position: relative;
+  height: 62px;
+  width: 100px;
+  display: grid;
+  justify-content: end;
+  align-items: center;
+  left: calc(100% - 100px);
+}
+
+.icon-spacer {
+  display: grid;
+  width: 25px;
+}

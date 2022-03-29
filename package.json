@@ -1,0 +1,55 @@
+{
+  "name": "tse-moneta",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "app": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "lint-fix": "(eslint --fix --cache --report-unused-disable-directives . || true) && prettier --write .",
+    "lint-check": "eslint --cache --report-unused-disable-directives . && prettier --check .",
+    "prepare": "cd .. && husky install .husky",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TritonSE/TSE-Moneta.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
+    "config": "^3.3.6",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.0.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.1.5",
+    "nanoid": "^3.3.1",
+    "validation": "0.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "husky": "^7.0.4",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "react-router-dom": "^6.2.1"
+  },
+  "engines": {
+    "node": "14.17.0"
+  }
+}

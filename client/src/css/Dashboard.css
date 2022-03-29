@@ -1,0 +1,104 @@
+.clickable:hover {
+  cursor: pointer;
+}
+
+.dashboard-div {
+  position: absolute;
+  top: 25px;
+}
+
+.dashboard-header {
+  position: absolute;
+  width: 222px;
+  left: 320px;
+  min-width: 500px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.group-select {
+  position: absolute;
+  left: 320px;
+  width: 200px;
+  height: 40px;
+  top: 70px;
+}
+
+.add-row {
+  position: absolute;
+  left: 536px;
+  top: 70px;
+  width: 120px;
+  height: 40px;
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 5px;
+  border: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  width: 119px;
+  height: 40px;
+  background: #05204a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.dashboard.add-icon-svg {
+  margin-right: 8px;
+}
+
+.pencil-button {
+  background: none;
+  border: 0px;
+  float: right;
+}
+
+.pencil-button:hover {
+  cursor: pointer;
+}
+
+.Pencil {
+  float: right;
+  margin-right: 14px;
+}
+
+.Plus {
+  float: right;
+  padding-top: 4px;
+  margin-right: 14px;
+}
+
+.dashboard-search {
+  position: absolute;
+  font-size: 16px;
+  line-height: 24px;
+  color: #949494;
+  top: 70px;
+  left: 892px;
+  width: 393px;
+  height: 40px;
+  padding-left: 48px;
+  border: 0px;
+  background: #f3f3f3;
+  border-radius: 5px;
+}
+
+.dashboard-search-icon {
+  position: absolute;
+  left: 908px;
+  top: 81px;
+}
+
+.toggle-csv-menu {
+  position: absolute;
+  left: 1350px;
+  top: 83px;
+  border: 0px;
+  background: transparent;
+  cursor: pointer;
+}

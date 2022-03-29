@@ -1,0 +1,56 @@
+.user-modal-background {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-modal-view {
+  position: fixed;
+  background-color: #ffffff;
+  padding: 27px 37px;
+  border-radius: 5px;
+  width: 450px;
+  height: 350px;
+  z-index: 1001;
+  top: calc(50vh - 175px);
+  left: calc(50% - 225px);
+}
+
+.user-header h2 {
+  margin-bottom: 0px;
+}
+
+.user-form-wrapper form {
+  display: grid;
+}
+
+.user-form-wrapper input[type="text"],
+input[type="email"] {
+  width: calc(100% - 10px);
+  height: 40px;
+  border: 1px solid #c4c4c4;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.user-form-wrapper input[type="submit"] {
+  width: 120px;
+  height: 40px;
+  justify-self: center;
+  background: #05204a;
+  background-image: url("../images/AddIcon.svg");
+  background-repeat: no-repeat;
+  background-position: 30px center;
+  color: white;
+  border: 0px;
+  border-radius: 5px;
+  padding-left: 15px;
+}

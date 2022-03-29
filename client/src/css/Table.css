@@ -1,0 +1,83 @@
+.table-div {
+  position: absolute;
+  left: 320px;
+  top: 130px;
+}
+.table-header-row {
+  font-weight: 500;
+}
+
+.table-header-cell {
+  padding-left: 17px;
+  padding-bottom: 11px;
+  color: #000000;
+  width: auto;
+}
+
+.table {
+  position: relative;
+  min-width: 1056px;
+  text-align: left;
+  font-size: 16px;
+  line-height: 24px;
+  border-collapse: collapse;
+  overflow: visible;
+  margin: 0px;
+}
+
+.table-body-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table-page-selector {
+  text-align: center;
+  margin-top: 39px;
+  margin-bottom: 34px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #353535;
+}
+
+.table-page-selector-text {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.table-page-selector-text.current {
+  background: #f4f4f4;
+  border-radius: 2px;
+}
+
+.table-page-selector-text.of {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.table-row-count {
+  float: right;
+  position: relative;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #949494;
+}
+
+.table-button {
+  display: inline-block;
+  background: transparent;
+  border: 0px;
+  height: 22px;
+  padding: 0px;
+  vertical-align: middle;
+  margin-top: 0px;
+}
+
+.table-button.prev-page {
+  padding-right: 20px;
+}
+.table-button.next-page {
+  padding-left: 20px;
+}
