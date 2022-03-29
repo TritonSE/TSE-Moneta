@@ -15,8 +15,6 @@ connectDB();
 const port = process.env.PORT || 80;
 const app = express();
 
-app.get("/", (req, res) => res.send("Hello world!"));
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
