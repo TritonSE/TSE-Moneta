@@ -1,10 +1,10 @@
 # This config file is sourced by the pre-commit script.
 
 # Change 1 to 0 to disable linting.
-enabled=1
+enabled=0
 
 # Directories containing Node.js projects to be linted, separated by spaces.
-node_dirs='backend frontend'
+node_dirs='client'
 
 # Command used to run a lint check.
 check_command='npm run lint-check'
