@@ -1,7 +1,7 @@
 # This config file is sourced by the pre-commit script.
 
 # Change 1 to 0 to disable linting.
-enabled=0
+enabled=1
 
 # Directories containing Node.js projects to be linted, separated by spaces.
 node_dirs='client'

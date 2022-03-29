@@ -68,8 +68,6 @@ function Dashboard() {
         { id: "", value: "create-new", values: [], label: "Create New", isCreate: true },
       ];
 
-      console.log(response)
-
       if (listOfGroups) {
         for (const group of listOfGroups) {
           const { Name, _id, GroupId, Values } = group;
