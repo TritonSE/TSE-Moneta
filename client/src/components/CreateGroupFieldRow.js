@@ -16,7 +16,6 @@ import "../css/CreateGroupFieldRow.css";
  */
 function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispatch }) {
   const fieldNameInputClass = "group-field-name-input" + (invalid ? " invalid" : "");
-  /* eslint-disable jsx-a11y/no-onchange */
   return (
     <div className="group-field-row">
       <input
