@@ -12,7 +12,7 @@ const path = require("path");
 
 connectDB();
 
-const port = process.env.BACKEND_PORT || 8082;
+const port = process.env.PORT || 80;
 const app = express();
 
 app.get("/", (req, res) => res.send("Hello world!"));
