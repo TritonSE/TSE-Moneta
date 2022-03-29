@@ -36,7 +36,8 @@
     "format": "prettier --write .",
     "lint-fix": "(eslint --fix --cache --report-unused-disable-directives . || true) && prettier --write .",
     "lint-check": "eslint --cache --report-unused-disable-directives . && prettier --check .",
-    "prepare": "cd .. && husky install .husky"
+    "prepare": "cd .. && husky install .husky",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install npm && run build"
   },
   "eslintConfig": {
     "extends": [
