@@ -48,7 +48,9 @@ function Admin() {
   const getEmployees = async () => {
     setIsLoading(true);
     if (orgInfo) {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?organizationId=${orgInfo.id}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/users?organizationId=${orgInfo.id}`
+      );
       const json = await response.json();
 
       setEmployees(json.getUser);

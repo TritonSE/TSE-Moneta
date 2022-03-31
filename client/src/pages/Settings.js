@@ -134,6 +134,7 @@ function Settings() {
             Current Password
             <br />
             <input
+              autoFocus
               type="password"
               id="current-password"
               name="current-password"

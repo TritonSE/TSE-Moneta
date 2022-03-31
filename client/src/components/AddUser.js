@@ -46,10 +46,13 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
       headers: { "Content-Type": "application/json" },
     });
 
-    const orgExists = await fetch(`${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    const orgExists = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     if (userExists.status === 200) {
       setSnackbar({

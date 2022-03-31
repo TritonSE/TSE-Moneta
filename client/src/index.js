@@ -15,6 +15,10 @@ export default function App() {
   const userInfo = window.localStorage.getItem("userInfo");
 
   if (orgInfo) {
+    const currTime = new Date();
+
+    if (currTime > orgInfo) localStorage.removeItem("orgInfo");
+
     return (
       <BrowserRouter>
         <Routes>
@@ -27,6 +31,10 @@ export default function App() {
     );
   }
   if (userInfo) {
+    const currTime = new Date();
+
+    if (currTime > orgInfo) localStorage.removeItem("userInfo");
+
     return (
       <BrowserRouter>
         <Routes>

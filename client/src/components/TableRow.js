@@ -56,7 +56,10 @@ export default function TableRow({
           {editActivated ? (
             <div className="input-resizer">
               <input
-                ref={(element) => {inputFields.current[index] = element; return element}}
+                ref={(element) => {
+                  inputFields.current[index] = element;
+                  return element;
+                }}
                 type="text"
                 size={fieldDefaultSize}
                 className="edit-cell-input"

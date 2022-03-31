@@ -7,8 +7,6 @@
  * @author Elias Fang
  */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from "react";
 import { useCSVReader, useCSVDownloader } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
@@ -33,13 +31,15 @@ function CSVParser({
   const group = selectedGroup;
 
   React.useEffect(async () => {
-    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(async (response) => {
-      if (response.ok) {
-        let json = await response.json();
-        json = json.map((row) => row.data);
-        setTableData(json);
+    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
+      async (response) => {
+        if (response.ok) {
+          let json = await response.json();
+          json = json.map((row) => row.data);
+          setTableData(json);
+        }
       }
-    });
+    );
   }, [CSVUploaded]);
 
   /**
@@ -100,7 +100,7 @@ function CSVParser({
         organizationId: orgId,
       };
 
-      const resp = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

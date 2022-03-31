@@ -39,10 +39,13 @@ export default function Login() {
     const email = registerForm.current[0].value;
     const password = registerForm.current[1].value;
 
-    const orgResponse = await fetch(`${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    const orgResponse = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/organizations?Email=${email}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     const userResponse = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?email=${email}`, {
       method: "GET",
@@ -62,6 +65,9 @@ export default function Login() {
 
         signInWithEmailAndPassword(auth, email, password)
           .then(() => {
+            const expiryTime = new Date();
+            expiryTime.setHours(expiryTime.getHours() + 4);
+
             window.localStorage.setItem(
               "orgInfo",
               JSON.stringify({
@@ -69,6 +75,7 @@ export default function Login() {
                 email: org.Email,
                 approvedUsers: org.ApprovedUsers,
                 id: org._id,
+                expiry: expiryTime,
               })
             );
 
@@ -132,6 +139,9 @@ export default function Login() {
 
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+          const expiryTime = new Date();
+          expiryTime.setHours(expiryTime.getHours() + 4);
+
           window.localStorage.setItem(
             "userInfo",
             JSON.stringify({
@@ -140,6 +150,7 @@ export default function Login() {
               email: user.email,
               name: user.fullName,
               id: user._id,
+              expiry: expiryTime,
             })
           );
 
@@ -182,6 +193,7 @@ export default function Login() {
               <label htmlFor="nonprofit-email">
                 Email address <br />
                 <input
+                  autoFocus
                   required
                   name="nonprofit-email"
                   id="nonprofit-email"
