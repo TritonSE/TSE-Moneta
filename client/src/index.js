@@ -17,7 +17,7 @@ export default function App() {
   if (orgInfo) {
     const currTime = new Date();
 
-    if(currTime > orgInfo) localStorage.removeItem("orgInfo");
+    if (currTime > orgInfo) localStorage.removeItem("orgInfo");
 
     return (
       <BrowserRouter>
@@ -33,7 +33,7 @@ export default function App() {
   if (userInfo) {
     const currTime = new Date();
 
-    if(currTime > orgInfo) localStorage.removeItem("userInfo");
+    if (currTime > orgInfo) localStorage.removeItem("userInfo");
 
     return (
       <BrowserRouter>

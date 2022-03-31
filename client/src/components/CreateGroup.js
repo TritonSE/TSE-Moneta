@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useCallback, useEffect, useReducer, useState, useRef } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -145,7 +145,6 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
           </h3>
           <div className={fieldsListDivClass}>
             {fields.map(({ name, type, invalid }, index) => (
-              /* eslint-disable react/no-array-index-key */
               <CreateGroupFieldRow
                 key={index}
                 index={index}

@@ -17,14 +17,7 @@ import "../css/Table.css";
  *
  * @returns Table display for dashboard.
  */
-function Table({
-  setTableChanged,
-  setSnackbar,
-  addingRow,
-  data,
-  group,
-  elementsPerPage,
-}) {
+function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
