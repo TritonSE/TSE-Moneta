@@ -182,6 +182,7 @@ export default function Login() {
               <label htmlFor="nonprofit-email">
                 Email address <br />
                 <input
+                  autoFocus
                   required
                   name="nonprofit-email"
                   id="nonprofit-email"

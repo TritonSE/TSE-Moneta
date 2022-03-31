@@ -124,6 +124,7 @@ export default function SetPassword() {
               <label htmlFor="user-password">
                 Password <br />
                 <input
+                  autoFocus
                   required
                   name="user-password"
                   id="user-password"
