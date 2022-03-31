@@ -62,6 +62,9 @@ export default function Login() {
 
         signInWithEmailAndPassword(auth, email, password)
           .then(() => {
+            const expiryTime = new Date();
+            expiryTime.setHours(expiryTime.getHours() + 4);
+
             window.localStorage.setItem(
               "orgInfo",
               JSON.stringify({
@@ -69,6 +72,7 @@ export default function Login() {
                 email: org.Email,
                 approvedUsers: org.ApprovedUsers,
                 id: org._id,
+                expiry: expiryTime
               })
             );
 
@@ -132,6 +136,9 @@ export default function Login() {
 
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+          const expiryTime = new Date();
+          expiryTime.setHours(expiryTime.getHours() + 4);
+
           window.localStorage.setItem(
             "userInfo",
             JSON.stringify({
@@ -140,6 +147,7 @@ export default function Login() {
               email: user.email,
               name: user.fullName,
               id: user._id,
+              expiry: expiryTime
             })
           );
 
