@@ -81,3 +81,7 @@
 .table-button.next-page {
   padding-left: 20px;
 }
+
+.table-delete-selected-svg {
+  float: right;
+}
