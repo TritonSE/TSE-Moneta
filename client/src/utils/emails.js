@@ -8,20 +8,23 @@
 
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport(process.env.EMAIL_SENDER_CONNECTION_URL, {
+const transporter = nodemailer.createTransport(process.env.REACT_APP_EMAIL_SENDER_CONNECTION_URL, {
   from: "tsemoneta@gmail.com",
 });
 
 export const sendOrganizationSignUpEmail = async (name, status) => {
   try {
     await transporter.sendMail({
-      to: process.env.ADMIN_EMAIL_ADDRESS, // TODO: fill in env
+      to: process.env.REACT_APP_ADMIN_EMAIL_ADDRESS,
       subject: "New org has signed up",
       text: `New org has signed up\nOrg name: ${name}\nStatus: ${status}`,
       html: `New org has signed up<br>Org name: ${name}<br>Status: ${status}`,
     });
   } catch (error) {
     console.error(error);
+    throw new Error(
+      `An error occurred while trying to send email: ${error.message}. Please contact ${process.env.REACT_APP_ADMIN_EMAIL_ADDRESS} for assistance.`
+    );
   }
 };
 
@@ -35,5 +38,8 @@ export const sendUserSignUpEmail = async (id, name, email) => {
     });
   } catch (error) {
     console.error(error);
+    throw new Error(
+      `An error occurred while trying to send email: ${error.message}. Please contact ${process.env.REACT_APP_ADMIN_EMAIL_ADDRESS} for assistance.`
+    );
   }
 };
