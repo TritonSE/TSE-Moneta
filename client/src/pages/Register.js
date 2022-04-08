@@ -6,10 +6,10 @@
  */
 
 import React from "react";
-import emailjs from "emailjs-com";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Snackbar, Alert } from "@mui/material";
 import { auth } from "../firebaseConfig";
+import { sendOrganizationSignUpEmail } from "../utils";
 import Logo from "../images/Logo.svg";
 import Back from "../images/BackButton.svg";
 
@@ -37,20 +37,6 @@ export default function Register() {
       message: "",
       severity: "",
     });
-  };
-
-  /**
-   * Sends email with org information to email
-   */
-  const sendEmail = (e) => {
-    e.preventDefault();
-
-    emailjs.sendForm(
-      process.env.REACT_APP_EMAILJS_SERVICE,
-      process.env.REACT_APP_EMAILJS_REGISTER_TEMPLATE,
-      registerForm.current,
-      process.env.REACT_APP_EMAILJS_UID
-    );
   };
 
   /**
@@ -97,11 +83,20 @@ export default function Register() {
 
     // if email is not already in db
     if (response.ok) {
-      sendEmail(e);
       setRegistered(true);
 
       // use firebase to sign up user
       createUserWithEmailAndPassword(auth, email, password);
+
+      try {
+        sendOrganizationSignUpEmail(name, "pending");
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message,
+          severity: "error",
+        });
+      }
     }
     // if email is already in db
     else if (response.status === 409)
