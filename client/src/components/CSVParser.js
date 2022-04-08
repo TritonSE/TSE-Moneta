@@ -7,9 +7,10 @@
  * @author Elias Fang
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { useCSVReader, useCSVDownloader } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
+import CloudUpload from "../images/CloudUpload.svg";
 
 import "../css/CSVParser.css";
 
@@ -119,39 +120,73 @@ function CSVParser({
     });
   }
 
+  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
   return (
-    <div className="csv-parser">
-      <CSVReader
-        // assumes csv comes with header row
-        config={{
-          header: true,
-        }}
-        onUploadAccepted={(results) => {
-          importToDB(results.data, CSVUploaded, setCSVUploaded).then();
-          // console.log(results);
-        }}
-      >
-        {({ getRootProps }) => (
-          <div>
-            <button type="button" {...getRootProps()} className="csv-button">
-              <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
-            </button>
+    <div>
+      {CSVFlowVisible ? (
+        <div className="modal-background">
+          <div className="modal-view csv">
+            <h1 className="upload-csv-header">Upload CSV File</h1>
+            <div className="upload-csv-area">
+              <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
+              <p className="upload-csv-area-text">Drag and drop files here to upload</p>
+              <p className="upload-csv-area-text">or</p>
+              <CSVReader
+                // assumes csv comes with header row
+                config={{
+                  header: true,
+                }}
+                onUploadAccepted={(results) => {
+                  importToDB(results.data, CSVUploaded, setCSVUploaded).then();
+                  // console.log(results);
+                }}
+              >
+                {({ getRootProps }) => (
+                  <div>
+                    <button
+                      type="submit"
+                      {...getRootProps()}
+                      className="modal-blue csv-browse-files"
+                    >
+                      Browse Files
+                    </button>
+                  </div>
+                )}
+              </CSVReader>
+            </div>
+            <div className="csv-submit-div">
+              <button
+                className="modal-white csv-cancel"
+                type="button"
+                onClick={() => setCSVFlowVisible(false)}
+              >
+                Cancel
+              </button>
+              <button className="modal-blue csv-next" type="submit">
+                Next
+              </button>
+            </div>
           </div>
-        )}
-      </CSVReader>
+        </div>
+      ) : null}
 
-      <CSVDownloader
-        type={Type.Button}
-        className="csv-button download"
-        filename="data"
-        bom
-        config={{
-          delimiter: ";",
-        }}
-        data={tableData}
-      >
-        <AiOutlineDownload className="csv-icon download" /> Download
-      </CSVDownloader>
+      <div className="csv-parser">
+        <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
+          <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
+        </button>
+        <CSVDownloader
+          type={Type.Button}
+          className="csv-button download"
+          filename="data"
+          bom
+          config={{
+            delimiter: ";",
+          }}
+          data={tableData}
+        >
+          <AiOutlineDownload className="csv-icon download" /> Download
+        </CSVDownloader>
+      </div>
     </div>
   );
 }

@@ -31,3 +31,60 @@
 .csv-icon {
   padding-right: 10px;
 }
+
+.upload-csv-header {
+  left: 7.14%;
+  right: 56.37%;
+  top: 0%;
+  margin: 0px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+  padding-bottom: 34px;
+}
+.modal-view.csv {
+  width: 444px;
+  height: 414px;
+}
+.upload-csv-area {
+  width: 98%;
+  height: 62%;
+  background: #f3f3f3;
+  border: 2.5px dashed #a9a9a9;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.csv-submit-div {
+  margin-top: 34px;
+}
+
+.modal-white.csv-cancel {
+  float: left;
+  margin-left: 0px;
+}
+
+.modal-blue.csv-next {
+  float: right;
+}
+
+.upload-csv-icon {
+  width: 34px;
+}
+
+.modal-blue.csv-browse-files {
+  width: 134px;
+  bottom: 50px;
+}
+
+.upload-csv-cloud {
+  position: relative;
+  top: 30px;
+  margin-bottom: 15px;
+}
+
+.upload-csv-area-text {
+  position: relative;
+  color: #949494;
+  line-height: 20px;
+}
