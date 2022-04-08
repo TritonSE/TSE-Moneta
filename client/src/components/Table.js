@@ -157,7 +157,6 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
                 src={Trashcan}
                 onClick={() => {
                   selected.forEach((id) => {
-                    console.log(id);
                     deleteTableData(id);
                   });
                   selected.clear();

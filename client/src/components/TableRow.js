@@ -51,17 +51,18 @@ export default function TableRow({
 
   if (isLoading) return <></>;
 
+  /**
+   * Removes or adds row id to selected set when checkbox is toggled
+   * @param e - event
+   */
   function handleCheckboxChange(e) {
     let selectedCopy = selected;
-    console.log(selectedCopy);
-
     if (!e.target.checked) {
       selectedCopy.delete(id);
     } else {
       selectedCopy.add(id);
     }
     setSelected(selectedCopy);
-    console.log(selectedCopy);
   }
 
   return (
