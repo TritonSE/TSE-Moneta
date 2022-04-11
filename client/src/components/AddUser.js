@@ -9,7 +9,6 @@
  */
 
 import React from "react";
-import { sendUserSignUpEmail } from "../utils";
 import "../css/AddUser.css";
 
 /**
@@ -79,17 +78,23 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
     addUserForm.current[2].value = userId;
 
     if (response.ok) {
-      try {
-        sendUserSignUpEmail(userId, fullName, email);
+      const sendEmailResponse = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/email/addUser/${userId}`,
+        {
+          method: "POST",
+        }
+      );
+      if (sendEmailResponse.ok) {
         setSnackbar({
           open: true,
           message: "User added!",
           severity: "success",
         });
-      } catch (error) {
+      } else {
         setSnackbar({
           open: true,
-          message: error.message,
+          message:
+            "An error occurred while trying to send the registration email. Please contact us for assistance.",
           severity: "error",
         });
       }

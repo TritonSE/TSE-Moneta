@@ -9,7 +9,6 @@ import React from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Snackbar, Alert } from "@mui/material";
 import { auth } from "../firebaseConfig";
-import { sendOrganizationSignUpEmail } from "../utils";
 import Logo from "../images/Logo.svg";
 import Back from "../images/BackButton.svg";
 
@@ -88,12 +87,18 @@ export default function Register() {
       // use firebase to sign up user
       createUserWithEmailAndPassword(auth, email, password);
 
-      try {
-        sendOrganizationSignUpEmail(name, "pending");
-      } catch (error) {
+      const { _id } = json.addCompany;
+      const sendEmailResponse = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/email/registerOrg/${_id}`,
+        {
+          method: "POST",
+        }
+      );
+      if (!sendEmailResponse.ok) {
         setSnackbar({
           open: true,
-          message: error.message,
+          message:
+            "An error occurred while trying to send the registration email. Please contact us for assistance.",
           severity: "error",
         });
       }
