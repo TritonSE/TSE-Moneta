@@ -8,6 +8,7 @@ const tableDataRoutes = require("./routes/tableDataRoutes");
 const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 const path = require("path");
 
 connectDB();
@@ -22,10 +23,11 @@ app.use("/", userRoutes);
 app.use("/", organizationRoutes);
 app.use("/", groupRoutes);
 app.use("/", tableDataRoutes);
+app.use("/email", emailRoutes);
 app.use(express.static(path.resolve(__dirname, "client", "build")));
 
 app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
