@@ -208,7 +208,7 @@ function CSVParser({
                       }
                     }}
                   >
-                    {acceptedFile ? "Finish" : "Next"}
+                    Finish
                   </button>
                 </div>
               </div>
