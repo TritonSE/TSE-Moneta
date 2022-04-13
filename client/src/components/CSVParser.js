@@ -8,11 +8,20 @@
  */
 
 import React, { useState } from "react";
-import { useCSVReader, useCSVDownloader } from "react-papaparse";
+import { useCSVReader, useCSVDownloader, formatFileSize } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
 import CloudUpload from "../images/CloudUpload.svg";
+import FileIcon from "../images/File.svg";
 
 import "../css/CSVParser.css";
+
+const progressBarStyles = {
+  bottom: 14,
+  position: "absolute",
+  width: "100%",
+  paddingLeft: 10,
+  paddingRight: 10,
+};
 
 /**
  * Renders the CSV parser
@@ -30,6 +39,9 @@ function CSVParser({
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
+  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
+  const [CSVData, setCSVData] = useState(null);
+  const [formSubmittable, setFormSubmittable] = useState(false);
 
   React.useEffect(async () => {
     await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
@@ -120,54 +132,89 @@ function CSVParser({
     });
   }
 
-  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
   return (
     <div>
       {CSVFlowVisible ? (
-        <div className="modal-background">
-          <div className="modal-view csv">
-            <h1 className="upload-csv-header">Upload CSV File</h1>
-            <div className="upload-csv-area">
-              <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
-              <p className="upload-csv-area-text">Drag and drop files here to upload</p>
-              <p className="upload-csv-area-text">or</p>
-              <CSVReader
-                // assumes csv comes with header row
-                config={{
-                  header: true,
-                }}
-                onUploadAccepted={(results) => {
-                  importToDB(results.data, CSVUploaded, setCSVUploaded).then();
-                  // console.log(results);
-                }}
-              >
-                {({ getRootProps }) => (
+        <CSVReader
+          // assumes csv comes with header row
+          config={{
+            header: true,
+          }}
+          onUploadAccepted={(results) => {
+            setCSVData(results.data);
+            setFormSubmittable(true);
+          }}
+        >
+          {({ getRootProps, acceptedFile, ProgressBar }) => (
+            <div className="modal-background">
+              <div className="modal-view csv">
+                <h1 className="upload-csv-header">Upload CSV File</h1>
+                <div className="upload-csv-area" {...getRootProps()}>
+                  <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
+                  <p className="upload-csv-area-text">Drag and drop files here to upload</p>
+                  <p className="upload-csv-area-text">or</p>
                   <div>
-                    <button
-                      type="submit"
-                      {...getRootProps()}
-                      className="modal-blue csv-browse-files"
-                    >
+                    <button type="submit" className="modal-blue csv-browse-files">
                       Browse Files
                     </button>
                   </div>
-                )}
-              </CSVReader>
+                </div>
+                {acceptedFile ? (
+                  <div className="csv-progress-div">
+                    <div className="csv-progress-file-icon-container">
+                      <img src={FileIcon} className="csv-progress-file-icon" alt="File" />
+                    </div>
+                    <div className="csv-progress-text-div">
+                      <p className="csv-progress-file-name">{acceptedFile.name}</p>
+                      <div
+                        className={
+                          formSubmittable ? "csv-progress-bar-div full" : "csv-progress-bar-div"
+                        }
+                      >
+                        <ProgressBar className="csv-progress-bar" />
+                      </div>
+                      <span className="csv-progress-file-size">
+                        {formatFileSize(acceptedFile.size)}
+                      </span>
+                      <span className="csv-progress-status">
+                        {formSubmittable ? "Upload complete!" : "Uploading..."}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="csv-submit-div">
+                  <button
+                    className="modal-white csv-cancel"
+                    type="button"
+                    onClick={() => {
+                      setFormSubmittable(false);
+                      setCSVFlowVisible(false);
+                      setCSVData(null);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className={
+                      formSubmittable ? "modal-blue csv-next" : "modal-blue csv-next disabled"
+                    }
+                    type="submit"
+                    onClick={() => {
+                      if (formSubmittable) {
+                        importToDB(CSVData, CSVUploaded, setCSVUploaded).then();
+                        setCSVData(null);
+                        setFormSubmittable(false);
+                        setCSVFlowVisible(false);
+                      }
+                    }}
+                  >
+                    {acceptedFile ? "Finish" : "Next"}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="csv-submit-div">
-              <button
-                className="modal-white csv-cancel"
-                type="button"
-                onClick={() => setCSVFlowVisible(false)}
-              >
-                Cancel
-              </button>
-              <button className="modal-blue csv-next" type="submit">
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
+          )}
+        </CSVReader>
       ) : null}
 
       <div className="csv-parser">

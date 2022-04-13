@@ -44,11 +44,11 @@
 }
 .modal-view.csv {
   width: 444px;
-  height: 414px;
+  height: auto;
 }
 .upload-csv-area {
   width: 98%;
-  height: 62%;
+  height: 255px;
   background: #f3f3f3;
   border: 2.5px dashed #a9a9a9;
   border-radius: 12px;
@@ -66,6 +66,11 @@
 
 .modal-blue.csv-next {
   float: right;
+}
+
+.modal-blue.csv-next.disabled {
+  pointer-events: none;
+  background-color: #8d9cae;
 }
 
 .upload-csv-icon {
@@ -87,4 +92,69 @@
   position: relative;
   color: #949494;
   line-height: 20px;
+}
+
+.csv-progress-div {
+  height: 55px;
+  margin-top: 33px;
+}
+
+.csv-progress-file-icon-container {
+  display: inline-flex;
+  justify-content: center;
+  width: 32px;
+  height: 50px;
+  margin: 0px;
+}
+.csv-progress-file-icon {
+  width: 32px;
+  float: left;
+  vertical-align: middle;
+}
+.csv-progress-text-div {
+  float: right;
+  height: auto;
+  width: 90%;
+}
+
+.csv-progress-file-name {
+  color: #05204a;
+  margin: 0px;
+}
+
+.csv-progress-file-size {
+  float: left;
+  margin: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #a9a9a9;
+}
+.csv-progress-status {
+  float: right;
+  margin: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #05204a;
+}
+
+.csv-progress-bar-div {
+  height: 6px;
+  width: 100%;
+  background: #f3f3f3;
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+.csv-progress-bar-div.full {
+  background: #6c89b6;
+}
+
+.csv-progress-bar {
+  height: 6px !important;
+  background-color: #6c89b6 !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
 }
