@@ -16,6 +16,8 @@ export default function TableRow({
   createTableData,
   updateTableData,
   deleteTableData,
+  selected,
+  setSelected,
   cellData,
   groupFields,
 }) {
@@ -49,8 +51,34 @@ export default function TableRow({
 
   if (isLoading) return <></>;
 
+  /**
+   * Removes or adds row id to selected set when checkbox is toggled
+   * @param e - event
+   */
+  function handleCheckboxChange(e) {
+    let selectedCopy = selected;
+    if (!e.target.checked) {
+      selectedCopy.delete(id);
+    } else {
+      selectedCopy.add(id);
+    }
+    setSelected(selectedCopy);
+  }
+
   return (
     <tr className="table-body-row" key={cellData.email}>
+      {!newRow ? (
+        <td className="table-checkbox-cell">
+          <input
+            type="checkbox"
+            name="row-selector"
+            key={id}
+            onChange={(e) => handleCheckboxChange(e)}
+          />
+        </td>
+      ) : (
+        <td></td>
+      )}
       {groupFields.map((field, index) => (
         <td className="table-body-cell">
           {editActivated ? (
@@ -90,7 +118,7 @@ export default function TableRow({
                     deleteTableData(id);
                     setEditActivated(!editActivated);
                   }}
-                  className="checkmark-svg clickable"
+                  className="table-delete-selected-svg clickable"
                   alt="confirm edit icon on table row"
                 />
               </div>
