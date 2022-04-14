@@ -5,6 +5,7 @@
  * @summary CSV parser for dashboard table
  * @author Kevin Fu
  * @author Elias Fang
+ * @author Alex Zhang
  */
 
 import React, { useState } from "react";
@@ -14,14 +15,6 @@ import CloudUpload from "../images/CloudUpload.svg";
 import FileIcon from "../images/File.svg";
 
 import "../css/CSVParser.css";
-
-const progressBarStyles = {
-  bottom: 14,
-  position: "absolute",
-  width: "100%",
-  paddingLeft: 10,
-  paddingRight: 10,
-};
 
 /**
  * Renders the CSV parser
