@@ -17,7 +17,7 @@ const User = require("../models/Users");
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport(
   {
-    host: "gmail.com",
+    host: "smtp.gmail.com",
     auth: {
       user: process.env.ADMIN_EMAIL_USERNAME,
       pass: process.env.ADMIN_EMAIL_PASSWORD,
