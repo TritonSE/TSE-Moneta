@@ -34,6 +34,7 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
   }, [group, data]);
 
   const createTableData = async (dataArg) => {
+    const faultyInputs = [];
     setTableChanged(true);
 
     const tempData = {
@@ -49,22 +50,23 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
       },
       body: JSON.stringify(tempData),
     });
-
     if (response.ok) {
       setSnackbar({
         open: true,
         message: "Row added!",
         severity: "success",
       });
+      return faultyInputs;
     } else {
       const json = await response.json();
-      const error = json.error;
+      const error = json.Error;
 
-      setSnackbar({
-        open: true,
-        message: error,
-        severity: "error",
-      });
+      // setSnackbar({
+      //   open: true,
+      //   message: error,
+      //   severity: "error",
+      // });
+      return error;
     }
 
     setTableChanged(false);

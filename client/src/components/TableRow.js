@@ -3,7 +3,6 @@
  *
  */
 import React from "react";
-
 import Pencil from "../images/Pencil.svg";
 import CheckMark from "../images/CheckMark.svg";
 import Trashcan from "../images/TrashCan.svg";
@@ -101,13 +100,14 @@ export default function TableRow({
             <div className={!newRow ? "icon-spacer" : ""} style={{ paddingRight: "22px" }}>
               <img
                 src={CheckMark}
-                onClick={() => {
+                onClick={async () => {
                   /* eslint-disable */
+                  const faultyInputs = await createTableData(cellDatas);
                   newRow
-                    ? createTableData(cellDatas)
+                    ? faultyInputs.length == 0
                       ? setEditActivated(!editActivated)
-                      : ""
-                    : updateTableData(id, cellDatas)
+                      : alert("error")
+                    : (await updateTableData(id, cellDatas))
                     ? setEditActivated(!editActivated)
                     : "";
                   /* eslint-enable */

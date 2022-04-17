@@ -150,6 +150,7 @@ function Dashboard() {
           }
         }
       } catch (error) {
+        //highlight code goes here
         setSnackbar({
           open: true,
           message: error.message,

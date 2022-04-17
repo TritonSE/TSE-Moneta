@@ -52,15 +52,33 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
     }
 
     let broken = false;
-    const groupVals = new Set([]);
+    const groupVals = new Map();
 
     group.forEach((value) => {
-      groupVals.add(value.name);
+      groupVals.set(value.name, value.type);
     });
 
     Object.keys(req.body.data).map((val) => {
       if (groupVals.has(val)) {
-        groupVals.delete(val);
+        const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        switch (groupVals.get(val)) {
+          case "Text":
+            groupVals.delete(val);
+            break;
+          case "Number":
+            if (!Number.isNaN(parseInt(req.body.data[val], 10))) {
+              groupVals.delete(val);
+            }
+            break;
+
+          case "Email":
+            console.log("bruh");
+            if (emailRegex.test(req.body.data[val])) {
+              console.log("valid email");
+              groupVals.delete(val);
+            }
+            break;
+        }
       } else {
         broken = true;
       }
@@ -71,16 +89,13 @@ router.post("/rows", [body("group").exists(), body("data").exists()], async (req
       broken = true;
     }
 
-    const missingFields = Array.from(groupVals);
+    const missingFields = Array.from(groupVals.keys());
+
     if (broken) {
       return res.status(409).json({
         Error: missingFields,
       });
     }
-
-    // if (!(await isValidGroup(req.body.group, res))) {
-    //  return;
-    // }
 
     return await TableData.find({ group: req.body.group, data: req.body.data })
       .then(async (data) => {
