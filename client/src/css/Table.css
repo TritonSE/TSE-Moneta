@@ -73,6 +73,7 @@
   padding: 0px;
   vertical-align: middle;
   margin-top: 0px;
+  cursor: pointer;
 }
 
 .table-button.prev-page {
