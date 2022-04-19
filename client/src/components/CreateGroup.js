@@ -38,7 +38,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
     case "ADD_ROW":
       value
         ? newFields.push({ name: value.name, type: value.type })
-        : newFields.push({ name: "", type: "" });
+        : newFields.push({ name: "", type: "Text" });
       break;
     case "DELETE_ROW":
       newFields.splice(index, 1);
@@ -74,7 +74,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
    */
   const [fields, dispatch] = useReducer(
     fieldsReducer,
-    !editGroup ? [{ name: "", type: "Email" }] : []
+    !editGroup ? [{ name: "", type: "Text" }] : []
   );
   const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
