@@ -406,14 +406,16 @@ function Dashboard() {
           value={selectedGroup}
           onChange={handleSelectGroup}
         />
-        <button
-          className="add-row clickable"
-          type="button"
-          onClick={() => setAddingRow(!addingRow)}
-        >
-          <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-          Add row
-        </button>
+        {selectedGroup && 
+          <button
+            className="add-row clickable"
+            type="button"
+            onClick={() => setAddingRow(!addingRow)}
+          >
+            <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
+            Add row
+          </button>
+        }
         {dataLoading ? (
           <div className="data-loading">
             <ReactLoading type="spin" color="#05204a" height={100} width={100} />
