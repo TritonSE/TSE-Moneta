@@ -133,9 +133,6 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
               Deleting this field will delete the data in its column. We recommend that you download
               a CSV before deleting to save your data.
             </p>
-            <p className="confirm-delete-subbody">
-              Contact us within X days if you would like a CSV of your deleted data.
-            </p>
             <div className="confirm-delete-buttons-div">
               <button
                 className="group-modal-cancel confirm-delete"

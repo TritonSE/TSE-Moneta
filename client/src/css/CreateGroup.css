@@ -24,7 +24,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 400px;
+  height: 375px;
   padding: 0px;
 }
 .group-first-header {
@@ -156,6 +156,7 @@
   line-height: 36px;
   text-align: center;
   margin: 0px;
+  margin-bottom: 10px;
 }
 
 .confirm-delete-body {
@@ -164,15 +165,7 @@
   line-height: 24px;
   text-align: center;
   color: #353535;
-  margin-bottom: 24px;
-}
-
-.confirm-delete-subbody {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: center;
-  color: #959595;
+  margin-bottom: 30px;
 }
 
 .confirm-delete-buttons-div {
