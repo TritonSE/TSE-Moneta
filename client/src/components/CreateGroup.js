@@ -63,6 +63,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
 function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
@@ -124,65 +125,96 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
 
   return (
     <div className="modal-background">
-      <div className="modal-view">
-        <form
-          className="group-form"
-          onSubmit={(event) => {
-            tryConfirm(groupName, fields);
-            event.preventDefault();
-          }}
-        >
-          <h1 className="group-first-header">{!editGroup ? "Create New Group" : "Edit Group"}</h1>
-          <h2 className="group-second-header">Group Name</h2>
-          <input
-            className={nameInputClass}
-            value={groupName}
-            onChange={(event) => setGroupName(event.target.value)}
-          />
-          <h2 className="group-second-header">Fields</h2>
-          <h3 className="group-third-header">
-            List the fields you want associated with this group...
-          </h3>
-          <div className={fieldsListDivClass}>
-            {fields.map(({ name, type, invalid }, index) => (
-              <CreateGroupFieldRow
-                key={index}
-                index={index}
-                fieldName={name}
-                fieldType={type}
-                invalid={invalid}
-                changeDispatch={dispatch}
-              />
-            ))}
-          </div>
-          <button
-            className="add-field-button"
-            type="button"
-            onClick={() => dispatch({ type: "ADD_ROW" })}
-          >
-            <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
-            Add new field
-          </button>
-          <div className="group-submit-div">
-            <button className="group-modal-submit" type="submit">
-              {editGroup ? "Save" : "Create"}
-            </button>
-            {editGroup && (
+      {confirmDelete ? (
+        <div className="modal-view confirm-delete">
+          <div className="confirm-delete-div">
+            <h1 className="confirm-delete-header">Are you sure you want to delete this field?</h1>
+            <p className="confirm-delete-body">
+              Deleting this field will delete the data in its column. We recommend that you download
+              a CSV before deleting to save your data.
+            </p>
+            <p className="confirm-delete-subbody">
+              Contact us within X days if you would like a CSV of your deleted data.
+            </p>
+            <div className="confirm-delete-buttons-div">
               <button
-                className="group-modal-cancel"
+                className="group-modal-cancel confirm-delete"
                 type="button"
                 onClick={() => onDelete(editGroup.id)}
-                style={{ marginLeft: "20px" }}
               >
                 Delete
               </button>
-            )}
-            <button className="group-modal-cancel" type="button" onClick={onCancel}>
-              Cancel
-            </button>
+              <button
+                className="group-modal-cancel confirm-cancel"
+                type="button"
+                onClick={onCancel}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+      ) : (
+        <div className="modal-view">
+          <form
+            className="group-form"
+            onSubmit={(event) => {
+              tryConfirm(groupName, fields);
+              event.preventDefault();
+            }}
+          >
+            <h1 className="group-first-header">{!editGroup ? "Create New Group" : "Edit Group"}</h1>
+            <h2 className="group-second-header">Group Name</h2>
+            <input
+              className={nameInputClass}
+              value={groupName}
+              onChange={(event) => setGroupName(event.target.value)}
+            />
+            <h2 className="group-second-header">Fields</h2>
+            <h3 className="group-third-header">
+              List the fields you want associated with this group...
+            </h3>
+            <div className={fieldsListDivClass}>
+              {fields.map(({ name, type, invalid }, index) => (
+                <CreateGroupFieldRow
+                  key={index}
+                  index={index}
+                  fieldName={name}
+                  fieldType={type}
+                  invalid={invalid}
+                  changeDispatch={dispatch}
+                />
+              ))}
+            </div>
+            <button
+              className="add-field-button"
+              type="button"
+              onClick={() => dispatch({ type: "ADD_ROW" })}
+            >
+              <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
+              Add new field
+            </button>
+            <div className="group-submit-div">
+              <button className="group-modal-submit" type="submit">
+                {editGroup ? "Save" : "Create"}
+              </button>
+              {editGroup && (
+                <button
+                  className="group-modal-cancel"
+                  type="button"
+                  onClick={() => setConfirmDelete(true)}
+                  style={{ marginLeft: "20px" }}
+                >
+                  Delete
+                </button>
+              )}
+              <button className="group-modal-cancel" type="button" onClick={onCancel}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

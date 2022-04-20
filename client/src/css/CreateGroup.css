@@ -20,6 +20,13 @@
   height: 500px;
 }
 
+.modal-view.confirm-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  padding: 0px;
+}
 .group-first-header {
   font-size: 25px;
   font-weight: bold;
@@ -137,4 +144,53 @@
   background: #ffffff;
   color: #05204a;
   cursor: pointer;
+}
+
+.confirm-delete-div {
+  width: 370px;
+}
+
+.confirm-delete-header {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+  text-align: center;
+  margin: 0px;
+}
+
+.confirm-delete-body {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #353535;
+  margin-bottom: 24px;
+}
+
+.confirm-delete-subbody {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #959595;
+}
+
+.confirm-delete-buttons-div {
+  width: 270px;
+  height: 40px;
+  margin-top: 30px;
+  margin-left: 50px;
+}
+.group-modal-cancel.confirm-delete {
+  float: left;
+  margin: 0px;
+  background: #05204a;
+  color: #ffffff;
+}
+
+.group-modal-cancel.confirm-cancel {
+  float: right;
+  background: #ffffff;
+  border: 2px solid #949494;
+  color: #949494;
 }
