@@ -1,6 +1,8 @@
 /**
- *
- *
+ * Table row component that displays information in table. Allows for editing, deleting, and row selection.
+ * 
+ * @summary table row
+ * @author  Navid Boloorian
  */
 import React from "react";
 
@@ -33,7 +35,13 @@ export default function TableRow({
 
     if (newRow) {
       setEditActivated(true);
+
+      // sets the default width of input field to 5 
       setFieldDefaultSize(5);
+
+      for(let i = 0; i < groupFields.length; i++) {
+        cellData[groupFields[i].name] = "";
+      }
     }
 
     setCellDatas(cellData);
@@ -82,6 +90,7 @@ export default function TableRow({
       {groupFields.map((field, index) => (
         <td className="table-body-cell">
           {editActivated ? (
+            // sets width of input fields when user types
             <div className="input-resizer">
               <input
                 ref={(element) => {

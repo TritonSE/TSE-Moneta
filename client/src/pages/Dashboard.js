@@ -390,7 +390,7 @@ function Dashboard() {
    * Hide csv dropdown when click outside of it
    */
   document.addEventListener("mousedown", (event) => {
-    if (!csvDropdown.contains(event.target)) setVisibility(false)
+    if (csvDropdown && !csvDropdown.contains(event.target)) setVisibility(false)
   });
 
   if (isLoading || (!orgInfo && !userInfo)) {
