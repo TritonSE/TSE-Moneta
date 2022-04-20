@@ -395,7 +395,7 @@ function Dashboard() {
     <>
       <SideNavigation currentPage="/" userInfo={userInfo} />
       <div className="dashboard-div">
-        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+        {/* <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
@@ -457,7 +457,7 @@ function Dashboard() {
             orgId={orgId}
             setDataLoading={setDataLoading}
           />
-        ) : null}
+        ) : null} */}
       </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
