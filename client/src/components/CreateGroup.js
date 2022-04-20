@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState, useRef } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -63,6 +63,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
 function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
+  const fieldsScrollDiv = useRef(null);
 
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
@@ -90,6 +91,11 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
       setGroupName("");
     }
   }, [editGroup]);
+
+  // scrolls down window when new fields are added
+  useEffect(() => {
+    fieldsScrollDiv.current.scrollIntoView({behavior: "smooth"});  
+  }, [fields])
 
   const tryConfirm = useCallback(
     (groupName_, fields_) => {
@@ -154,6 +160,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
                 changeDispatch={dispatch}
               />
             ))}
+            <div ref={fieldsScrollDiv} />
           </div>
           <button
             className="add-field-button"
