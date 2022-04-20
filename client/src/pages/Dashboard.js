@@ -20,6 +20,7 @@ import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
+import NoGroups from "../components/NoGroups";
 
 import "../css/Dashboard.css";
 
@@ -391,11 +392,16 @@ function Dashboard() {
     );
   }
 
+  if (groupOptions.length == 1) {
+    
+  }
+
   return (
     <>
       <SideNavigation currentPage="/" userInfo={userInfo} />
-      <div className="dashboard-div">
-        {/* <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+      <NoGroups />
+      {/* <div className="dashboard-div">
+        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
         <Select
           className="group-select"
           classNamePrefix="select"
@@ -457,7 +463,7 @@ function Dashboard() {
             orgId={orgId}
             setDataLoading={setDataLoading}
           />
-        ) : null} */}
+        ) : null}
       </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
@@ -486,7 +492,7 @@ function Dashboard() {
             {snackbar.message}
           </Alert>
         </Snackbar>
-      </div>
+      </div> */}
     </>
   );
 }
