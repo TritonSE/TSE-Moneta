@@ -56,6 +56,9 @@ function Dashboard() {
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
 
+  // reference to div containing csv dropdown
+  const csvDropdown = document.querySelector(".csv-parser-dropdown");
+
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
    * @returns The new list of options
@@ -383,6 +386,13 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
+  /**
+   * Hide csv dropdown when click outside of it
+   */
+  document.addEventListener("mousedown", (event) => {
+    if (!csvDropdown.contains(event.target)) setVisibility(false)
+  });
+
   if (isLoading || (!orgInfo && !userInfo)) {
     return (
       <div className="loading">
@@ -449,17 +459,19 @@ function Dashboard() {
         >
           <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
         </button>
-        {visible ? (
-          <CSVParser
-            CSVUploaded={CSVUploaded}
-            setCSVUploaded={setCSVUploaded}
-            snackbar={snackbar}
-            setSnackbar={setSnackbar}
-            selectedGroup={selectedGroup}
-            orgId={orgId}
-            setDataLoading={setDataLoading}
-          />
-        ) : null}
+        <div className="csv-parser-dropdown">
+          {visible ? (
+            <CSVParser
+              CSVUploaded={CSVUploaded}
+              setCSVUploaded={setCSVUploaded}
+              snackbar={snackbar}
+              setSnackbar={setSnackbar}
+              selectedGroup={selectedGroup}
+              orgId={orgId}
+              setDataLoading={setDataLoading}
+            />
+          ) : null}
+        </div>
       </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
