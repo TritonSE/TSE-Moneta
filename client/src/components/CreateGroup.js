@@ -63,7 +63,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
 function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
-  const fieldsScrollDiv = useRef(null);
+  const fieldsListDiv = useRef(null);
 
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
@@ -77,7 +77,6 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     fieldsReducer,
     !editGroup ? [{ name: "", type: "Text" }] : []
   );
-  const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
   useEffect(() => {
     if (editGroup) {
@@ -92,26 +91,30 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     }
   }, [editGroup]);
 
-  // scrolls down window when new fields are added
-  useEffect(() => {
-    fieldsScrollDiv.current.scrollIntoView({behavior: "smooth"});  
-  }, [fields])
+  const scrollToIndex = useCallback(
+    (index) => {
+      fieldsListDiv.current.children[index].scrollIntoView({ behavior: "smooth" });
+    },
+    [fieldsListDiv]
+  );
 
   const tryConfirm = useCallback(
     (groupName_, fields_) => {
       let valid = true;
       setGroupNameInvalid(false);
-      setFieldsInvalid(false);
 
       if (groupName_.length === 0) {
         setGroupNameInvalid(true);
         valid = false;
       }
+      let firstErrorIndex = -1;
       for (let i = 0; i < fields_.length; i++) {
         const fieldInfo = fields_[i];
         if (fieldInfo.name.length === 0) {
           dispatch({ type: "SET_INVALID", payload: { index: i } });
-          setFieldsInvalid(true);
+          if (firstErrorIndex === -1) {
+            firstErrorIndex = i;
+          }
           valid = false;
         } else {
           dispatch({ type: "SET_VALID", payload: { index: i } });
@@ -120,13 +123,14 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
 
       if (valid) {
         !editGroup ? onConfirm(groupName_, fields_) : onConfirm(groupName_, fields_, editGroup.id);
+      } else {
+        scrollToIndex(firstErrorIndex);
       }
     },
-    [onConfirm]
+    [editGroup, onConfirm, scrollToIndex]
   );
 
   const nameInputClass = "group-name-input" + (groupNameInvalid ? " invalid" : "");
-  const fieldsListDivClass = "group-fields-list" + (fieldsInvalid ? " invalid" : "");
 
   return (
     <div className="modal-background">
@@ -149,7 +153,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
           <h3 className="group-third-header">
             List the fields you want associated with this group...
           </h3>
-          <div className={fieldsListDivClass}>
+          <div className="group-fields-list" ref={fieldsListDiv}>
             {fields.map(({ name, type, invalid }, index) => (
               <CreateGroupFieldRow
                 key={index}
@@ -160,12 +164,14 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
                 changeDispatch={dispatch}
               />
             ))}
-            <div ref={fieldsScrollDiv} />
           </div>
           <button
             className="add-field-button"
             type="button"
-            onClick={() => dispatch({ type: "ADD_ROW" })}
+            onClick={() => {
+              dispatch({ type: "ADD_ROW" });
+              setTimeout(() => scrollToIndex(fields.length), 100);
+            }}
           >
             <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
             Add new field
