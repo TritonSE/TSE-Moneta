@@ -91,33 +91,30 @@ function Dashboard() {
       });
       return [];
     }
-  }, [orgId]);
+  }, [orgId, selectedGroup]);
 
   /**
    * Fetches the rows in the given group which contain the given search string
    */
-  const fetchRows = useCallback(
-    async (groupID, searchString = "") => {
-      try {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ group: groupID, search: searchString }),
-        };
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
-        const json = await response.json();
+  const fetchRows = useCallback(async (groupID, searchString = "") => {
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ group: groupID, search: searchString }),
+      };
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
+      const json = await response.json();
 
-        setTableData(json);
-      } catch (error) {
-        setSnackbar({
-          open: true,
-          message: error.message,
-          severity: "error",
-        });
-      }
-    },
-    [selectedGroup]
-  );
+      setTableData(json);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message,
+        severity: "error",
+      });
+    }
+  }, []);
 
   /**
    * Callback which receives new group info from the create group module and sends a request to the
@@ -207,7 +204,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups]
   );
 
   /**
@@ -256,7 +253,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, groupOptions]
   );
 
   /**
@@ -296,7 +293,7 @@ function Dashboard() {
       fetchRows(selectedGroup.id, Search);
       setAddingRow(false);
     }
-  }, [selectedGroup, Search, CSVUploaded, tableChanged]);
+  }, [fetchRows, selectedGroup, Search, CSVUploaded, tableChanged]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -390,7 +387,7 @@ function Dashboard() {
    * Hide csv dropdown when click outside of it
    */
   document.addEventListener("mousedown", (event) => {
-    if (csvDropdown && !csvDropdown.contains(event.target)) setVisibility(false)
+    if (csvDropdown && !csvDropdown.contains(event.target)) setVisibility(false);
   });
 
   if (isLoading || (!orgInfo && !userInfo)) {
@@ -416,7 +413,7 @@ function Dashboard() {
           value={selectedGroup}
           onChange={handleSelectGroup}
         />
-        {selectedGroup && 
+        {selectedGroup && (
           <button
             className="add-row clickable"
             type="button"
@@ -425,7 +422,7 @@ function Dashboard() {
             <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
             Add row
           </button>
-        }
+        )}
         {dataLoading ? (
           <div className="data-loading">
             <ReactLoading type="spin" color="#05204a" height={100} width={100} />
