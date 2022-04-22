@@ -403,26 +403,47 @@ function Dashboard() {
       <SideNavigation currentPage="/" userInfo={userInfo} />
       <div className="dashboard-div">
         <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
-        <Select
-          className="group-select"
-          classNamePrefix="select"
-          options={groupOptions}
-          placeholder="Select Group"
-          styles={selectStyles}
-          components={{ Option: iconOption }}
-          value={selectedGroup}
-          onChange={handleSelectGroup}
-        />
-        {selectedGroup && (
+        <div className="dashboard-top-bar">
+          <Select
+            className="group-select"
+            classNamePrefix="select"
+            options={groupOptions}
+            placeholder="Select Group"
+            styles={selectStyles}
+            components={{ Option: iconOption }}
+            value={selectedGroup}
+            onChange={handleSelectGroup}
+          />
+          {selectedGroup && (
+            <button
+              className="add-row clickable"
+              type="button"
+              onClick={() => setAddingRow(!addingRow)}
+            >
+              <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
+              Add row
+            </button>
+          )}
           <button
-            className="add-row clickable"
             type="button"
-            onClick={() => setAddingRow(!addingRow)}
+            className="toggle-csv-menu"
+            onClick={() => {
+              setVisibility(!visible);
+            }}
           >
-            <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-            Add row
+            <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
           </button>
-        )}
+          <div className="dashboard-search-box">
+            <input
+              type="text"
+              className="dashboard-search"
+              placeholder="Search"
+              value={Search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+          </div>
+        </div>
         {dataLoading ? (
           <div className="data-loading">
             <ReactLoading type="spin" color="#05204a" height={100} width={100} />
@@ -439,37 +460,20 @@ function Dashboard() {
             rerender={tableChanged}
           />
         )}
-        <input
-          type="text"
-          className="dashboard-search"
-          placeholder="Search"
-          value={Search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
-        <button
-          type="button"
-          className="toggle-csv-menu"
-          onClick={() => {
-            setVisibility(!visible);
-          }}
-        >
-          <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-        </button>
-        <div className="csv-parser-dropdown">
-          {visible ? (
-            <CSVParser
-              CSVUploaded={CSVUploaded}
-              setCSVUploaded={setCSVUploaded}
-              snackbar={snackbar}
-              setSnackbar={setSnackbar}
-              selectedGroup={selectedGroup}
-              orgId={orgId}
-              setDataLoading={setDataLoading}
-            />
-          ) : null}
-        </div>
       </div>
+      {visible ? (
+        <div className="csv-parser-dropdown">
+          <CSVParser
+            CSVUploaded={CSVUploaded}
+            setCSVUploaded={setCSVUploaded}
+            snackbar={snackbar}
+            setSnackbar={setSnackbar}
+            selectedGroup={selectedGroup}
+            orgId={orgId}
+            setDataLoading={setDataLoading}
+          />
+        </div>
+      ) : null}
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
