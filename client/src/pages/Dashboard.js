@@ -57,7 +57,7 @@ function Dashboard() {
   const [groupEditVisible, setGroupEditVisible] = useState(false);
   const [groupCSVVisible, setGroupCSVVisible] = useState(false);
   const [createCSVGroup, setCreateCSVGroup] = useState(false);
-  const [CSVFields, setCSVFields] = useState([]);
+  const [CSVFields, setCSVFields] = useState(null);
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -126,6 +126,7 @@ function Dashboard() {
    */
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
+      setCSVFields(null);
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`, {
           method: "POST",
@@ -484,13 +485,10 @@ function Dashboard() {
       </div>
       {groupCreationVisible && (
         <CreateGroup
-          onConfirm={() => {
-            submitNewGroup();
-            setCSVFields([]);
-          }}
+          onConfirm={submitNewGroup}
           onCancel={() => {
             setGroupCreationVisible(false);
-            setCSVFields([]);
+            setCSVFields(null);
           }}
           CSVFields={CSVFields}
         />
