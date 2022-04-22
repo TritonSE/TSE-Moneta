@@ -14,13 +14,28 @@ const ObjectId = require("mongodb").ObjectId;
 const Organization = require("../models/Organizations");
 const User = require("../models/Users");
 
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+const oAuth2Client = new OAuth2(
+  process.env.ADMIN_OAUTH2_CLIENT_ID,
+  process.env.ADMIN_OAUTH2_CLIENT_SECRET,
+  process.env.ADMIN_OAUTH2_REDIRECT_URL
+);
+oAuth2Client.setCredentials({
+  refresh_token: process.env.ADMIN_OAUTH2_REFRESH_TOKEN,
+});
+
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport(
   {
     host: "smtp.gmail.com",
     auth: {
-      user: process.env.ADMIN_EMAIL_USERNAME,
-      pass: process.env.ADMIN_EMAIL_PASSWORD,
+      type: "OAuth2",
+      user: process.env.ADMIN_EMAIL_ADDRESS,
+      clientId: process.env.ADMIN_OAUTH2_CLIENT_ID,
+      clientSecret: process.env.ADMIN_OAUTH2_CLIENT_SECRET,
+      refreshToken: process.env.ADMIN_OAUTH2_REFRESH_TOKEN,
+      accessToken: oAuth2Client.getAccessToken(),
     },
     secure: true,
   },
