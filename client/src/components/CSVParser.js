@@ -24,6 +24,10 @@ function CSVParser({
   selectedGroup,
   orgId,
   setDataLoading,
+  createCSVGroup,
+  groupCreationVisible,
+  setGroupCreationVisible,
+  setCSVFields,
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
@@ -126,8 +130,18 @@ function CSVParser({
         config={{
           header: true,
         }}
-        onUploadAccepted={(results) => {
-          importToDB(results.data, CSVUploaded, setCSVUploaded).then();
+        onUploadAccepted={async (results) => {
+          if (createCSVGroup) {
+            // if we create group from CSV
+            let headers = Object.keys(results.data[0]);
+            headers = headers.map((value) => {
+              return { name: value, type: "Text" };
+            });
+            await setCSVFields(headers);
+            setGroupCreationVisible(!groupCreationVisible);
+          } else {
+            importToDB(results.data, CSVUploaded, setCSVUploaded).then();
+          }
           // console.log(results);
         }}
       >

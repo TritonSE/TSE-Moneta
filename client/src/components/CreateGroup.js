@@ -60,7 +60,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  *
  * @return jsx for create group module
  */
-function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
+function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
 
@@ -74,7 +74,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
    */
   const [fields, dispatch] = useReducer(
     fieldsReducer,
-    !editGroup ? [{ name: "", type: "Email" }] : []
+    !editGroup && !CSVFields ? [{ name: "", type: "Email" }] : []
   );
   const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
@@ -89,7 +89,13 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     } else {
       setGroupName("");
     }
-  }, [editGroup]);
+    if (CSVFields) {
+      CSVFields.map((value) => {
+        dispatch({ type: "ADD_ROW", payload: { value } });
+        return value;
+      });
+    }
+  }, [editGroup, CSVFields]);
 
   const tryConfirm = useCallback(
     (groupName_, fields_) => {

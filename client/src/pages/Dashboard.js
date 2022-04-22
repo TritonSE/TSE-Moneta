@@ -55,6 +55,9 @@ function Dashboard() {
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
+  const [groupCSVVisible, setGroupCSVVisible] = useState(false);
+  const [createCSVGroup, setCreateCSVGroup] = useState(false);
+  const [CSVFields, setCSVFields] = useState([]);
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -438,6 +441,22 @@ function Dashboard() {
           onChange={(event) => setSearch(event.target.value)}
         />
         <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+
+        <div className="radio-div">
+          <input
+            type="checkbox"
+            className="create-group-csv-button"
+            id="create-group-csv"
+            value="create-group-csv"
+            onChange={() => {
+              setCreateCSVGroup(!createCSVGroup);
+            }}
+          />
+          <label htmlFor="create-group-csv" className="create-group-csv-label">
+            Create Group With CSV
+          </label>
+        </div>
+
         <button
           type="button"
           className="toggle-csv-menu"
@@ -456,11 +475,25 @@ function Dashboard() {
             selectedGroup={selectedGroup}
             orgId={orgId}
             setDataLoading={setDataLoading}
+            createCSVGroup={createCSVGroup}
+            groupCreationVisible={groupCreationVisible}
+            setGroupCreationVisible={setGroupCreationVisible}
+            setCSVFields={setCSVFields}
           />
         ) : null}
       </div>
       {groupCreationVisible && (
-        <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+        <CreateGroup
+          onConfirm={() => {
+            submitNewGroup();
+            setCSVFields([]);
+          }}
+          onCancel={() => {
+            setGroupCreationVisible(false);
+            setCSVFields([]);
+          }}
+          CSVFields={CSVFields}
+        />
       )}
       {groupEditVisible && (
         <CreateGroup
