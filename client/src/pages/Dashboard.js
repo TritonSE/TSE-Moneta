@@ -55,9 +55,9 @@ function Dashboard() {
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
-  const [groupCSVVisible, setGroupCSVVisible] = useState(false);
   const [createCSVGroup, setCreateCSVGroup] = useState(false);
   const [CSVFields, setCSVFields] = useState(null);
+  const [submittedCSVGroup, setSubmittedCSVGroup] = useState(false);
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -141,7 +141,12 @@ function Dashboard() {
           throw new Error(json.msg ?? json.Error ?? json.message.message);
         }
         setGroupCreationVisible(false);
-
+        if (createCSVGroup) {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`);
+          const { listOfGroups } = await response.json();
+          setSelectedGroup(listOfGroups[listOfGroups.length - 1]);
+          setSubmittedCSVGroup(!submittedCSVGroup);
+        }
         // display the newly created group
         const {
           addGroup: { GroupId: newGroupID },
@@ -161,7 +166,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, orgId, createCSVGroup]
   );
 
   /**
@@ -449,9 +454,7 @@ function Dashboard() {
             className="create-group-csv-button"
             id="create-group-csv"
             value="create-group-csv"
-            onChange={() => {
-              setCreateCSVGroup(!createCSVGroup);
-            }}
+            onClick={() => setCreateCSVGroup(!createCSVGroup)}
           />
           <label htmlFor="create-group-csv" className="create-group-csv-label">
             Create Group With CSV
@@ -480,6 +483,7 @@ function Dashboard() {
             groupCreationVisible={groupCreationVisible}
             setGroupCreationVisible={setGroupCreationVisible}
             setCSVFields={setCSVFields}
+            submittedCSVGroup={submittedCSVGroup}
           />
         ) : null}
       </div>

@@ -28,11 +28,13 @@ function CSVParser({
   groupCreationVisible,
   setGroupCreationVisible,
   setCSVFields,
+  submittedCSVGroup,
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
+  let recentCSV = null;
 
   React.useEffect(async () => {
     await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
@@ -45,6 +47,10 @@ function CSVParser({
       }
     );
   }, [CSVUploaded]);
+
+  React.useEffect(async () => {
+    await importToDB(recentCSV, CSVUploaded, setCSVUploaded);
+  }, [submittedCSVGroup]);
 
   /**
    *  Returns true if CSV values are valid, otherwise false.
@@ -139,6 +145,7 @@ function CSVParser({
             });
             await setCSVFields(headers);
             setGroupCreationVisible(!groupCreationVisible);
+            recentCSV = results.data;
           } else {
             importToDB(results.data, CSVUploaded, setCSVUploaded).then();
           }
