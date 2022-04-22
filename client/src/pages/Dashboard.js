@@ -461,8 +461,8 @@ function Dashboard() {
           />
         )}
       </div>
-      {visible ? (
-        <div className="csv-parser-dropdown">
+      <div className="csv-parser-dropdown">
+        {visible ? (
           <CSVParser
             CSVUploaded={CSVUploaded}
             setCSVUploaded={setCSVUploaded}
@@ -472,8 +472,8 @@ function Dashboard() {
             orgId={orgId}
             setDataLoading={setDataLoading}
           />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
       )}
