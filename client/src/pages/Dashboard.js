@@ -155,6 +155,7 @@ function Dashboard() {
           }
         }
 
+        // import CSV data if using
         if (CSVData != null) {
           setDataLoading(true);
           for (const row of CSVData) {
@@ -190,7 +191,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId, createCSVGroup, CSVData]
+    [fetchGroups, orgId, createCSVGroup, CSVData, CSVUploaded]
   );
 
   /**

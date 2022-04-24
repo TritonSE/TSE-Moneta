@@ -35,16 +35,18 @@ function CSVParser({
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
 
-  React.useEffect(async () => {
-    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
-      async (response) => {
-        if (response.ok) {
-          let json = await response.json();
-          json = json.map((row) => row.data);
-          setTableData(json);
+  React.useEffect(() => {
+    async function fetchData() {
+      await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
+        async (response) => {
+          if (response.ok) {
+            let json = await response.json();
+            json = json.map((row) => row.data);
+            setTableData(json);
+          }
         }
-      }
-    );
+      );
+    }
   }, [CSVUploaded]);
 
   /**
@@ -138,7 +140,7 @@ function CSVParser({
             headers = headers.map((value) => {
               return { name: value, type: "Text" };
             });
-            await setCSVFields(headers);
+            setCSVFields(headers);
             setCSVData(results.data);
             setGroupCreationVisible(!groupCreationVisible);
           } else {
