@@ -102,3 +102,65 @@
   background: transparent;
   cursor: pointer;
 }
+
+.no-groups-div {
+  position: absolute;
+  top: 25px;
+}
+
+.no-groups-header {
+  position: absolute;
+  width: 222px;
+  top: 295px;
+  left: 617px;
+  min-width: 500px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.no-groups-text {
+  position: absolute;
+  text-align: center;
+  color: #949494;
+  width: 633px;
+  top: 350px;
+  left: 486px;
+  min-width: 700px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.create-group {
+  position: absolute;
+  left: 730px;
+  top: 430px;
+  width: 147px;
+  height: 40px;
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 5px;
+  border: solid;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  color: #05204a;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.no-groups.create-icon-svg {
+  position: absolute;
+  top: 236px;
+  left: 801px;
+}
+
+.no-groups.add-icon-svg {
+  margin-left: -2px;
+  margin-right: 8px;
+  margin-top: -2px;
+}

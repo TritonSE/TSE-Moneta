@@ -5,6 +5,7 @@
  * @author Alex Zhang
  * @author William Wu
  * @author Navid Boloorian
+ * @author Elias Fang
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -18,9 +19,11 @@ import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
+import CreateIcon from "../images/CreateIcon.svg";
+import AddIconBlue from "../images/AddIconBlue.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
-import NoGroups from "../components/NoGroups";
+// import NoGroups from "../components/NoGroups";
 
 import "../css/Dashboard.css";
 
@@ -392,109 +395,141 @@ function Dashboard() {
     );
   }
 
-  if (groupOptions.length == 1) {
-    
-  }
+  if (groupOptions.length === 1) {
+    return (
+      <>
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="no-groups-div">
+            <img src={CreateIcon} className="no-groups create-icon-svg" alt="create icon" />
+            <h1 className="no-groups-header">Start building your dashboard!</h1>
+            <p className="no-groups-text">Click "Create new" to begin adding data to your table.<br />
+            Have previous databases? No worries! You can upload your CSV file as well.</p>
+            <button
+                className="create-group clickable"
+                type="button"
+                onClick={() => {
+                  setGroupCreationVisible(true);
+                }}
+            >
+              <img src={AddIconBlue} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              Create new
+            </button>
 
-  return (
-    <>
-      <SideNavigation currentPage="/" userInfo={userInfo} />
-      <NoGroups />
-      {/* <div className="dashboard-div">
-        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
-        <Select
-          className="group-select"
-          classNamePrefix="select"
-          options={groupOptions}
-          placeholder="Select Group"
-          styles={selectStyles}
-          components={{ Option: iconOption }}
-          value={selectedGroup}
-          onChange={handleSelectGroup}
-        />
-        <button
-          className="add-row clickable"
-          type="button"
-          onClick={() => setAddingRow(!addingRow)}
-        >
-          <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-          Add row
-        </button>
-        {dataLoading ? (
-          <div className="data-loading">
-            <ReactLoading type="spin" color="#05204a" height={100} width={100} />
-          </div>
-        ) : (
-          <Table
-            CSVUploaded={CSVUploaded}
-            setSnackbar={setSnackbar}
-            addingRow={addingRow}
-            group={selectedGroup}
-            data={tableData}
-            elementsPerPage={25}
-            setTableChanged={setTableChanged}
-            rerender={tableChanged}
+            {groupCreationVisible && (
+                <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+            )}
+            {groupEditVisible && (
+                <CreateGroup
+                onConfirm={submitEditGroup}
+                editGroup={editGroup}
+                onDelete={submitDeleteGroup}
+                onCancel={() => setGroupEditVisible(false)}
+                />
+            )}
+        </div>
+      </>
+    );
+  } else {
+    console.log(groupOptions.length);
+    return (
+      <>
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="dashboard-div">
+          <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+          <Select
+            className="group-select"
+            classNamePrefix="select"
+            options={groupOptions}
+            placeholder="Select Group"
+            styles={selectStyles}
+            components={{ Option: iconOption }}
+            value={selectedGroup}
+            onChange={handleSelectGroup}
+          />
+          <button
+            className="add-row clickable"
+            type="button"
+            onClick={() => setAddingRow(!addingRow)}
+          >
+            <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
+            Add row
+          </button>
+          {dataLoading ? (
+            <div className="data-loading">
+              <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+            </div>
+          ) : (
+            <Table
+              CSVUploaded={CSVUploaded}
+              setSnackbar={setSnackbar}
+              addingRow={addingRow}
+              group={selectedGroup}
+              data={tableData}
+              elementsPerPage={25}
+              setTableChanged={setTableChanged}
+              rerender={tableChanged}
+            />
+          )}
+          <input
+            type="text"
+            className="dashboard-search"
+            placeholder="Search"
+            value={Search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+          <button
+            type="button"
+            className="toggle-csv-menu"
+            onClick={() => {
+              setVisibility(!visible);
+            }}
+          >
+            <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
+          </button>
+          {visible ? (
+            <CSVParser
+              CSVUploaded={CSVUploaded}
+              setCSVUploaded={setCSVUploaded}
+              snackbar={snackbar}
+              setSnackbar={setSnackbar}
+              selectedGroup={selectedGroup}
+              orgId={orgId}
+              setDataLoading={setDataLoading}
+            />
+          ) : null}
+        </div>
+        {groupCreationVisible && (
+          <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+        )}
+        {groupEditVisible && (
+          <CreateGroup
+            onConfirm={submitEditGroup}
+            editGroup={editGroup}
+            onDelete={submitDeleteGroup}
+            onCancel={() => setGroupEditVisible(false)}
           />
         )}
-        <input
-          type="text"
-          className="dashboard-search"
-          placeholder="Search"
-          value={Search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
-        <button
-          type="button"
-          className="toggle-csv-menu"
-          onClick={() => {
-            setVisibility(!visible);
-          }}
-        >
-          <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-        </button>
-        {visible ? (
-          <CSVParser
-            CSVUploaded={CSVUploaded}
-            setCSVUploaded={setCSVUploaded}
-            snackbar={snackbar}
-            setSnackbar={setSnackbar}
-            selectedGroup={selectedGroup}
-            orgId={orgId}
-            setDataLoading={setDataLoading}
-          />
-        ) : null}
-      </div>
-      {groupCreationVisible && (
-        <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
-      )}
-      {groupEditVisible && (
-        <CreateGroup
-          onConfirm={submitEditGroup}
-          editGroup={editGroup}
-          onDelete={submitDeleteGroup}
-          onCancel={() => setGroupEditVisible(false)}
-        />
-      )}
-      <div className="snackbar">
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
-          <Alert
+        <div className="snackbar">
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
             onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
+            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </div> */}
-    </>
-  );
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </div>
+      </>
+    );
+  }
 }
 
 export default Dashboard;
