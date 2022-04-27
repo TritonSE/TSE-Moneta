@@ -141,7 +141,6 @@ export default function TableRow({
                         fieldsToUpdate.add(key);
                       }
                     }
-                    console.log(fieldsToUpdate);
                     if (selected.has(id)) {
                       selected.forEach((value, key, _map) => {
                         /**
