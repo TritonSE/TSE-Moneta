@@ -395,6 +395,7 @@ function Dashboard() {
     );
   }
 
+  // When no groups exist, show no groups page
   if (groupOptions.length === 1) {
     return (
       <>
