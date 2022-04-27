@@ -56,13 +56,11 @@ export default function TableRow({
    * @param e - event
    */
   function handleCheckboxChange(e) {
-    let selectedCopy = selected;
     if (!e.target.checked) {
-      selectedCopy.delete(id);
+      selected.delete(id);
     } else {
-      selectedCopy.add(id);
+      selected.set(id, cellData);
     }
-    setSelected(selectedCopy);
   }
 
   return (
@@ -130,15 +128,31 @@ export default function TableRow({
               <img
                 src={CheckMark}
                 onClick={() => {
-                  /* eslint-disable */
-                  newRow
-                    ? createTableData(cellDatas)
-                      ? setEditActivated(!editActivated)
-                      : ""
-                    : updateTableData(id, cellDatas)
-                    ? setEditActivated(!editActivated)
-                    : "";
-                  /* eslint-enable */
+                  if (newRow && createTableData(cellDatas)) {
+                    setEditActivated(!editActivated);
+                  } else if (updateTableData(id, cellDatas)) {
+                    /**
+                     * Check which fields in the table row have changed from the original.
+                     * We're storing the fields that have been updated in the set fieldsToUpdate.
+                     */
+                    const fieldsToUpdate = new Set();
+                    for (const [key, value] of Object.entries(cellData)) {
+                      if (cellDatas[key] !== value) {
+                        fieldsToUpdate.add(key);
+                      }
+                    }
+                    console.log(fieldsToUpdate);
+                    if (selected.has(id)) {
+                      selected.forEach((value, key, _map) => {
+                        /**
+                         * Only update the fields for each checkbox entry that need to be updated.
+                         */
+                        fieldsToUpdate.forEach((field) => (value[field] = cellDatas[field]));
+                        updateTableData(key, value);
+                      });
+                    }
+                    setEditActivated(!editActivated);
+                  }
                 }}
                 className="checkmark-svg clickable"
                 alt="checkmark icon on table row"
