@@ -46,6 +46,7 @@
 .modal-view.csv {
   width: 444px;
   height: auto;
+  position: relative;
 }
 .upload-csv-area {
   width: 98%;
@@ -158,4 +159,10 @@
   width: 100% !important;
   border-radius: 12px !important;
   box-shadow: none !important;
+}
+
+.radio-div {
+  width: max-content;
+  margin-bottom: -20px;
+  margin-top: 10px;
 }

@@ -51,10 +51,12 @@ function Dashboard() {
   });
 
   const [groupOptions, setGroupOptions] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  let [selectedGroup, setSelectedGroup] = useState(null);
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
+  const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
+  const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
 
   // reference to div containing csv dropdown
   const csvDropdown = document.querySelector(".csv-parser-dropdown");
@@ -123,6 +125,7 @@ function Dashboard() {
    */
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
+      setCSVFields(null);
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`, {
           method: "POST",
@@ -143,11 +146,41 @@ function Dashboard() {
           addGroup: { GroupId: newGroupID },
         } = json;
         const options = await fetchGroups();
+        let group = null;
         for (const option of options) {
           if (option.value === newGroupID) {
             setSelectedGroup(option);
-            return;
+            group = option;
           }
+        }
+
+        // import CSV data if using
+        if (CSVData != null) {
+          setDataLoading(true);
+          for (const row of CSVData) {
+            const data = {
+              group: group.id,
+              data: row,
+              organizationId: orgId,
+            };
+            await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+              mode: "cors",
+            });
+          }
+          setDataLoading(false);
+          setCSVUploaded(!CSVUploaded); // tell table to reload
+          setSnackbar({
+            open: true,
+            message: "CSV uploaded!",
+            severity: "success",
+          });
+          setCSVData(null);
+          setCSVFields(null);
         }
       } catch (error) {
         setSnackbar({
@@ -157,7 +190,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, orgId, CSVData, CSVUploaded]
   );
 
   /**
@@ -444,6 +477,11 @@ function Dashboard() {
                     orgId={orgId}
                     setDataLoading={setDataLoading}
                     setVisiblity={setVisibility}
+                    groupCreationVisible={groupCreationVisible}
+                    setGroupCreationVisible={setGroupCreationVisible}
+                    setCSVFields={setCSVFields}
+                    CSVData={CSVData}
+                    setCSVData={setCSVData}
                   />
                 ) : null}
               </div>
@@ -474,10 +512,20 @@ function Dashboard() {
             setTableChanged={setTableChanged}
             rerender={tableChanged}
           />
+
+          
         )}
       </div>
       {groupCreationVisible && (
-        <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+        <CreateGroup
+          onConfirm={submitNewGroup}
+          onCancel={() => {
+            setGroupCreationVisible(false);
+            setCSVFields(null);
+            setCSVData(null);
+          }}
+          CSVFields={CSVFields}
+        />
       )}
       {groupEditVisible && (
         <CreateGroup
@@ -485,6 +533,7 @@ function Dashboard() {
           editGroup={editGroup}
           onDelete={submitDeleteGroup}
           onCancel={() => setGroupEditVisible(false)}
+          CSVFields={null}
         />
       )}
       <div className="snackbar">
