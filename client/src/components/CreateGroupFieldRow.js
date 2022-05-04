@@ -16,7 +16,6 @@ import "../css/CreateGroupFieldRow.css";
  */
 function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispatch, CSVFields }) {
   const fieldNameInputClass = "group-field-name-input" + (invalid ? " invalid" : "");
-  console.log(CSVFields);
   return (
     <div className="group-field-row">
       <input

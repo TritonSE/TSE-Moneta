@@ -248,7 +248,6 @@ function CSVParser({
         <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
           <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
         </button>
-        {console.log(tableData)}
         <CSVDownloader
           type={Type.Button}
           className="csv-button download"
