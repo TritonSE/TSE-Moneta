@@ -11,6 +11,7 @@ import TableRow from "./TableRow";
 import PrevPage from "../images/PrevPageIcon.svg";
 import NextPage from "../images/NextPageIcon.svg";
 import "../css/Table.css";
+import Trashcan from "../images/TrashCan.svg";
 
 /**
  * Renders the table display.
@@ -19,6 +20,7 @@ import "../css/Table.css";
  */
 function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selected, setSelected] = useState(new Set());
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
   const rowTemplate = {};
@@ -29,7 +31,7 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
         rowTemplate[value] = "";
       }
     }
-
+    setSelected(new Set());
     setCurrentPage(1);
   }, [group, data]);
 
@@ -40,6 +42,8 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
       group: group.id,
       data: dataArg,
     };
+
+    console.log(tempData);
 
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
       method: "POST",
@@ -144,11 +148,26 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
       <table className="table">
         <tbody>
           <tr className="table-header-row">
+            <th className="checkbox-header-cell"></th>
             {group.values.map((field) => (
               <th className="table-header-cell" key={field._id}>
                 {field.name}
               </th>
             ))}
+            <th className="table-header-cell">
+              <img
+                src={Trashcan}
+                onClick={() => {
+                  selected.forEach((id) => {
+                    deleteTableData(id);
+                  });
+                  selected.clear();
+                  setSelected(selected);
+                }}
+                className="table-delete-selected-svg clickable"
+                alt=""
+              />
+            </th>
           </tr>
           {addingRow ? (
             <TableRow
@@ -168,6 +187,8 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
                 newRow={false}
                 updateTableData={updateTableData}
                 deleteTableData={deleteTableData}
+                selected={selected}
+                setSelected={setSelected}
                 cellData={entry.data}
                 groupFields={group.values}
               />
@@ -179,7 +200,10 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
           <button
             className="table-button prev-page"
             type="button"
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            onClick={() => {
+              setCurrentPage(Math.max(1, currentPage - 1));
+              setSelected(new Set());
+            }}
           >
             <img src={PrevPage} className="table-prev-page-icon" alt="Previous Page" />
           </button>
@@ -190,7 +214,10 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
           <button
             className="table-button next-page"
             type="button"
-            onClick={() => setCurrentPage(Math.min(maxPage, currentPage + 1))}
+            onClick={() => {
+              setCurrentPage(Math.min(maxPage, currentPage + 1));
+              setSelected(new Set());
+            }}
           >
             <img src={NextPage} className="table-next-page-icon" alt="Next Page" />
           </button>

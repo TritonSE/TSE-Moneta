@@ -1,6 +1,8 @@
 /**
- *
- *
+ * Table row component that displays information in table. Allows for editing, deleting, and row selection.
+ * 
+ * @summary table row
+ * @author  Navid Boloorian
  */
 import React from "react";
 
@@ -16,6 +18,8 @@ export default function TableRow({
   createTableData,
   updateTableData,
   deleteTableData,
+  selected,
+  setSelected,
   cellData,
   groupFields,
 }) {
@@ -31,7 +35,14 @@ export default function TableRow({
 
     if (newRow) {
       setEditActivated(true);
+
+      // sets the default width of input field to 5 
       setFieldDefaultSize(5);
+
+      // sets a blank default value for columns to allow for empty columns
+      for(let i = 0; i < groupFields.length; i++) {
+        cellData[groupFields[i].name] = "";
+      }
     }
 
     setCellDatas(cellData);
@@ -49,11 +60,38 @@ export default function TableRow({
 
   if (isLoading) return <></>;
 
+  /**
+   * Removes or adds row id to selected set when checkbox is toggled
+   * @param e - event
+   */
+  function handleCheckboxChange(e) {
+    let selectedCopy = selected;
+    if (!e.target.checked) {
+      selectedCopy.delete(id);
+    } else {
+      selectedCopy.add(id);
+    }
+    setSelected(selectedCopy);
+  }
+
   return (
     <tr className="table-body-row" key={cellData.email}>
+      {!newRow ? (
+        <td className="table-checkbox-cell">
+          <input
+            type="checkbox"
+            name="row-selector"
+            key={id}
+            onChange={(e) => handleCheckboxChange(e)}
+          />
+        </td>
+      ) : (
+        <td></td>
+      )}
       {groupFields.map((field, index) => (
         <td className="table-body-cell">
           {editActivated ? (
+            // sets width of input fields when user types
             <div className="input-resizer">
               <input
                 ref={(element) => {
@@ -90,7 +128,7 @@ export default function TableRow({
                     deleteTableData(id);
                     setEditActivated(!editActivated);
                   }}
-                  className="checkmark-svg clickable"
+                  className="table-delete-selected-svg clickable"
                   alt="confirm edit icon on table row"
                 />
               </div>

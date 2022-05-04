@@ -181,7 +181,7 @@ export default function Login() {
       <div className="form-half">
         <div>
           <div className="account-logo">
-            <img src={Logo} alt="Moenta logo" />
+            <img src={Logo} alt="Moneta logo" />
             <h1>Moneta</h1>
           </div>
           <div className="account-form">
