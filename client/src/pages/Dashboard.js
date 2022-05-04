@@ -5,6 +5,7 @@
  * @author Alex Zhang
  * @author William Wu
  * @author Navid Boloorian
+ * @author Elias Fang
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -18,6 +19,8 @@ import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
+import CreateIcon from "../images/CreateIcon.svg";
+import AddIconBlue from "../images/AddIconBlue.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
@@ -44,6 +47,7 @@ function Dashboard() {
   const [orgInfo, setOrgInfo] = useState({});
   const [orgId, setOrgId] = useState();
   const [userInfo, setUserInfo] = useState({});
+  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -51,10 +55,13 @@ function Dashboard() {
   });
 
   const [groupOptions, setGroupOptions] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  let [selectedGroup, setSelectedGroup] = useState(null);
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
+  const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
+  const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
+
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -88,33 +95,30 @@ function Dashboard() {
       });
       return [];
     }
-  }, [orgId]);
+  }, [orgId, selectedGroup]);
 
   /**
    * Fetches the rows in the given group which contain the given search string
    */
-  const fetchRows = useCallback(
-    async (groupID, searchString = "") => {
-      try {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ group: groupID, search: searchString }),
-        };
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
-        const json = await response.json();
+  const fetchRows = useCallback(async (groupID, searchString = "") => {
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ group: groupID, search: searchString }),
+      };
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
+      const json = await response.json();
 
-        setTableData(json);
-      } catch (error) {
-        setSnackbar({
-          open: true,
-          message: error.message,
-          severity: "error",
-        });
-      }
-    },
-    [selectedGroup]
-  );
+      setTableData(json);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message,
+        severity: "error",
+      });
+    }
+  }, []);
 
   /**
    * Callback which receives new group info from the create group module and sends a request to the
@@ -123,6 +127,7 @@ function Dashboard() {
    */
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
+      setCSVFields(null);
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`, {
           method: "POST",
@@ -143,11 +148,41 @@ function Dashboard() {
           addGroup: { GroupId: newGroupID },
         } = json;
         const options = await fetchGroups();
+        let group = null;
         for (const option of options) {
           if (option.value === newGroupID) {
             setSelectedGroup(option);
-            return;
+            group = option;
           }
+        }
+
+        // import CSV data if using
+        if (CSVData != null) {
+          setDataLoading(true);
+          for (const row of CSVData) {
+            const data = {
+              group: group.id,
+              data: row,
+              organizationId: orgId,
+            };
+            await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+              mode: "cors",
+            });
+          }
+          setDataLoading(false);
+          setCSVUploaded(!CSVUploaded); // tell table to reload
+          setSnackbar({
+            open: true,
+            message: "CSV uploaded!",
+            severity: "success",
+          });
+          setCSVData(null);
+          setCSVFields(null);
         }
       } catch (error) {
         setSnackbar({
@@ -157,7 +192,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, orgId, CSVData, CSVUploaded]
   );
 
   /**
@@ -204,7 +239,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups]
   );
 
   /**
@@ -253,7 +288,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, groupOptions]
   );
 
   /**
@@ -293,7 +328,7 @@ function Dashboard() {
       fetchRows(selectedGroup.id, Search);
       setAddingRow(false);
     }
-  }, [selectedGroup, Search, CSVUploaded, tableChanged]);
+  }, [fetchRows, selectedGroup, Search, CSVUploaded, tableChanged]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -383,6 +418,16 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
+  /**
+   * Hide csv dropdown when click outside of it
+   */  
+  document.addEventListener('mouseup', function(e) {
+    var dropdown = document.getElementById('csv-parser-dropdown');
+    if (!dropdown.contains(e.target)) {
+      setVisibility(false)
+    }
+  });
+
   if (isLoading || (!orgInfo && !userInfo)) {
     return (
       <div className="loading">
@@ -391,29 +436,142 @@ function Dashboard() {
     );
   }
 
-  return (
-    <>
-      <SideNavigation currentPage="/" userInfo={userInfo} />
-      <div className="dashboard-div">
-        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
-        <Select
-          className="group-select"
-          classNamePrefix="select"
-          options={groupOptions}
-          placeholder="Select Group"
-          styles={selectStyles}
-          components={{ Option: iconOption }}
-          value={selectedGroup}
-          onChange={handleSelectGroup}
+  // When no groups exist, show no groups page
+  if (groupOptions.length === 1) {
+    return (
+      <>
+        <CSVParser
+          CSVUploaded={CSVUploaded}
+          setCSVUploaded={setCSVUploaded}
+          snackbar={snackbar}
+          setSnackbar={setSnackbar}
+          orgId={orgId}
+          setDataLoading={setDataLoading}
+          setVisiblity={setVisibility}
+          groupCreationVisible={groupCreationVisible}
+          setGroupCreationVisible={setGroupCreationVisible}
+          setCSVFields={setCSVFields}
+          CSVData={CSVData}
+          setCSVData={setCSVData}
+          setCSVFlowVisible={setCSVFlowVisible}
+          CSVFlowVisible={CSVFlowVisible}
+          forceNewGroup={true}
         />
-        <button
-          className="add-row clickable"
-          type="button"
-          onClick={() => setAddingRow(!addingRow)}
-        >
-          <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-          Add row
-        </button>
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="no-groups-div">
+          <div className="no-groups-info-wrapper">
+            <img src={CreateIcon} className="no-groups create-icon-svg" alt="create icon" /><br />
+            <h1 className="no-groups-header">Start building your dashboard!</h1>
+            <p className="no-groups-text">Click "Create new" to begin adding data to your table.<br />
+            Have previous databases? No worries! You can upload your CSV file as well.</p>
+            <button
+                className="create-group clickable"
+                type="button"
+                onClick={() => {
+                  setGroupCreationVisible(true);
+                }}
+            >
+              <img src={AddIconBlue} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              Create new
+            </button>
+            <button
+                className="csv-create-group clickable"
+                type="button"
+                onClick={() => {
+                  setCSVFlowVisible(true);
+                }}
+            >
+              <img src={AddIcon} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              Create from CSV
+            </button>
+            {(groupCreationVisible && !CSVFields) && (
+                <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+            )}
+            
+            {(groupCreationVisible && CSVFields) && (
+              <CreateGroup
+                onConfirm={submitNewGroup}
+                onCancel={() => {
+                  setGroupCreationVisible(false);
+                  setCSVFields(null);
+                  setCSVData(null);
+                }}
+                CSVFields={CSVFields}
+              />
+            )}
+            </div>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="dashboard-div">
+          <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+          <div className="dashboard-top-bar">
+          <Select
+            className="group-select"
+            classNamePrefix="select"
+            options={groupOptions}
+            placeholder="Select Group"
+            styles={selectStyles}
+            components={{ Option: iconOption }}
+            value={selectedGroup}
+            onChange={handleSelectGroup}
+          />
+          {selectedGroup && (
+            <button
+              className="add-row clickable"
+              type="button"
+              onClick={() => setAddingRow(!addingRow)}
+            >
+              <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
+              Add row
+            </button>
+          )}
+            <div className="toggle-csv-menu">
+              <button
+                type="button"
+                onClick={() => {
+                  setVisibility(!visible);
+                }}
+              >
+                <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
+              </button>
+              <div id="csv-parser-dropdown" className="csv-parser-dropdown">
+                {visible ? (
+                  <CSVParser
+                    CSVUploaded={CSVUploaded}
+                    setCSVUploaded={setCSVUploaded}
+                    snackbar={snackbar}
+                    setSnackbar={setSnackbar}
+                    selectedGroup={selectedGroup}
+                    orgId={orgId}
+                    setDataLoading={setDataLoading}
+                    setVisiblity={setVisibility}
+                    groupCreationVisible={groupCreationVisible}
+                    setGroupCreationVisible={setGroupCreationVisible}
+                    setCSVFields={setCSVFields}
+                    CSVData={CSVData}
+                    setCSVData={setCSVData}
+                    setCSVFlowVisible={setCSVFlowVisible}
+                    CSVFlowVisible={CSVFlowVisible}
+                  />
+                ) : null}
+              </div>
+            </div>
+          <div className="dashboard-search-box">
+            <input
+              type="text"
+              className="dashboard-search"
+              placeholder="Search"
+              value={Search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+          </div>
+        </div>
         {dataLoading ? (
           <div className="data-loading">
             <ReactLoading type="spin" color="#05204a" height={100} width={100} />
@@ -430,37 +588,17 @@ function Dashboard() {
             rerender={tableChanged}
           />
         )}
-        <input
-          type="text"
-          className="dashboard-search"
-          placeholder="Search"
-          value={Search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
-        <button
-          type="button"
-          className="toggle-csv-menu"
-          onClick={() => {
-            setVisibility(!visible);
-          }}
-        >
-          <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-        </button>
-        {visible ? (
-          <CSVParser
-            CSVUploaded={CSVUploaded}
-            setCSVUploaded={setCSVUploaded}
-            snackbar={snackbar}
-            setSnackbar={setSnackbar}
-            selectedGroup={selectedGroup}
-            orgId={orgId}
-            setDataLoading={setDataLoading}
-          />
-        ) : null}
       </div>
       {groupCreationVisible && (
-        <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+        <CreateGroup
+          onConfirm={submitNewGroup}
+          onCancel={() => {
+            setGroupCreationVisible(false);
+            setCSVFields(null);
+            setCSVData(null);
+          }}
+          CSVFields={CSVFields}
+        />
       )}
       {groupEditVisible && (
         <CreateGroup
@@ -468,6 +606,7 @@ function Dashboard() {
           editGroup={editGroup}
           onDelete={submitDeleteGroup}
           onCancel={() => setGroupEditVisible(false)}
+          CSVFields={null}
         />
       )}
       <div className="snackbar">
@@ -477,18 +616,19 @@ function Dashboard() {
           onClose={handleSnackClose}
           anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
         >
-          <Alert
-            onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </div>
-    </>
-  );
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </div>
+      </>
+    );
+  }
 }
 
 export default Dashboard;

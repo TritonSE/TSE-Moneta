@@ -8,7 +8,7 @@
  * @author William Wu
  */
 
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState, useRef } from "react";
 import AddFieldIcon from "../images/AddFieldIcon.svg";
 import CreateGroupFieldRow from "./CreateGroupFieldRow";
 import "../css/CreateGroup.css";
@@ -38,7 +38,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
     case "ADD_ROW":
       value
         ? newFields.push({ name: value.name, type: value.type })
-        : newFields.push({ name: "", type: "" });
+        : newFields.push({ name: "", type: "Text" });
       break;
     case "DELETE_ROW":
       newFields.splice(index, 1);
@@ -60,9 +60,11 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  *
  * @return jsx for create group module
  */
-function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
+function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
+  const fieldsListDiv = useRef(null);
+
 
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
@@ -74,9 +76,8 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
    */
   const [fields, dispatch] = useReducer(
     fieldsReducer,
-    !editGroup ? [{ name: "", type: "Email" }] : []
+    !editGroup && !CSVFields ? [{ name: "", type: "Text" }] : []
   );
-  const [fieldsInvalid, setFieldsInvalid] = useState(false);
 
   useEffect(() => {
     if (editGroup) {
@@ -89,23 +90,38 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     } else {
       setGroupName("");
     }
-  }, [editGroup]);
+    if (CSVFields) {
+      CSVFields.map((value) => {
+        dispatch({ type: "ADD_ROW", payload: { value } });
+        return value;
+      });
+    }
+  }, [editGroup, CSVFields]);
+
+  const scrollToIndex = useCallback(
+    (index) => {
+      fieldsListDiv.current.children[index].scrollIntoView({ behavior: "smooth" });
+    },
+    [fieldsListDiv]
+  );
 
   const tryConfirm = useCallback(
     (groupName_, fields_) => {
       let valid = true;
       setGroupNameInvalid(false);
-      setFieldsInvalid(false);
 
       if (groupName_.length === 0) {
         setGroupNameInvalid(true);
         valid = false;
       }
+      let firstErrorIndex = -1;
       for (let i = 0; i < fields_.length; i++) {
         const fieldInfo = fields_[i];
         if (fieldInfo.name.length === 0) {
           dispatch({ type: "SET_INVALID", payload: { index: i } });
-          setFieldsInvalid(true);
+          if (firstErrorIndex === -1) {
+            firstErrorIndex = i;
+          }
           valid = false;
         } else {
           dispatch({ type: "SET_VALID", payload: { index: i } });
@@ -114,13 +130,14 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
 
       if (valid) {
         !editGroup ? onConfirm(groupName_, fields_) : onConfirm(groupName_, fields_, editGroup.id);
+      } else {
+        scrollToIndex(firstErrorIndex);
       }
     },
-    [onConfirm]
+    [editGroup, onConfirm, scrollToIndex]
   );
 
   const nameInputClass = "group-name-input" + (groupNameInvalid ? " invalid" : "");
-  const fieldsListDivClass = "group-fields-list" + (fieldsInvalid ? " invalid" : "");
 
   return (
     <div className="modal-background">
@@ -138,12 +155,13 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
             className={nameInputClass}
             value={groupName}
             onChange={(event) => setGroupName(event.target.value)}
+            required
           />
           <h2 className="group-second-header">Fields</h2>
           <h3 className="group-third-header">
             List the fields you want associated with this group...
           </h3>
-          <div className={fieldsListDivClass}>
+          <div className="group-fields-list" ref={fieldsListDiv}>
             {fields.map(({ name, type, invalid }, index) => (
               <CreateGroupFieldRow
                 key={index}
@@ -152,24 +170,32 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
                 fieldType={type}
                 invalid={invalid}
                 changeDispatch={dispatch}
+                CSVFields={CSVFields}
               />
             ))}
           </div>
-          <button
-            className="add-field-button"
-            type="button"
-            onClick={() => dispatch({ type: "ADD_ROW" })}
-          >
-            <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
-            Add new field
-          </button>
+          {!CSVFields ?
+            <button
+              className="add-field-button"
+              type="button"
+              onClick={() => {
+                dispatch({ type: "ADD_ROW" });
+                setTimeout(() => scrollToIndex(fields.length), 100);
+              }}
+            >
+              <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
+              Add new field
+            </button>
+            :
+            <br />
+          }
           <div className="group-submit-div">
-            <button className="group-modal-submit" type="submit">
+            <button className="modal-blue" type="submit">
               {editGroup ? "Save" : "Create"}
             </button>
             {editGroup && (
               <button
-                className="group-modal-cancel"
+                className="modal-white"
                 type="button"
                 onClick={() => onDelete(editGroup.id)}
                 style={{ marginLeft: "20px" }}
@@ -177,7 +203,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
                 Delete
               </button>
             )}
-            <button className="group-modal-cancel" type="button" onClick={onCancel}>
+            <button className="modal-white" type="button" onClick={onCancel}>
               Cancel
             </button>
           </div>
