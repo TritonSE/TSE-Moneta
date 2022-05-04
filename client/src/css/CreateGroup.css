@@ -112,7 +112,7 @@
   margin-top: 24px;
 }
 
-.group-modal-submit {
+.modal-blue {
   font-weight: 500;
   font-size: 16px;
   border-radius: 5px;
@@ -124,7 +124,7 @@
   cursor: pointer;
 }
 
-.group-modal-cancel {
+.modal-white {
   font-weight: 500;
   font-size: 16px;
   border-radius: 5px;

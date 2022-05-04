@@ -424,15 +424,30 @@ function Dashboard() {
               Add row
             </button>
           )}
-          <button
-            type="button"
-            className="toggle-csv-menu"
-            onClick={() => {
-              setVisibility(!visible);
-            }}
-          >
-            <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-          </button>
+            <div className="toggle-csv-menu">
+              <button
+                type="button"
+                onClick={() => {
+                  setVisibility(!visible);
+                }}
+              >
+                <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
+              </button>
+              <div className="csv-parser-dropdown">
+                {visible ? (
+                  <CSVParser
+                    CSVUploaded={CSVUploaded}
+                    setCSVUploaded={setCSVUploaded}
+                    snackbar={snackbar}
+                    setSnackbar={setSnackbar}
+                    selectedGroup={selectedGroup}
+                    orgId={orgId}
+                    setDataLoading={setDataLoading}
+                    setVisiblity={setVisibility}
+                  />
+                ) : null}
+              </div>
+            </div>
           <div className="dashboard-search-box">
             <input
               type="text"
@@ -460,19 +475,6 @@ function Dashboard() {
             rerender={tableChanged}
           />
         )}
-      </div>
-      <div className="csv-parser-dropdown">
-        {visible ? (
-          <CSVParser
-            CSVUploaded={CSVUploaded}
-            setCSVUploaded={setCSVUploaded}
-            snackbar={snackbar}
-            setSnackbar={setSnackbar}
-            selectedGroup={selectedGroup}
-            orgId={orgId}
-            setDataLoading={setDataLoading}
-          />
-        ) : null}
       </div>
       {groupCreationVisible && (
         <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
