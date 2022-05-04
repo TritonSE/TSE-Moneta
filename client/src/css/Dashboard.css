@@ -110,10 +110,3 @@
 .create-group-csv-label {
   white-space: nowrap;
 }
-
-.radio-div {
-  position: absolute;
-  left: 1220px;
-  top: 40px;
-  width: max-content;
-}

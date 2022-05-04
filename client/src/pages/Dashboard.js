@@ -55,7 +55,6 @@ function Dashboard() {
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
-  const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
   const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
   const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
 
@@ -191,7 +190,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId, createCSVGroup, CSVData, CSVUploaded]
+    [fetchGroups, orgId, CSVData, CSVUploaded]
   );
 
   /**
@@ -478,10 +477,10 @@ function Dashboard() {
                     orgId={orgId}
                     setDataLoading={setDataLoading}
                     setVisiblity={setVisibility}
-                    createCSVGroup={createCSVGroup}
                     groupCreationVisible={groupCreationVisible}
                     setGroupCreationVisible={setGroupCreationVisible}
                     setCSVFields={setCSVFields}
+                    CSVData={CSVData}
                     setCSVData={setCSVData}
                   />
                 ) : null}
@@ -516,19 +515,6 @@ function Dashboard() {
 
           
         )}
-
-        <div className="radio-div">
-          <input
-            type="checkbox"
-            className="create-group-csv-button"
-            id="create-group-csv"
-            value="create-group-csv"
-            onClick={() => setCreateCSVGroup(!createCSVGroup)}
-          />
-          <label htmlFor="create-group-csv" className="create-group-csv-label">
-            Create Group With CSV
-          </label>
-        </div>
       </div>
       {groupCreationVisible && (
         <CreateGroup
@@ -547,6 +533,7 @@ function Dashboard() {
           editGroup={editGroup}
           onDelete={submitDeleteGroup}
           onCancel={() => setGroupEditVisible(false)}
+          CSVFields={null}
         />
       )}
       <div className="snackbar">

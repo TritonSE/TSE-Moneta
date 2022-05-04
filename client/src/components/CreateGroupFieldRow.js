@@ -14,14 +14,16 @@ import "../css/CreateGroupFieldRow.css";
  *
  * @return jsx for create group module field row
  */
-function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispatch }) {
+function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispatch, CSVFields }) {
   const fieldNameInputClass = "group-field-name-input" + (invalid ? " invalid" : "");
+  console.log(CSVFields);
   return (
     <div className="group-field-row">
       <input
         className={fieldNameInputClass}
         placeholder="Field name"
         value={fieldName}
+        disabled={CSVFields ? true : false}
         onChange={(event) =>
           changeDispatch({ type: "SET_NAME", payload: { index, value: event.target.value } })
         }
@@ -37,7 +39,7 @@ function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispa
         <option value="Number">Number</option>
         <option value="Email">Email</option>
       </select>
-      {index !== 0 && (
+      {(index !== 0 && !CSVFields) && (
         <button
           className="group-field-delete"
           type="button"
