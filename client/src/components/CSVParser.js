@@ -27,6 +27,7 @@ function CSVParser({
   selectedGroup,
   orgId,
   setDataLoading,
+  setVisiblity
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
@@ -198,6 +199,7 @@ function CSVParser({
                         setCSVData(null);
                         setFormSubmittable(false);
                         setCSVFlowVisible(false);
+                        setVisiblity(false);
                       }
                     }}
                   >
