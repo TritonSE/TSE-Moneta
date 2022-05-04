@@ -31,27 +31,31 @@ function CSVParser({
   setGroupCreationVisible,
   setCSVFields,
   setCSVData,
-  setVisiblity
+  setVisiblity,
+  CSVFlowVisible,
+  setCSVFlowVisible,
+  forceNewGroup
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
-  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
   const [noGroupCSVData, setNoGroupCSVData] = useState(null);
   const [formSubmittable, setFormSubmittable] = useState(false);
   const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
 
   React.useEffect(async () => {
-    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
-      async (response) => {
-        if (response.ok) {
-          let json = await response.json();
-          json = json.map((row) => row.data);
-          setTableData(json);
+    if(group) {
+      await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
+        async (response) => {
+          if (response.ok) {
+            let json = await response.json();
+            json = json.map((row) => row.data);
+            setTableData(json);
+          }
         }
-      }
-    );
+      );
+    }
   }, [CSVUploaded]);
 
   /**
@@ -192,13 +196,25 @@ function CSVParser({
                   </div>
                 ) : null}
                 <div className="radio-div">
-                  <input
-                    type="checkbox"
-                    className="create-group-csv-button"
-                    id="create-group-csv"
-                    value="create-group-csv"
-                    onClick={() => setCreateCSVGroup(!createCSVGroup)}
-                  />
+                 {forceNewGroup ?
+                    <input
+                      type="checkbox"
+                      className="create-group-csv-button"
+                      id="create-group-csv"
+                      value="create-group-csv"
+                      onClick={() => setCreateCSVGroup(!createCSVGroup)}
+                      checked
+                      disabled
+                    />
+                    :
+                    <input
+                      type="checkbox"
+                      className="create-group-csv-button"
+                      id="create-group-csv"
+                      value="create-group-csv"
+                      onClick={() => setCreateCSVGroup(!createCSVGroup)}
+                    />
+                  }
                   <label htmlFor="create-group-csv" className="create-group-csv-label">
                     Create a new group from CSV
                   </label>
@@ -224,7 +240,7 @@ function CSVParser({
                       if (formSubmittable) {
                         setCSVFlowVisible(false);
 
-                        if (createCSVGroup) {
+                        if (forceNewGroup || createCSVGroup) {
                           setGroupCreationVisible(!groupCreationVisible);
                         } else {
                           importToDB(noGroupCSVData, CSVUploaded, setCSVUploaded).then();
@@ -244,6 +260,7 @@ function CSVParser({
         </CSVReader>
       ) : null}
 
+      {!forceNewGroup && 
       <div className="csv-parser">
         <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
           <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
@@ -261,6 +278,7 @@ function CSVParser({
           <AiOutlineDownload className="csv-icon download" /> Download
         </CSVDownloader>
       </div>
+      }
     </div>
   );
 }

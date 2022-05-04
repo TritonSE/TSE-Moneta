@@ -65,6 +65,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
   const fieldsListDiv = useRef(null);
 
+
   /**
    * `fields` is an array of objects representing the group's fields. Each object has a `name` and
    * a `type`, both strings. Each object may also have a boolean `invalid` field, denoting whether
