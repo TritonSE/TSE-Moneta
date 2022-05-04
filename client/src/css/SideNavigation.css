@@ -38,6 +38,7 @@
   font-size: 24px;
   line-height: 36px;
   color: #05204a;
+  cursor: pointer;
 }
 
 .sidenav-logo {
@@ -53,6 +54,7 @@
   fill: #05204a;
   border-radius: 5px;
   border: 0px;
+  cursor: pointer;
 }
 
 .active {
@@ -87,6 +89,7 @@
   font-size: 18px;
   line-height: 27px;
   color: #000000;
+  cursor: pointer;
 }
 
 .sidenav-icon-logout {

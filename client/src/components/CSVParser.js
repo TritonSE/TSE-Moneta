@@ -158,18 +158,21 @@ function CSVParser({
         )}
       </CSVReader>
 
-      <CSVDownloader
-        type={Type.Button}
-        className="csv-button download"
-        filename="data"
-        bom
-        config={{
-          delimiter: ";",
-        }}
-        data={tableData}
-      >
-        <AiOutlineDownload className="csv-icon download" /> Download
-      </CSVDownloader>
+      {
+        selectedGroup &&
+          <CSVDownloader
+            type={Type.Button}
+            className="csv-button download"
+            filename="data"
+            bom
+            config={{
+              delimiter: ";",
+            }}
+            data={tableData}
+          >
+            <AiOutlineDownload className="csv-icon download" /> Download
+          </CSVDownloader>
+      }
     </div>
   );
 }
