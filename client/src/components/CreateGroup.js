@@ -183,12 +183,12 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
             Add new field
           </button>
           <div className="group-submit-div">
-            <button className="group-modal-submit" type="submit">
+            <button className="modal-blue" type="submit">
               {editGroup ? "Save" : "Create"}
             </button>
             {editGroup && (
               <button
-                className="group-modal-cancel"
+                className="modal-white"
                 type="button"
                 onClick={() => onDelete(editGroup.id)}
                 style={{ marginLeft: "20px" }}
@@ -196,7 +196,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
                 Delete
               </button>
             )}
-            <button className="group-modal-cancel" type="button" onClick={onCancel}>
+            <button className="modal-white" type="button" onClick={onCancel}>
               Cancel
             </button>
           </div>

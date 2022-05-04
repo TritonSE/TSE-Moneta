@@ -94,13 +94,17 @@
 }
 
 .toggle-csv-menu {
+  position: relative;
   float: right;
-  margin-top: 12px;
+  margin-top: 10px;
   border: 0px;
+  padding-left: 10px;
+}
+
+.toggle-csv-menu > button {
   background: transparent;
   cursor: pointer;
-  padding-left: 10px;
-  padding-right: 10px;
+  border: 0px;
 }
 
 .create-group-csv-label {
