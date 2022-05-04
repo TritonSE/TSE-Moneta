@@ -27,6 +27,10 @@ function CSVParser({
   selectedGroup,
   orgId,
   setDataLoading,
+  groupCreationVisible,
+  setGroupCreationVisible,
+  setCSVFields,
+  setCSVData,
   setVisiblity
 }) {
   const { CSVReader } = useCSVReader();
@@ -34,8 +38,9 @@ function CSVParser({
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
   const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
-  const [CSVData, setCSVData] = useState(null);
+  const [noGroupCSVData, setNoGroupCSVData] = useState(null);
   const [formSubmittable, setFormSubmittable] = useState(false);
+  const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
 
   React.useEffect(async () => {
     await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
@@ -134,8 +139,18 @@ function CSVParser({
           config={{
             header: true,
           }}
-          onUploadAccepted={(results) => {
+          onUploadAccepted={async (results) => {
+            // if we create group from CSV
             setCSVData(results.data);
+            
+            let headers = Object.keys(results.data[0]);
+            headers = headers.map((value) => {
+              return { name: value, type: "Text" };
+            });
+            setCSVFields(headers);
+
+            // add to current group
+            setNoGroupCSVData(results.data);
             setFormSubmittable(true);
           }}
         >
@@ -176,6 +191,18 @@ function CSVParser({
                     </div>
                   </div>
                 ) : null}
+                <div className="radio-div">
+                  <input
+                    type="checkbox"
+                    className="create-group-csv-button"
+                    id="create-group-csv"
+                    value="create-group-csv"
+                    onClick={() => setCreateCSVGroup(!createCSVGroup)}
+                  />
+                  <label htmlFor="create-group-csv" className="create-group-csv-label">
+                    Create a new group from CSV
+                  </label>
+                </div>  
                 <div className="csv-submit-div">
                   <button
                     className="modal-white csv-cancel"
@@ -183,7 +210,7 @@ function CSVParser({
                     onClick={() => {
                       setFormSubmittable(false);
                       setCSVFlowVisible(false);
-                      setCSVData(null);
+                      setNoGroupCSVData(null);
                     }}
                   >
                     Cancel
@@ -195,11 +222,16 @@ function CSVParser({
                     type="submit"
                     onClick={() => {
                       if (formSubmittable) {
-                        importToDB(CSVData, CSVUploaded, setCSVUploaded).then();
-                        setCSVData(null);
-                        setFormSubmittable(false);
                         setCSVFlowVisible(false);
-                        setVisiblity(false);
+
+                        if (createCSVGroup) {
+                          setGroupCreationVisible(!groupCreationVisible);
+                        } else {
+                          importToDB(noGroupCSVData, CSVUploaded, setCSVUploaded).then();
+                          setNoGroupCSVData(null);
+                          setFormSubmittable(false);
+                          setVisiblity(false);
+                        }
                       }
                     }}
                   >

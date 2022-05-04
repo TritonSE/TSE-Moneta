@@ -60,7 +60,7 @@ const fieldsReducer = (prevFields, { type, payload }) => {
  *
  * @return jsx for create group module
  */
-function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
+function CreateGroup({ onConfirm, onCancel, editGroup, onDelete, CSVFields }) {
   const [groupName, setGroupName] = useState("");
   const [groupNameInvalid, setGroupNameInvalid] = useState(false);
   const fieldsListDiv = useRef(null);
@@ -75,7 +75,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
    */
   const [fields, dispatch] = useReducer(
     fieldsReducer,
-    !editGroup ? [{ name: "", type: "Text" }] : []
+    !editGroup && !CSVFields ? [{ name: "", type: "Text" }] : []
   );
 
   useEffect(() => {
@@ -89,7 +89,13 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
     } else {
       setGroupName("");
     }
-  }, [editGroup]);
+    if (CSVFields) {
+      CSVFields.map((value) => {
+        dispatch({ type: "ADD_ROW", payload: { value } });
+        return value;
+      });
+    }
+  }, [editGroup, CSVFields]);
 
   const scrollToIndex = useCallback(
     (index) => {
@@ -148,6 +154,7 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
             className={nameInputClass}
             value={groupName}
             onChange={(event) => setGroupName(event.target.value)}
+            required
           />
           <h2 className="group-second-header">Fields</h2>
           <h3 className="group-third-header">
@@ -162,20 +169,25 @@ function CreateGroup({ onConfirm, onCancel, editGroup, onDelete }) {
                 fieldType={type}
                 invalid={invalid}
                 changeDispatch={dispatch}
+                CSVFields={CSVFields}
               />
             ))}
           </div>
-          <button
-            className="add-field-button"
-            type="button"
-            onClick={() => {
-              dispatch({ type: "ADD_ROW" });
-              setTimeout(() => scrollToIndex(fields.length), 100);
-            }}
-          >
-            <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
-            Add new field
-          </button>
+          {!CSVFields ?
+            <button
+              className="add-field-button"
+              type="button"
+              onClick={() => {
+                dispatch({ type: "ADD_ROW" });
+                setTimeout(() => scrollToIndex(fields.length), 100);
+              }}
+            >
+              <img src={AddFieldIcon} className="add-field-svg" alt="add field button icon" />
+              Add new field
+            </button>
+            :
+            <br />
+          }
           <div className="group-submit-div">
             <button className="modal-blue" type="submit">
               {editGroup ? "Save" : "Create"}

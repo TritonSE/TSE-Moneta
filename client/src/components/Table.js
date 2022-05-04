@@ -46,8 +46,6 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
       data: dataArg,
     };
 
-    console.log(tempData);
-
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
       method: "POST",
       mode: "cors",
