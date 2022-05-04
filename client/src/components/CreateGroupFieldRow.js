@@ -33,9 +33,9 @@ function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispa
           changeDispatch({ type: "SET_TYPE", payload: { index, value: event.target.value } })
         }
       >
-        <option value="Email">Email</option>
         <option value="Text">Text</option>
         <option value="Number">Number</option>
+        <option value="Email">Email</option>
       </select>
       {index !== 0 && (
         <button
