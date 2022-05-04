@@ -27,15 +27,12 @@ function CSVParser({
   selectedGroup,
   orgId,
   setDataLoading,
-<<<<<<< HEAD
   createCSVGroup,
   groupCreationVisible,
   setGroupCreationVisible,
   setCSVFields,
   setCSVData,
-=======
   setVisiblity
->>>>>>> 735491ccf6020379cf0d2378c26c7641b3bc3b69
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
