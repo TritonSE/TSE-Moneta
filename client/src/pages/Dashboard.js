@@ -23,7 +23,6 @@ import CreateIcon from "../images/CreateIcon.svg";
 import AddIconBlue from "../images/AddIconBlue.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
-// import NoGroups from "../components/NoGroups";
 
 import "../css/Dashboard.css";
 
@@ -55,10 +54,15 @@ function Dashboard() {
   });
 
   const [groupOptions, setGroupOptions] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  let [selectedGroup, setSelectedGroup] = useState(null);
   const [editGroup, setEditGroup] = useState(null);
   const [groupCreationVisible, setGroupCreationVisible] = useState(false);
   const [groupEditVisible, setGroupEditVisible] = useState(false);
+  const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
+  const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
+
+  // reference to div containing csv dropdown
+  const csvDropdown = document.querySelector(".csv-parser-dropdown");
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -92,33 +96,30 @@ function Dashboard() {
       });
       return [];
     }
-  }, [orgId]);
+  }, [orgId, selectedGroup]);
 
   /**
    * Fetches the rows in the given group which contain the given search string
    */
-  const fetchRows = useCallback(
-    async (groupID, searchString = "") => {
-      try {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ group: groupID, search: searchString }),
-        };
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
-        const json = await response.json();
+  const fetchRows = useCallback(async (groupID, searchString = "") => {
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ group: groupID, search: searchString }),
+      };
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/search`, requestOptions);
+      const json = await response.json();
 
-        setTableData(json);
-      } catch (error) {
-        setSnackbar({
-          open: true,
-          message: error.message,
-          severity: "error",
-        });
-      }
-    },
-    [selectedGroup]
-  );
+      setTableData(json);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message,
+        severity: "error",
+      });
+    }
+  }, []);
 
   /**
    * Callback which receives new group info from the create group module and sends a request to the
@@ -127,6 +128,7 @@ function Dashboard() {
    */
   const submitNewGroup = useCallback(
     async (groupName, groupFields) => {
+      setCSVFields(null);
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/groups/${orgId}`, {
           method: "POST",
@@ -147,11 +149,41 @@ function Dashboard() {
           addGroup: { GroupId: newGroupID },
         } = json;
         const options = await fetchGroups();
+        let group = null;
         for (const option of options) {
           if (option.value === newGroupID) {
             setSelectedGroup(option);
-            return;
+            group = option;
           }
+        }
+
+        // import CSV data if using
+        if (CSVData != null) {
+          setDataLoading(true);
+          for (const row of CSVData) {
+            const data = {
+              group: group.id,
+              data: row,
+              organizationId: orgId,
+            };
+            await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+              mode: "cors",
+            });
+          }
+          setDataLoading(false);
+          setCSVUploaded(!CSVUploaded); // tell table to reload
+          setSnackbar({
+            open: true,
+            message: "CSV uploaded!",
+            severity: "success",
+          });
+          setCSVData(null);
+          setCSVFields(null);
         }
       } catch (error) {
         setSnackbar({
@@ -161,7 +193,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, orgId, CSVData, CSVUploaded]
   );
 
   /**
@@ -208,7 +240,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups]
   );
 
   /**
@@ -257,7 +289,7 @@ function Dashboard() {
         });
       }
     },
-    [fetchGroups, orgId]
+    [fetchGroups, groupOptions]
   );
 
   /**
@@ -297,7 +329,7 @@ function Dashboard() {
       fetchRows(selectedGroup.id, Search);
       setAddingRow(false);
     }
-  }, [selectedGroup, Search, CSVUploaded, tableChanged]);
+  }, [fetchRows, selectedGroup, Search, CSVUploaded, tableChanged]);
 
   const handleSelectGroup = useCallback((option) => {
     if (option.isCreate) {
@@ -387,6 +419,13 @@ function Dashboard() {
     closeMenuOnSelect: false,
   };
 
+  /**
+   * Hide csv dropdown when click outside of it
+   */
+  document.addEventListener("mousedown", (event) => {
+    if (csvDropdown && !csvDropdown.contains(event.target)) setVisibility(false);
+  });
+
   if (isLoading || (!orgInfo && !userInfo)) {
     return (
       <div className="loading">
@@ -437,6 +476,7 @@ function Dashboard() {
         <SideNavigation currentPage="/" userInfo={userInfo} />
         <div className="dashboard-div">
           <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+          <div className="dashboard-top-bar">
           <Select
             className="group-select"
             classNamePrefix="select"
@@ -447,74 +487,103 @@ function Dashboard() {
             value={selectedGroup}
             onChange={handleSelectGroup}
           />
-          <button
-            className="add-row clickable"
-            type="button"
-            onClick={() => setAddingRow(!addingRow)}
-          >
-            <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-            Add row
-          </button>
-          {dataLoading ? (
-            <div className="data-loading">
-              <ReactLoading type="spin" color="#05204a" height={100} width={100} />
-            </div>
-          ) : (
-            <Table
-              CSVUploaded={CSVUploaded}
-              setSnackbar={setSnackbar}
-              addingRow={addingRow}
-              group={selectedGroup}
-              data={tableData}
-              elementsPerPage={25}
-              setTableChanged={setTableChanged}
-              rerender={tableChanged}
-            />
+          {selectedGroup && (
+            <button
+              className="add-row clickable"
+              type="button"
+              onClick={() => setAddingRow(!addingRow)}
+            >
+              <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
+              Add row
+            </button>
           )}
-          <input
-            type="text"
-            className="dashboard-search"
-            placeholder="Search"
-            value={Search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-          <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
-          <button
-            type="button"
-            className="toggle-csv-menu"
-            onClick={() => {
-              setVisibility(!visible);
-            }}
-          >
-            <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-          </button>
-          {visible ? (
-            <CSVParser
-              CSVUploaded={CSVUploaded}
-              setCSVUploaded={setCSVUploaded}
-              snackbar={snackbar}
-              setSnackbar={setSnackbar}
-              selectedGroup={selectedGroup}
-              orgId={orgId}
-              setDataLoading={setDataLoading}
+            <div className="toggle-csv-menu">
+              <button
+                type="button"
+                onClick={() => {
+                  setVisibility(!visible);
+                }}
+              >
+                <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
+              </button>
+              <div className="csv-parser-dropdown">
+                {visible ? (
+                  <CSVParser
+                    CSVUploaded={CSVUploaded}
+                    setCSVUploaded={setCSVUploaded}
+                    snackbar={snackbar}
+                    setSnackbar={setSnackbar}
+                    selectedGroup={selectedGroup}
+                    orgId={orgId}
+                    setDataLoading={setDataLoading}
+                    setVisiblity={setVisibility}
+                    groupCreationVisible={groupCreationVisible}
+                    setGroupCreationVisible={setGroupCreationVisible}
+                    setCSVFields={setCSVFields}
+                    CSVData={CSVData}
+                    setCSVData={setCSVData}
+                  />
+                ) : null}
+              </div>
+            </div>
+          <div className="dashboard-search-box">
+            <input
+              type="text"
+              className="dashboard-search"
+              placeholder="Search"
+              value={Search}
+              onChange={(event) => setSearch(event.target.value)}
             />
-          ) : null}
+            <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+          </div>
         </div>
-        {groupCreationVisible && (
-          <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
-        )}
-        {groupEditVisible && (
-          <CreateGroup
-            onConfirm={submitEditGroup}
-            editGroup={editGroup}
-            onDelete={submitDeleteGroup}
-            onCancel={() => setGroupEditVisible(false)}
+        {dataLoading ? (
+          <div className="data-loading">
+            <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+          </div>
+        ) : (
+          <Table
+            CSVUploaded={CSVUploaded}
+            setSnackbar={setSnackbar}
+            addingRow={addingRow}
+            group={selectedGroup}
+            data={tableData}
+            elementsPerPage={25}
+            setTableChanged={setTableChanged}
+            rerender={tableChanged}
           />
+
+          
         )}
-        <div className="snackbar">
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={6000}
+      </div>
+      {groupCreationVisible && (
+        <CreateGroup
+          onConfirm={submitNewGroup}
+          onCancel={() => {
+            setGroupCreationVisible(false);
+            setCSVFields(null);
+            setCSVData(null);
+          }}
+          CSVFields={CSVFields}
+        />
+      )}
+      {groupEditVisible && (
+        <CreateGroup
+          onConfirm={submitEditGroup}
+          editGroup={editGroup}
+          onDelete={submitDeleteGroup}
+          onCancel={() => setGroupEditVisible(false)}
+          CSVFields={null}
+        />
+      )}
+      <div className="snackbar">
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleSnackClose}
+          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+        >
+          <Alert
             onClose={handleSnackClose}
             anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
           >

@@ -5,11 +5,14 @@
  * @summary CSV parser for dashboard table
  * @author Kevin Fu
  * @author Elias Fang
+ * @author Alex Zhang
  */
 
-import React from "react";
-import { useCSVReader, useCSVDownloader } from "react-papaparse";
+import React, { useState } from "react";
+import { useCSVReader, useCSVDownloader, formatFileSize } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
+import CloudUpload from "../images/CloudUpload.svg";
+import FileIcon from "../images/File.svg";
 
 import "../css/CSVParser.css";
 
@@ -24,11 +27,20 @@ function CSVParser({
   selectedGroup,
   orgId,
   setDataLoading,
+  groupCreationVisible,
+  setGroupCreationVisible,
+  setCSVFields,
+  setCSVData,
+  setVisiblity
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
+  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
+  const [noGroupCSVData, setNoGroupCSVData] = useState(null);
+  const [formSubmittable, setFormSubmittable] = useState(false);
+  const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
 
   React.useEffect(async () => {
     await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
@@ -120,38 +132,135 @@ function CSVParser({
   }
 
   return (
-    <div className="csv-parser">
-      <CSVReader
-        // assumes csv comes with header row
-        config={{
-          header: true,
-        }}
-        onUploadAccepted={(results) => {
-          importToDB(results.data, CSVUploaded, setCSVUploaded).then();
-          // console.log(results);
-        }}
-      >
-        {({ getRootProps }) => (
-          <div>
-            <button type="button" {...getRootProps()} className="csv-button">
-              <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
-            </button>
-          </div>
-        )}
-      </CSVReader>
+    <div>
+      {CSVFlowVisible ? (
+        <CSVReader
+          // assumes csv comes with header row
+          config={{
+            header: true,
+          }}
+          onUploadAccepted={async (results) => {
+            // if we create group from CSV
+            setCSVData(results.data);
+            
+            let headers = Object.keys(results.data[0]);
+            headers = headers.map((value) => {
+              return { name: value, type: "Text" };
+            });
+            setCSVFields(headers);
 
-      <CSVDownloader
-        type={Type.Button}
-        className="csv-button download"
-        filename="data"
-        bom
-        config={{
-          delimiter: ";",
-        }}
-        data={tableData}
-      >
-        <AiOutlineDownload className="csv-icon download" /> Download
-      </CSVDownloader>
+            // add to current group
+            setNoGroupCSVData(results.data);
+            setFormSubmittable(true);
+          }}
+        >
+          {({ getRootProps, acceptedFile, ProgressBar }) => (
+            <div className="modal-background">
+              <div className="modal-view csv">
+                <h1 className="upload-csv-header">Upload CSV File</h1>
+                <div className="upload-csv-area" {...getRootProps()}>
+                  <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
+                  <p className="upload-csv-area-text">Drag and drop files here to upload</p>
+                  <p className="upload-csv-area-text">or</p>
+                  <div>
+                    <button type="submit" className="modal-blue csv-browse-files">
+                      Browse Files
+                    </button>
+                  </div>
+                </div>
+                {acceptedFile ? (
+                  <div className="csv-progress-div">
+                    <div className="csv-progress-file-icon-container">
+                      <img src={FileIcon} className="csv-progress-file-icon" alt="File" />
+                    </div>
+                    <div className="csv-progress-text-div">
+                      <p className="csv-progress-file-name">{acceptedFile.name}</p>
+                      <div
+                        className={
+                          formSubmittable ? "csv-progress-bar-div full" : "csv-progress-bar-div"
+                        }
+                      >
+                        <ProgressBar className="csv-progress-bar" />
+                      </div>
+                      <span className="csv-progress-file-size">
+                        {formatFileSize(acceptedFile.size)}
+                      </span>
+                      <span className="csv-progress-status">
+                        {formSubmittable ? "Upload complete!" : "Uploading..."}
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="radio-div">
+                  <input
+                    type="checkbox"
+                    className="create-group-csv-button"
+                    id="create-group-csv"
+                    value="create-group-csv"
+                    onClick={() => setCreateCSVGroup(!createCSVGroup)}
+                  />
+                  <label htmlFor="create-group-csv" className="create-group-csv-label">
+                    Create a new group from CSV
+                  </label>
+                </div>  
+                <div className="csv-submit-div">
+                  <button
+                    className="modal-white csv-cancel"
+                    type="button"
+                    onClick={() => {
+                      setFormSubmittable(false);
+                      setCSVFlowVisible(false);
+                      setNoGroupCSVData(null);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className={
+                      formSubmittable ? "modal-blue csv-next" : "modal-blue csv-next disabled"
+                    }
+                    type="submit"
+                    onClick={() => {
+                      if (formSubmittable) {
+                        setCSVFlowVisible(false);
+
+                        if (createCSVGroup) {
+                          setGroupCreationVisible(!groupCreationVisible);
+                        } else {
+                          importToDB(noGroupCSVData, CSVUploaded, setCSVUploaded).then();
+                          setNoGroupCSVData(null);
+                          setFormSubmittable(false);
+                          setVisiblity(false);
+                        }
+                      }
+                    }}
+                  >
+                    Finish
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </CSVReader>
+      ) : null}
+
+      <div className="csv-parser">
+        <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
+          <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
+        </button>
+        <CSVDownloader
+          type={Type.Button}
+          className="csv-button download"
+          filename="data"
+          bom
+          config={{
+            delimiter: ";",
+          }}
+          data={tableData}
+        >
+          <AiOutlineDownload className="csv-icon download" /> Download
+        </CSVDownloader>
+      </div>
     </div>
   );
 }

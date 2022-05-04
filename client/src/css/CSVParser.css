@@ -1,14 +1,15 @@
 .csv-parser {
   position: absolute;
+  z-index: 100;
   width: 158px;
   height: 80px;
-  left: 1202px;
-  top: 110px;
   background: #fafafa;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   text-align: center;
   border: 0px;
+  top: 20px;
+  right: 0;
 }
 
 .csv-button {
@@ -30,4 +31,138 @@
 
 .csv-icon {
   padding-right: 10px;
+}
+
+.upload-csv-header {
+  left: 7.14%;
+  right: 56.37%;
+  top: 0%;
+  margin: 0px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 36px;
+  padding-bottom: 34px;
+}
+.modal-view.csv {
+  width: 444px;
+  height: auto;
+  position: relative;
+}
+.upload-csv-area {
+  width: 98%;
+  height: 255px;
+  background: #f3f3f3;
+  border: 2.5px dashed #a9a9a9;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.csv-submit-div {
+  margin-top: 34px;
+}
+
+.modal-white.csv-cancel {
+  float: left;
+  margin-left: 0px;
+}
+
+.modal-blue.csv-next {
+  float: right;
+}
+
+.modal-blue.csv-next.disabled {
+  pointer-events: none;
+  background-color: #8d9cae;
+}
+
+.upload-csv-icon {
+  width: 34px;
+}
+
+.modal-blue.csv-browse-files {
+  width: 134px;
+  bottom: 50px;
+}
+
+.upload-csv-cloud {
+  position: relative;
+  top: 30px;
+  margin-bottom: 15px;
+}
+
+.upload-csv-area-text {
+  position: relative;
+  color: #949494;
+  line-height: 20px;
+}
+
+.csv-progress-div {
+  height: 55px;
+  margin-top: 33px;
+}
+
+.csv-progress-file-icon-container {
+  display: inline-flex;
+  justify-content: center;
+  width: 32px;
+  height: 50px;
+  margin: 0px;
+}
+.csv-progress-file-icon {
+  width: 32px;
+  float: left;
+  vertical-align: middle;
+}
+.csv-progress-text-div {
+  float: right;
+  height: auto;
+  width: 90%;
+}
+
+.csv-progress-file-name {
+  color: #05204a;
+  margin: 0px;
+}
+
+.csv-progress-file-size {
+  float: left;
+  margin: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #a9a9a9;
+}
+.csv-progress-status {
+  float: right;
+  margin: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #05204a;
+}
+
+.csv-progress-bar-div {
+  height: 6px;
+  width: 100%;
+  background: #f3f3f3;
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+.csv-progress-bar-div.full {
+  background: #6c89b6;
+}
+
+.csv-progress-bar {
+  height: 6px !important;
+  background-color: #6c89b6 !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.radio-div {
+  width: max-content;
+  margin-bottom: -20px;
+  margin-top: 10px;
 }
