@@ -42,18 +42,16 @@ function CSVParser({
   const [formSubmittable, setFormSubmittable] = useState(false);
   const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
 
-  React.useEffect(() => {
-    async function fetchData() {
-      await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
-        async (response) => {
-          if (response.ok) {
-            let json = await response.json();
-            json = json.map((row) => row.data);
-            setTableData(json);
-          }
+  React.useEffect(async () => {
+    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
+      async (response) => {
+        if (response.ok) {
+          let json = await response.json();
+          json = json.map((row) => row.data);
+          setTableData(json);
         }
-      );
-    }
+      }
+    );
   }, [CSVUploaded]);
 
   /**
@@ -250,6 +248,7 @@ function CSVParser({
         <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
           <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
         </button>
+        {console.log(tableData)}
         <CSVDownloader
           type={Type.Button}
           className="csv-button download"
