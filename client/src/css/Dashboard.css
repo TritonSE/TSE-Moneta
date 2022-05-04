@@ -110,3 +110,76 @@
 .create-group-csv-label {
   white-space: nowrap;
 }
+
+.no-groups-div {
+  width: calc(100vw - 243px);
+  height: 100vh;
+  margin-left: 243px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  top: 25px;
+}
+
+.no-groups-header {
+  width: 222px;
+  min-width: 500px;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  margin: 0px;
+}
+
+.no-groups-text {
+  text-align: center;
+  color: #949494;
+  width: 633px;
+  min-width: 700px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.create-group {
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 5px;
+  border: solid;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  color: #05204a;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.csv-create-group {
+  display: inline-flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 5px;
+  border: solid;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 13px;
+  padding-right: 8px;
+  border-color: #05204a;
+  margin-left: 10px;
+  color: #ffffff;
+  background: #05204a;
+  cursor: pointer;
+}
+
+.no-groups.add-icon-svg {
+  margin-left: -2px;
+  margin-right: 8px;
+  margin-top: -2px;
+}
+
+.no-groups-info-wrapper {
+  text-align: center;
+}

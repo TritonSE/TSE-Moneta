@@ -5,6 +5,7 @@
  * @author Alex Zhang
  * @author William Wu
  * @author Navid Boloorian
+ * @author Elias Fang
  */
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -18,6 +19,8 @@ import Plus from "../images/Plus";
 import Pencil from "../images/Pencil";
 import MenuToggle from "../images/MenuToggle.svg";
 import SearchIcon from "../images/SearchIcon.svg";
+import CreateIcon from "../images/CreateIcon.svg";
+import AddIconBlue from "../images/AddIconBlue.svg";
 import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
@@ -44,6 +47,7 @@ function Dashboard() {
   const [orgInfo, setOrgInfo] = useState({});
   const [orgId, setOrgId] = useState();
   const [userInfo, setUserInfo] = useState({});
+  const [CSVFlowVisible, setCSVFlowVisible] = useState(false);
   const [snackbar, setSnackbar] = React.useState({
     open: false,
     message: "",
@@ -58,8 +62,6 @@ function Dashboard() {
   const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
   const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
 
-  // reference to div containing csv dropdown
-  const csvDropdown = document.querySelector(".csv-parser-dropdown");
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -418,9 +420,12 @@ function Dashboard() {
 
   /**
    * Hide csv dropdown when click outside of it
-   */
-  document.addEventListener("mousedown", (event) => {
-    if (csvDropdown && !csvDropdown.contains(event.target)) setVisibility(false);
+   */  
+  document.addEventListener('mouseup', function(e) {
+    var dropdown = document.getElementById('csv-parser-dropdown');
+    if (!dropdown.contains(e.target)) {
+      setVisibility(false)
+    }
   });
 
   if (isLoading || (!orgInfo && !userInfo)) {
@@ -431,12 +436,80 @@ function Dashboard() {
     );
   }
 
-  return (
-    <>
-      <SideNavigation currentPage="/" userInfo={userInfo} />
-      <div className="dashboard-div">
-        <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
-        <div className="dashboard-top-bar">
+  // When no groups exist, show no groups page
+  if (groupOptions.length === 1) {
+    return (
+      <>
+        <CSVParser
+          CSVUploaded={CSVUploaded}
+          setCSVUploaded={setCSVUploaded}
+          snackbar={snackbar}
+          setSnackbar={setSnackbar}
+          orgId={orgId}
+          setDataLoading={setDataLoading}
+          setVisiblity={setVisibility}
+          groupCreationVisible={groupCreationVisible}
+          setGroupCreationVisible={setGroupCreationVisible}
+          setCSVFields={setCSVFields}
+          CSVData={CSVData}
+          setCSVData={setCSVData}
+          setCSVFlowVisible={setCSVFlowVisible}
+          CSVFlowVisible={CSVFlowVisible}
+          forceNewGroup={true}
+        />
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="no-groups-div">
+          <div className="no-groups-info-wrapper">
+            <img src={CreateIcon} className="no-groups create-icon-svg" alt="create icon" /><br />
+            <h1 className="no-groups-header">Start building your dashboard!</h1>
+            <p className="no-groups-text">Click "Create new" to begin adding data to your table.<br />
+            Have previous databases? No worries! You can upload your CSV file as well.</p>
+            <button
+                className="create-group clickable"
+                type="button"
+                onClick={() => {
+                  setGroupCreationVisible(true);
+                }}
+            >
+              <img src={AddIconBlue} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              Create new
+            </button>
+            <button
+                className="csv-create-group clickable"
+                type="button"
+                onClick={() => {
+                  setCSVFlowVisible(true);
+                }}
+            >
+              <img src={AddIcon} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              Create from CSV
+            </button>
+            {(groupCreationVisible && !CSVFields) && (
+                <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+            )}
+            
+            {(groupCreationVisible && CSVFields) && (
+              <CreateGroup
+                onConfirm={submitNewGroup}
+                onCancel={() => {
+                  setGroupCreationVisible(false);
+                  setCSVFields(null);
+                  setCSVData(null);
+                }}
+                CSVFields={CSVFields}
+              />
+            )}
+            </div>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SideNavigation currentPage="/" userInfo={userInfo} />
+        <div className="dashboard-div">
+          <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
+          <div className="dashboard-top-bar">
           <Select
             className="group-select"
             classNamePrefix="select"
@@ -466,7 +539,7 @@ function Dashboard() {
               >
                 <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
               </button>
-              <div className="csv-parser-dropdown">
+              <div id="csv-parser-dropdown" className="csv-parser-dropdown">
                 {visible ? (
                   <CSVParser
                     CSVUploaded={CSVUploaded}
@@ -482,6 +555,8 @@ function Dashboard() {
                     setCSVFields={setCSVFields}
                     CSVData={CSVData}
                     setCSVData={setCSVData}
+                    setCSVFlowVisible={setCSVFlowVisible}
+                    CSVFlowVisible={CSVFlowVisible}
                   />
                 ) : null}
               </div>
@@ -512,8 +587,6 @@ function Dashboard() {
             setTableChanged={setTableChanged}
             rerender={tableChanged}
           />
-
-          
         )}
       </div>
       {groupCreationVisible && (
@@ -543,18 +616,19 @@ function Dashboard() {
           onClose={handleSnackClose}
           anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
         >
-          <Alert
-            onClose={handleSnackClose}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
-            variant="filled"
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </div>
-    </>
-  );
+            <Alert
+              onClose={handleSnackClose}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              variant="filled"
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </div>
+      </>
+    );
+  }
 }
 
 export default Dashboard;
