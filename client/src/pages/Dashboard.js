@@ -494,14 +494,6 @@ function Dashboard() {
             rerender={tableChanged}
           />
         )}
-        <input
-          type="text"
-          className="dashboard-search"
-          placeholder="Search"
-          value={Search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
 
         <div className="radio-div">
           <input
@@ -515,16 +507,6 @@ function Dashboard() {
             Create Group With CSV
           </label>
         </div>
-
-        <button
-          type="button"
-          className="toggle-csv-menu"
-          onClick={() => {
-            setVisibility(!visible);
-          }}
-        >
-          <img src={MenuToggle} className="menu-toggle-svg" alt="csv menu toggle button" />
-        </button>
       </div>
       <div className="csv-parser-dropdown">
         {visible ? (
