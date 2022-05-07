@@ -30,10 +30,13 @@ function Settings() {
     severity: "",
   });
 
+  const newOrgInfo = window.localStorage.getItem("orgInfo");
+  const newUserInfo = window.localStorage.getItem("userInfo");
+
   React.useEffect(() => {
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setUserInfo(JSON.parse(window.localStorage.getItem("userInfo")));
-  }, [window.localStorage.getItem("orgInfo"), window.localStorage.getItem("userInfo")]);
+  }, [newOrgInfo, newUserInfo]);
 
   const handleSnackClose = () => {
     setSnackbar({
