@@ -187,7 +187,7 @@ export default function Register() {
                 <h2>Your Registration is Under Review.</h2>
                 <h3>Please wait up to 24 hours to receive a response.</h3>
                 <p>
-                  Haven&apos;t received a reponse yet? <a href="#">Contact us.</a>
+                  Haven&apos;t received a reponse yet? <a href="/#">Contact us.</a>
                 </p>
               </>
             )}
