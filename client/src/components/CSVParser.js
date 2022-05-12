@@ -30,17 +30,17 @@ function CSVParser({
   const [tableData, setTableData] = React.useState([]);
   const group = selectedGroup;
 
-  React.useEffect(async () => {
-    await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
-      async (response) => {
-        if (response.ok) {
-          let json = await response.json();
-          json = json.map((row) => row.data);
-          setTableData(json);
-        }
+  React.useEffect(() => {
+    async function fetchRows() {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id);
+      if (response.ok) {
+        let json = await response.json();
+        json = json.map((row) => row.data);
+        setTableData(json);
       }
-    );
-  }, [CSVUploaded]);
+    }
+    fetchRows();
+  }, [CSVUploaded, group.id]);
 
   /**
    *  Returns true if CSV values are valid, otherwise false.
@@ -84,6 +84,8 @@ function CSVParser({
           severity: "error",
         });
         return;
+      default:
+      //pass, no error
     }
 
     // should ask user to confirm before clearing
