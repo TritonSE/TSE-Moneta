@@ -38,7 +38,7 @@ function CreateGroupFieldRow({ index, fieldName, fieldType, invalid, changeDispa
         <option value="Number">Number</option>
         <option value="Email">Email</option>
       </select>
-      {(index !== 0 && !CSVFields) && (
+      {index !== 0 && !CSVFields && (
         <button
           className="group-field-delete"
           type="button"

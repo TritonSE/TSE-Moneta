@@ -1,6 +1,6 @@
 /**
  * Table row component that displays information in table. Allows for editing, deleting, and row selection.
- * 
+ *
  * @summary table row
  * @author  Navid Boloorian
  */
@@ -36,11 +36,11 @@ export default function TableRow({
     if (newRow) {
       setEditActivated(true);
 
-      // sets the default width of input field to 5 
+      // sets the default width of input field to 5
       setFieldDefaultSize(5);
 
       // sets a blank default value for columns to allow for empty columns
-      for(let i = 0; i < groupFields.length; i++) {
+      for (let i = 0; i < groupFields.length; i++) {
         cellData[groupFields[i].name] = "";
       }
     }
