@@ -130,6 +130,7 @@ router.delete("/organizations/:id", async (req, res) => {
  */
 router.get("/organizations", async (req, res) => {
   try {
+    console.log(req.query);
     const companyExists = await organizations.exists(req.query);
     if (!companyExists) {
       return res.status(204).json({
@@ -138,6 +139,7 @@ router.get("/organizations", async (req, res) => {
     }
 
     const getCompany = await organizations.find(req.query);
+    console.log(getCompany);
     if (getCompany) {
       return res.status(200).json({
         getCompany,
