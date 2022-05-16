@@ -11,7 +11,6 @@ const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 const typeRoutes = require("./routes/typesRoutes");
 
-// const type = require("./models/Types");
 
 connectDB();
 
