@@ -13,10 +13,10 @@
  * @param {string} type String name for the column field to search for distinct value
  * @returns A Set containing all distinct values under the given type
  */
-function getDistinctValues(CSVData, type) {
+export function getDistinctValues(CSVData, type) {
   const ret = new Set();
   for (const row of CSVData) {
-    ret.add(CSVData[type]);
+    ret.add(row.data[type]);
   }
   return ret;
 }
