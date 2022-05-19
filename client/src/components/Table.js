@@ -4,6 +4,7 @@
  *
  * @summary Table display for dashboard page.
  * @author Alex Zhang
+ * @author Elias Fang
  */
 
 import React, { useEffect, useState } from "react";
