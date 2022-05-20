@@ -21,7 +21,7 @@ import Trashcan from "../images/TrashCan.svg";
  */
 function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsPerPage }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selected, setSelected] = useState(new Set());
+  const [selected, setSelected] = useState(new Map());
   const maxPage = Math.ceil(data.length / elementsPerPage);
 
   const rowTemplate = {};
@@ -32,9 +32,12 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
         rowTemplate[value] = "";
       }
     }
-    setSelected(new Set());
     setCurrentPage(1);
   }, [group, data]);
+
+  useEffect(() => {
+    setSelected(new Map());
+  }, [group]);
 
   const createTableData = async (dataArg) => {
     setTableChanged(true);
@@ -203,7 +206,7 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
             type="button"
             onClick={() => {
               setCurrentPage(Math.max(1, currentPage - 1));
-              setSelected(new Set());
+              setSelected(new Map());
             }}
           >
             <img src={PrevPage} className="table-prev-page-icon" alt="Previous Page" />
@@ -217,7 +220,7 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
             type="button"
             onClick={() => {
               setCurrentPage(Math.min(maxPage, currentPage + 1));
-              setSelected(new Set());
+              setSelected(new Map());
             }}
           >
             <img src={NextPage} className="table-next-page-icon" alt="Next Page" />
