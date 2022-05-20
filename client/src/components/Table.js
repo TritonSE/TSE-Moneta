@@ -4,6 +4,7 @@
  *
  * @summary Table display for dashboard page.
  * @author Alex Zhang
+ * @author Elias Fang
  */
 
 import React, { useEffect, useState } from "react";
@@ -146,56 +147,58 @@ function Table({ setTableChanged, setSnackbar, addingRow, data, group, elementsP
 
   return (
     <div className="table-div">
-      <table className="table">
-        <tbody>
-          <tr className="table-header-row">
-            <th className="checkbox-header-cell"></th>
-            {group.values.map((field) => (
-              <th className="table-header-cell" key={field._id}>
-                {field.name}
+      <div className="table-scroll-div">
+        <table className="table">
+          <tbody>
+            <tr className="table-header-row">
+              <th className="checkbox-header-cell"></th>
+              {group.values.map((field) => (
+                <th className="table-header-cell" key={field._id}>
+                  {field.name}
+                </th>
+              ))}
+              <th className="table-header-cell">
+                <img
+                  src={Trashcan}
+                  onClick={() => {
+                    selected.forEach((id) => {
+                      deleteTableData(id);
+                    });
+                    selected.clear();
+                    setSelected(selected);
+                  }}
+                  className="table-delete-selected-svg clickable"
+                  alt=""
+                />
               </th>
-            ))}
-            <th className="table-header-cell">
-              <img
-                src={Trashcan}
-                onClick={() => {
-                  selected.forEach((id) => {
-                    deleteTableData(id);
-                  });
-                  selected.clear();
-                  setSelected(selected);
-                }}
-                className="table-delete-selected-svg clickable"
-                alt=""
-              />
-            </th>
-          </tr>
-          {addingRow ? (
-            <TableRow
-              newRow
-              createTableData={createTableData}
-              cellData={rowTemplate}
-              groupFields={group.values}
-            />
-          ) : (
-            ""
-          )}
-          {data
-            .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
-            .map((entry) => (
+            </tr>
+            {addingRow ? (
               <TableRow
-                id={entry._id}
-                newRow={false}
-                updateTableData={updateTableData}
-                deleteTableData={deleteTableData}
-                selected={selected}
-                setSelected={setSelected}
-                cellData={entry.data}
+                newRow
+                createTableData={createTableData}
+                cellData={rowTemplate}
                 groupFields={group.values}
               />
-            ))}
-        </tbody>
-      </table>
+            ) : (
+              ""
+            )}
+            {data
+              .slice((currentPage - 1) * elementsPerPage, currentPage * elementsPerPage)
+              .map((entry) => (
+                <TableRow
+                  id={entry._id}
+                  newRow={false}
+                  updateTableData={updateTableData}
+                  deleteTableData={deleteTableData}
+                  selected={selected}
+                  setSelected={setSelected}
+                  cellData={entry.data}
+                  groupFields={group.values}
+                />
+              ))}
+          </tbody>
+        </table>
+      </div>
       {maxPage === 0 ? null : (
         <div className="table-page-selector">
           <button

@@ -3,6 +3,10 @@
   min-width: 1000px;
 }
 
+.table-scroll-div {
+  overflow-y: auto;
+}
+
 .table-header-row {
   font-weight: 500;
 }
