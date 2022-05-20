@@ -9,7 +9,6 @@
  */
 
 import React from "react";
-import emailjs from "emailjs-com";
 import "../css/AddUser.css";
 
 /**
@@ -19,20 +18,6 @@ import "../css/AddUser.css";
  */
 export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
   const addUserForm = React.useRef();
-
-  /**
-   * Sends email with to user
-   */
-  const sendEmail = (e) => {
-    e.preventDefault();
-
-    emailjs.sendForm(
-      process.env.REACT_APP_EMAILJS_SERVICE,
-      process.env.REACT_APP_EMAILJS_ADD_USER_TEMPLATE,
-      addUserForm.current,
-      process.env.REACT_APP_EMAILJS_UID
-    );
-  };
 
   const formCheck = async (e) => {
     e.preventDefault();
@@ -92,20 +77,35 @@ export default function AddUser({ orgId, setAddUserVisible, setSnackbar }) {
 
     addUserForm.current[2].value = userId;
 
-    if (response.ok)
-      setSnackbar({
-        open: true,
-        message: "User added!",
-        severity: "success",
-      });
-    else
+    if (response.ok) {
+      const sendEmailResponse = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/email/addUser/${userId}`,
+        {
+          method: "POST",
+        }
+      );
+      if (sendEmailResponse.ok) {
+        setSnackbar({
+          open: true,
+          message: "User added!",
+          severity: "success",
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message:
+            "An error occurred while trying to send the registration email. Please contact us for assistance.",
+          severity: "error",
+        });
+      }
+    } else {
       setSnackbar({
         open: true,
         message: "Something went wrong",
         severity: "error",
       });
+    }
 
-    sendEmail(e);
     setAddUserVisible(false);
   };
 

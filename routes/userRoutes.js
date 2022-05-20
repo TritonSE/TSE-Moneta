@@ -27,7 +27,9 @@ router.post("/users", async (req, res) => {
   try {
     const { fullName, email, organizationId } = req.body;
 
-    const numMatched = await Users.count({ email });
+    const numMatched = await Users.count({ email, organizationId });
+
+    console.log(numMatched);
 
     if (numMatched > 0) {
       return res.status(409).json({ msg: "Email already registered" });

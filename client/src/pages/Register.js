@@ -6,7 +6,6 @@
  */
 
 import React from "react";
-import emailjs from "emailjs-com";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Snackbar, Alert } from "@mui/material";
 import { auth } from "../firebaseConfig";
@@ -37,20 +36,6 @@ export default function Register() {
       message: "",
       severity: "",
     });
-  };
-
-  /**
-   * Sends email with org information to email
-   */
-  const sendEmail = (e) => {
-    e.preventDefault();
-
-    emailjs.sendForm(
-      process.env.REACT_APP_EMAILJS_SERVICE,
-      process.env.REACT_APP_EMAILJS_REGISTER_TEMPLATE,
-      registerForm.current,
-      process.env.REACT_APP_EMAILJS_UID
-    );
   };
 
   /**
@@ -97,11 +82,26 @@ export default function Register() {
 
     // if email is not already in db
     if (response.ok) {
-      sendEmail(e);
       setRegistered(true);
 
       // use firebase to sign up user
       createUserWithEmailAndPassword(auth, email, password);
+
+      const { _id } = json.addCompany;
+      const sendEmailResponse = await fetch(
+        `${process.env.REACT_APP_BACKEND_URI}/email/registerOrg/${_id}`,
+        {
+          method: "POST",
+        }
+      );
+      if (!sendEmailResponse.ok) {
+        setSnackbar({
+          open: true,
+          message:
+            "An error occurred while trying to send the registration email. Please contact us for assistance.",
+          severity: "error",
+        });
+      }
     }
     // if email is already in db
     else if (response.status === 409)
@@ -187,7 +187,7 @@ export default function Register() {
                 <h2>Your Registration is Under Review.</h2>
                 <h3>Please wait up to 24 hours to receive a response.</h3>
                 <p>
-                  Haven&apos;t received a reponse yet? <a href="#">Contact us.</a>
+                  Haven&apos;t received a response yet? <a href="mailto: tsemoneta@gmail.com">Contact us.</a>
                 </p>
               </>
             )}
