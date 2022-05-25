@@ -25,6 +25,7 @@ import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
 import "../css/Dashboard.css";
+import TypeDropdown from "../components/TypeDropdown";
 
 /**
  * Renders the dashboard page
@@ -61,7 +62,6 @@ function Dashboard() {
   const [groupEditVisible, setGroupEditVisible] = useState(false);
   const [CSVFields, setCSVFields] = useState(null); // stores fields from uploaded csv
   const [CSVData, setCSVData] = useState(null); // tracks if csv for group creation was uploaded
-
 
   /**
    * Fetches the list of groups and populates the options in the group selection dropdown.
@@ -420,11 +420,11 @@ function Dashboard() {
 
   /**
    * Hide csv dropdown when click outside of it
-   */  
-  document.addEventListener('mouseup', function(e) {
-    var dropdown = document.getElementById('csv-parser-dropdown');
+   */
+  document.addEventListener("mouseup", function (e) {
+    var dropdown = document.getElementById("csv-parser-dropdown");
     if (!dropdown.contains(e.target)) {
-      setVisibility(false)
+      setVisibility(false);
     }
   });
 
@@ -460,35 +460,46 @@ function Dashboard() {
         <SideNavigation currentPage="/" userInfo={userInfo} />
         <div className="no-groups-div">
           <div className="no-groups-info-wrapper">
-            <img src={CreateIcon} className="no-groups create-icon-svg" alt="create icon" /><br />
+            <img src={CreateIcon} className="no-groups create-icon-svg" alt="create icon" />
+            <br />
             <h1 className="no-groups-header">Start building your dashboard!</h1>
-            <p className="no-groups-text">Click "Create new" to begin adding data to your table.<br />
-            Have previous databases? No worries! You can upload your CSV file as well.</p>
+            <p className="no-groups-text">
+              Click "Create new" to begin adding data to your table.
+              <br />
+              Have previous databases? No worries! You can upload your CSV file as well.
+            </p>
             <button
-                className="create-group clickable"
-                type="button"
-                onClick={() => {
-                  setGroupCreationVisible(true);
-                }}
+              className="create-group clickable"
+              type="button"
+              onClick={() => {
+                setGroupCreationVisible(true);
+              }}
             >
-              <img src={AddIconBlue} className="no-groups add-icon-svg" alt="plus icon on add button" />
+              <img
+                src={AddIconBlue}
+                className="no-groups add-icon-svg"
+                alt="plus icon on add button"
+              />
               Create new
             </button>
             <button
-                className="csv-create-group clickable"
-                type="button"
-                onClick={() => {
-                  setCSVFlowVisible(true);
-                }}
+              className="csv-create-group clickable"
+              type="button"
+              onClick={() => {
+                setCSVFlowVisible(true);
+              }}
             >
               <img src={AddIcon} className="no-groups add-icon-svg" alt="plus icon on add button" />
               Create from CSV
             </button>
-            {(groupCreationVisible && !CSVFields) && (
-                <CreateGroup onConfirm={submitNewGroup} onCancel={() => setGroupCreationVisible(false)} />
+            {groupCreationVisible && !CSVFields && (
+              <CreateGroup
+                onConfirm={submitNewGroup}
+                onCancel={() => setGroupCreationVisible(false)}
+              />
             )}
-            
-            {(groupCreationVisible && CSVFields) && (
+
+            {groupCreationVisible && CSVFields && (
               <CreateGroup
                 onConfirm={submitNewGroup}
                 onCancel={() => {
@@ -499,7 +510,7 @@ function Dashboard() {
                 CSVFields={CSVFields}
               />
             )}
-            </div>
+          </div>
         </div>
       </>
     );
@@ -507,29 +518,34 @@ function Dashboard() {
     return (
       <>
         <SideNavigation currentPage="/" userInfo={userInfo} />
+        <TypeDropdown />
         <div className="dashboard-div">
           <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
           <div className="dashboard-top-bar">
-          <Select
-            className="group-select"
-            classNamePrefix="select"
-            options={groupOptions}
-            placeholder="Select Group"
-            styles={selectStyles}
-            components={{ Option: iconOption }}
-            value={selectedGroup}
-            onChange={handleSelectGroup}
-          />
-          {selectedGroup && (
-            <button
-              className="add-row clickable"
-              type="button"
-              onClick={() => setAddingRow(!addingRow)}
-            >
-              <img src={AddIcon} className="dashboard add-icon-svg" alt="plus icon on add button" />
-              Add row
-            </button>
-          )}
+            <Select
+              className="group-select"
+              classNamePrefix="select"
+              options={groupOptions}
+              placeholder="Select Group"
+              styles={selectStyles}
+              components={{ Option: iconOption }}
+              value={selectedGroup}
+              onChange={handleSelectGroup}
+            />
+            {selectedGroup && (
+              <button
+                className="add-row clickable"
+                type="button"
+                onClick={() => setAddingRow(!addingRow)}
+              >
+                <img
+                  src={AddIcon}
+                  className="dashboard add-icon-svg"
+                  alt="plus icon on add button"
+                />
+                Add row
+              </button>
+            )}
             <div className="toggle-csv-menu">
               <button
                 type="button"
@@ -561,61 +577,61 @@ function Dashboard() {
                 ) : null}
               </div>
             </div>
-          <div className="dashboard-search-box">
-            <input
-              type="text"
-              className="dashboard-search"
-              placeholder="Search"
-              value={Search}
-              onChange={(event) => setSearch(event.target.value)}
+            <div className="dashboard-search-box">
+              <input
+                type="text"
+                className="dashboard-search"
+                placeholder="Search"
+                value={Search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+              <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
+            </div>
+          </div>
+          {dataLoading ? (
+            <div className="data-loading">
+              <ReactLoading type="spin" color="#05204a" height={100} width={100} />
+            </div>
+          ) : (
+            <Table
+              CSVUploaded={CSVUploaded}
+              setSnackbar={setSnackbar}
+              addingRow={addingRow}
+              group={selectedGroup}
+              data={tableData}
+              elementsPerPage={25}
+              setTableChanged={setTableChanged}
+              rerender={tableChanged}
             />
-            <img src={SearchIcon} className="dashboard-search-icon" alt="Search" />
-          </div>
+          )}
         </div>
-        {dataLoading ? (
-          <div className="data-loading">
-            <ReactLoading type="spin" color="#05204a" height={100} width={100} />
-          </div>
-        ) : (
-          <Table
-            CSVUploaded={CSVUploaded}
-            setSnackbar={setSnackbar}
-            addingRow={addingRow}
-            group={selectedGroup}
-            data={tableData}
-            elementsPerPage={25}
-            setTableChanged={setTableChanged}
-            rerender={tableChanged}
+        {groupCreationVisible && (
+          <CreateGroup
+            onConfirm={submitNewGroup}
+            onCancel={() => {
+              setGroupCreationVisible(false);
+              setCSVFields(null);
+              setCSVData(null);
+            }}
+            CSVFields={CSVFields}
           />
         )}
-      </div>
-      {groupCreationVisible && (
-        <CreateGroup
-          onConfirm={submitNewGroup}
-          onCancel={() => {
-            setGroupCreationVisible(false);
-            setCSVFields(null);
-            setCSVData(null);
-          }}
-          CSVFields={CSVFields}
-        />
-      )}
-      {groupEditVisible && (
-        <CreateGroup
-          onConfirm={submitEditGroup}
-          editGroup={editGroup}
-          onDelete={submitDeleteGroup}
-          onCancel={() => setGroupEditVisible(false)}
-          CSVFields={null}
-        />
-      )}
-      <div className="snackbar">
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
-          onClose={handleSnackClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
+        {groupEditVisible && (
+          <CreateGroup
+            onConfirm={submitEditGroup}
+            editGroup={editGroup}
+            onDelete={submitDeleteGroup}
+            onCancel={() => setGroupEditVisible(false)}
+            CSVFields={null}
+          />
+        )}
+        <div className="snackbar">
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleSnackClose}
+            anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+          >
             <Alert
               onClose={handleSnackClose}
               severity={snackbar.severity}
