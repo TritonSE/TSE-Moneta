@@ -26,23 +26,27 @@ export default function SetPassword() {
 
   const { userId } = useParams();
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     // get selected user's information from the id
-    const selectedUser = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?_id=${userId}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    async function fetchUserData() {
+      const selectedUser = await fetch(`${process.env.REACT_APP_BACKEND_URI}/users?_id=${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("checking");
+      const json = await selectedUser.json();
 
-    const json = await selectedUser.json();
+      // attempt a sign in through firebase
+      const signInMethods = await fetchSignInMethodsForEmail(auth, json.getUser[0].email);
+      const registered = signInMethods.length !== 0;
 
-    // attempt a sign in through firebase
-    const signInMethods = await fetchSignInMethodsForEmail(auth, json.getUser[0].email);
-    const registered = signInMethods.length !== 0;
+      // if sign in is successful (user's password is already set) or the user is not found in our db then redirect to login
+      if (selectedUser.status === 400 || registered) window.location.href = "/login";
 
-    // if sign in is successful (user's password is already set) or the user is not found in our db then redirect to login
-    if (selectedUser.status === 400 || registered) window.location.href = "/login";
+      setUser(json.getUser[0]);
+    }
 
-    setUser(json.getUser[0]);
+    fetchUserData();
   }, [userId]);
 
   const handleSnackClose = () => {

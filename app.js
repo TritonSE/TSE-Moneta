@@ -9,6 +9,8 @@ const tableDataRoutes = require("./routes/tableDataRoutes");
 const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const typeRoutes = require("./routes/typesRoutes");
+
 
 connectDB();
 
@@ -22,6 +24,7 @@ app.use("/", userRoutes);
 app.use("/", organizationRoutes);
 app.use("/", groupRoutes);
 app.use("/", tableDataRoutes);
+app.use("/", typeRoutes);
 app.use(express.static(path.resolve(__dirname, "client", "build")));
 
 app.get("*", (req, res) => {

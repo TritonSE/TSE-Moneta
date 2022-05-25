@@ -34,7 +34,7 @@ function CSVParser({
   setVisiblity,
   CSVFlowVisible,
   setCSVFlowVisible,
-  forceNewGroup
+  forceNewGroup,
 }) {
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
@@ -45,7 +45,7 @@ function CSVParser({
   const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
 
   React.useEffect(async () => {
-    if(group) {
+    if (group) {
       await fetch(`${process.env.REACT_APP_BACKEND_URI}/rows?group=` + group.id).then(
         async (response) => {
           if (response.ok) {
@@ -146,7 +146,7 @@ function CSVParser({
           onUploadAccepted={async (results) => {
             // if we create group from CSV
             setCSVData(results.data);
-            
+
             let headers = Object.keys(results.data[0]);
             headers = headers.map((value) => {
               return { name: value, type: "Text" };
@@ -196,7 +196,7 @@ function CSVParser({
                   </div>
                 ) : null}
                 <div className="radio-div">
-                 {forceNewGroup ?
+                  {forceNewGroup ? (
                     <input
                       type="checkbox"
                       className="create-group-csv-button"
@@ -206,7 +206,7 @@ function CSVParser({
                       checked
                       disabled
                     />
-                    :
+                  ) : (
                     <input
                       type="checkbox"
                       className="create-group-csv-button"
@@ -214,11 +214,11 @@ function CSVParser({
                       value="create-group-csv"
                       onClick={() => setCreateCSVGroup(!createCSVGroup)}
                     />
-                  }
+                  )}
                   <label htmlFor="create-group-csv" className="create-group-csv-label">
                     Create a new group from CSV
                   </label>
-                </div>  
+                </div>
                 <div className="csv-submit-div">
                   <button
                     className="modal-white csv-cancel"
@@ -260,25 +260,25 @@ function CSVParser({
         </CSVReader>
       ) : null}
 
-      {!forceNewGroup && 
-      <div className="csv-parser">
-        <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
-          <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
-        </button>
-        <CSVDownloader
-          type={Type.Button}
-          className="csv-button download"
-          filename="data"
-          bom
-          config={{
-            delimiter: ";",
-          }}
-          data={tableData}
-        >
-          <AiOutlineDownload className="csv-icon download" /> Download
-        </CSVDownloader>
-      </div>
-      }
+      {!forceNewGroup && (
+        <div className="csv-parser">
+          <button type="button" onClick={() => setCSVFlowVisible(true)} className="csv-button">
+            <AiOutlineCloudUpload className="csv-icon cloud" /> Upload CSV
+          </button>
+          <CSVDownloader
+            type={Type.Button}
+            className="csv-button download"
+            filename="data"
+            bom
+            config={{
+              delimiter: ";",
+            }}
+            data={tableData}
+          >
+            <AiOutlineDownload className="csv-icon download" /> Download
+          </CSVDownloader>
+        </div>
+      )}
     </div>
   );
 }

@@ -39,13 +39,15 @@ function Admin() {
     });
   };
 
+  const orgInfoNew = window.localStorage.getItem("orgInfo");
+
   React.useEffect(() => {
     setIsLoading(true);
     setOrgInfo(JSON.parse(window.localStorage.getItem("orgInfo")));
     setIsLoading(false);
-  }, [window.localStorage.getItem("orgInfo")]);
+  }, [orgInfoNew]);
 
-  const getEmployees = async () => {
+  const getEmployees = React.useCallback(async () => {
     setIsLoading(true);
     if (orgInfo) {
       const response = await fetch(
@@ -56,11 +58,11 @@ function Admin() {
       setEmployees(json.getUser);
     }
     setIsLoading(false);
-  };
+  }, [orgInfo]);
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
     getEmployees();
-  }, [orgInfo, addUserVisible]);
+  }, [getEmployees, orgInfo, addUserVisible]);
 
   const deleteEmployee = async (id) => {
     setIsLoading(true);
