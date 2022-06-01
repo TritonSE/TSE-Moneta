@@ -55,6 +55,10 @@
   text-overflow: clip;
 }
 
+.type-dropdown-field.empty {
+  width: 170px;
+}
+
 .type-dropdown-option {
   position: static;
   width: 170px;
@@ -63,7 +67,6 @@
 .type-dropdown-pencil {
   float: right;
   margin-top: 9px;
-  margin-right: 5px;
   cursor: pointer;
 }
 

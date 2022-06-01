@@ -25,7 +25,6 @@ import CSVParser from "../components/CSVParser";
 import CreateGroup from "../components/CreateGroup";
 
 import "../css/Dashboard.css";
-import TypeDropdown from "../components/TypeDropdown";
 
 /**
  * Renders the dashboard page
@@ -518,7 +517,6 @@ function Dashboard() {
     return (
       <>
         <SideNavigation currentPage="/" userInfo={userInfo} />
-        <TypeDropdown />
         <div className="dashboard-div">
           <h1 className="dashboard-header">{orgInfo ? orgInfo.name : userInfo.orgName}</h1>
           <div className="dashboard-top-bar">

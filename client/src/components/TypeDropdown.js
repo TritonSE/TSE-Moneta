@@ -53,14 +53,13 @@ function TypeDropdown() {
         {typeField ? (
           <div className="type-dropdown-option">
             <input
-              className="type-dropdown-field"
+              className="type-dropdown-field empty"
               value={typeFieldValue}
               placeholder="Type here..."
               onKeyDown={onKeyDown}
               onChange={(event) => setTypeFieldValue(event.target.value)}
               autoFocus="autofocus"
             />
-            <Pencil className="type-dropdown-pencil" />
           </div>
         ) : null}
       </div>
