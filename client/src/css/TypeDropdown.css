@@ -1,0 +1,140 @@
+.type-dropdown-div-wrapper {
+  position: relative;
+  left: 50%;
+}
+
+.type-dropdown-div {
+  display: flex;
+  flex-flow: wrap;
+  width: 200px;
+  background: #fafafa;
+  border: 0.2px solid #05204a;
+  box-shadow: 0px 1.5px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 3.5px;
+  justify-content: center;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.add-type-dropdown-button {
+  display: table-cell;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  width: 170px;
+  height: 35px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 35px;
+  border-radius: 5px;
+  border: none;
+  background: #05204a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.type-dropdown-add-icon-svg {
+  position: relative;
+  top: 3px;
+  padding-right: 8px;
+  width: 15px;
+  justify-self: auto;
+}
+
+.type-dropdown-field {
+  height: 35px;
+  width: 135px;
+  margin-bottom: 12px;
+  text-align: center;
+  border: 0px;
+  background: #f3f3f3;
+  border-radius: 5px;
+  color: #404040;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+
+.type-dropdown-field.empty {
+  width: 170px;
+}
+
+.type-dropdown-option {
+  position: static;
+  width: 170px;
+}
+
+.type-dropdown-pencil {
+  float: right;
+  margin-top: 9px;
+  cursor: pointer;
+}
+
+.type-dropdown-edit-div {
+  position: absolute;
+  left: 13%;
+  z-index: 10;
+  background: #000000;
+  width: 190px;
+  height: 135px;
+  background: #fafafa;
+  border: 0.2px solid #05204a;
+  box-shadow: 0px 1.5px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 3.5px;
+}
+
+.type-dropdown-edit-header {
+  margin-left: 12px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #05204a;
+}
+
+.type-dropdown-edit-divider {
+  width: 160px;
+  border: 0.75px solid #e0dddd;
+  margin: 0px;
+  margin-left: 12px;
+}
+
+.type-dropdown-edit-field {
+  height: 35px;
+  width: 150px;
+  margin: 12px;
+  padding-left: 10px;
+  border: 1px solid #c5c5c5;
+  background: #f3f3f3;
+  border-radius: 5px;
+  color: #404040;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+
+.type-dropdown-delete-option {
+  display: inline-block;
+  padding: 0px;
+  background: none;
+  border: none;
+  height: 21px;
+  width: 150px;
+  margin-left: 17px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #c4c4c4;
+  cursor: pointer;
+}
+
+.type-dropdown-trash-can-svg {
+  float: left;
+  margin-right: 9px;
+}
+
+.type-dropdown-delete-option-text {
+  float: left;
+  line-height: 21px;
+  margin: 0px;
+}
