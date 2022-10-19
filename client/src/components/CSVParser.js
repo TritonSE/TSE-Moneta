@@ -11,6 +11,7 @@
 import React, { useState } from "react";
 import { useCSVReader, useCSVDownloader, formatFileSize } from "react-papaparse";
 import { AiOutlineCloudUpload, AiOutlineDownload } from "react-icons/ai";
+import Select from "react-select";
 import CloudUpload from "../images/CloudUpload.svg";
 import FileIcon from "../images/File.svg";
 
@@ -25,6 +26,8 @@ function CSVParser({
   setCSVUploaded,
   setSnackbar,
   selectedGroup,
+  setSelectedGroup,
+  groupOptions,
   orgId,
   setDataLoading,
   groupCreationVisible,
@@ -39,10 +42,13 @@ function CSVParser({
   const { CSVReader } = useCSVReader();
   const { CSVDownloader, Type } = useCSVDownloader();
   const [tableData, setTableData] = React.useState([]);
-  const group = selectedGroup;
+  const [group, setGroup] = useState(selectedGroup);
   const [noGroupCSVData, setNoGroupCSVData] = useState(null);
   const [formSubmittable, setFormSubmittable] = useState(false);
-  const [createCSVGroup, setCreateCSVGroup] = useState(false); // tracks if group creation from csv is toggled
+  // Tracks if group creation from CSV is toggled
+  const [useExistingCSVGroup, setUseExistingCSVGroup] = useState(false);
+  // Tracks if group select page (flow from uploading to existing group) is selected
+  const [groupSelectionVisible, setGroupSelectionVisible] = useState(false);
 
   React.useEffect(async () => {
     if (group) {
@@ -66,14 +72,20 @@ function CSVParser({
    */
   function validateCSV(values) {
     const schemaColumns = group.values;
-
     for (const row of values) {
       if (Object.keys(row).length < schemaColumns.length - 1) return 1; // check if sufficient columns are present
+      let colsSatisfied = 0;
       for (const key of Object.keys(row)) {
         const field = schemaColumns.find((obj) => obj.name === key);
         if (field == null) continue; // skip if col is not present in schema
         if (field.type.toLowerCase() === "number" && !/^\d+$/.test(row[key])) return 2; // if invalid number
         if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return 2; // if invalid email
+        // No issues, so we mark this schema column as complete
+        colsSatisfied += 1;
+      }
+      // Make sure all schema columns are represented in the row before continuing...
+      if (colsSatisfied !== schemaColumns.length) {
+        return 1;
       }
     }
     return 0;
@@ -100,6 +112,8 @@ function CSVParser({
           severity: "error",
         });
         return;
+      default:
+        break;
     }
 
     // should ask user to confirm before clearing
@@ -162,16 +176,20 @@ function CSVParser({
             <div className="modal-background">
               <div className="modal-view csv">
                 <h1 className="upload-csv-header">Upload CSV File</h1>
-                <div className="upload-csv-area" {...getRootProps()}>
-                  <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
-                  <p className="upload-csv-area-text">Drag and drop files here to upload</p>
-                  <p className="upload-csv-area-text">or</p>
-                  <div>
-                    <button type="submit" className="modal-blue csv-browse-files">
-                      Browse Files
-                    </button>
+                {groupSelectionVisible ? (
+                  <h3 className="upload-csv-subheader">Add CSV Upload to Group</h3>
+                ) : (
+                  <div className="upload-csv-area" {...getRootProps()}>
+                    <img src={CloudUpload} className="upload-csv-cloud" alt="Upload" />
+                    <p className="upload-csv-area-text">Drag and drop files here to upload</p>
+                    <p className="upload-csv-area-text">or</p>
+                    <div>
+                      <button type="submit" className="modal-blue csv-browse-files">
+                        Browse Files
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
                 {acceptedFile ? (
                   <div className="csv-progress-div">
                     <div className="csv-progress-file-icon-container">
@@ -195,41 +213,49 @@ function CSVParser({
                     </div>
                   </div>
                 ) : null}
-                <div className="radio-div">
-                  {forceNewGroup ? (
+                {forceNewGroup || groupSelectionVisible ? null : ( // We don't provide this dropdown option if we forceNewGroup
+                  <div className="radio-div">
+                    <label htmlFor="create-group-csv" className="create-group-csv-label">
+                      Add uploaded CSV to an existing group?
+                    </label>
                     <input
                       type="checkbox"
                       className="create-group-csv-button"
                       id="create-group-csv"
                       value="create-group-csv"
-                      onClick={() => setCreateCSVGroup(!createCSVGroup)}
-                      checked
-                      disabled
+                      checked={useExistingCSVGroup}
+                      onClick={() => setUseExistingCSVGroup(!useExistingCSVGroup)}
                     />
-                  ) : (
-                    <input
-                      type="checkbox"
-                      className="create-group-csv-button"
-                      id="create-group-csv"
-                      value="create-group-csv"
-                      onClick={() => setCreateCSVGroup(!createCSVGroup)}
+                  </div>
+                )}
+                {groupSelectionVisible ? (
+                  <div>
+                    <p>Select the group you want your CSV upload to go into.</p>
+                    <Select
+                      className="csv-group-select"
+                      classNamePrefix="select"
+                      options={groupOptions}
+                      placeholder="Select existing group..."
+                      value={group}
+                      onChange={(option) => setGroup(option)}
                     />
-                  )}
-                  <label htmlFor="create-group-csv" className="create-group-csv-label">
-                    Create a new group from CSV
-                  </label>
-                </div>
+                  </div>
+                ) : null}
                 <div className="csv-submit-div">
                   <button
                     className="modal-white csv-cancel"
                     type="button"
                     onClick={() => {
-                      setFormSubmittable(false);
-                      setCSVFlowVisible(false);
-                      setNoGroupCSVData(null);
+                      if (groupSelectionVisible) {
+                        setGroupSelectionVisible(false);
+                      } else {
+                        setFormSubmittable(false);
+                        setCSVFlowVisible(false);
+                        setNoGroupCSVData(null);
+                      }
                     }}
                   >
-                    Cancel
+                    {groupSelectionVisible ? "Back" : "Cancel"}
                   </button>
                   <button
                     className={
@@ -238,20 +264,25 @@ function CSVParser({
                     type="submit"
                     onClick={() => {
                       if (formSubmittable) {
-                        setCSVFlowVisible(false);
-
-                        if (forceNewGroup || createCSVGroup) {
+                        if (forceNewGroup || !useExistingCSVGroup) {
+                          setCSVFlowVisible(false);
                           setGroupCreationVisible(!groupCreationVisible);
-                        } else {
+                        } else if (groupSelectionVisible) {
+                          setCSVFlowVisible(false);
+                          setGroupSelectionVisible(false);
                           importToDB(noGroupCSVData, CSVUploaded, setCSVUploaded).then();
+                          // Update dashboard to display newly uploaded group
+                          setSelectedGroup(group);
                           setNoGroupCSVData(null);
                           setFormSubmittable(false);
                           setVisiblity(false);
+                        } else {
+                          setGroupSelectionVisible(true);
                         }
                       }
                     }}
                   >
-                    Finish
+                    {groupSelectionVisible ? "Finish" : "Next"}
                   </button>
                 </div>
               </div>

@@ -8,7 +8,6 @@
   border-radius: 5px;
   text-align: center;
   border: 0px;
-  top: 20px;
   right: 0;
 }
 
@@ -41,24 +40,36 @@
   font-weight: 500;
   font-size: 24px;
   line-height: 36px;
-  padding-bottom: 34px;
 }
+
+.upload-csv-subheader {
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
 .modal-view.csv {
   width: 444px;
   height: auto;
   position: relative;
 }
+
 .upload-csv-area {
+  display: inline-block;
+  margin-top: 34px;
   width: 98%;
   height: 255px;
   background: #f3f3f3;
-  border: 2.5px dashed #a9a9a9;
+  outline: 5px dashed #a9a9a9;
+  outline-offset: -5px;
   border-radius: 12px;
   text-align: center;
 }
 
 .csv-submit-div {
   margin-top: 34px;
+  width: 98%;
 }
 
 .modal-white.csv-cancel {
@@ -99,6 +110,7 @@
 .csv-progress-div {
   height: 55px;
   margin-top: 33px;
+  width: 98%;
 }
 
 .csv-progress-file-icon-container {
@@ -162,7 +174,11 @@
 }
 
 .radio-div {
-  width: max-content;
-  margin-bottom: -20px;
-  margin-top: 10px;
+  width: 100%;
+  margin-top: 33px;
+}
+
+.create-group-csv-button {
+  float: right;
+  margin-right: 10px;
 }

@@ -561,6 +561,8 @@ function Dashboard() {
                     snackbar={snackbar}
                     setSnackbar={setSnackbar}
                     selectedGroup={selectedGroup}
+                    setSelectedGroup={setSelectedGroup}
+                    groupOptions={groupOptions}
                     orgId={orgId}
                     setDataLoading={setDataLoading}
                     setVisiblity={setVisibility}
