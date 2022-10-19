@@ -72,14 +72,20 @@ function CSVParser({
    */
   function validateCSV(values) {
     const schemaColumns = group.values;
-
     for (const row of values) {
       if (Object.keys(row).length < schemaColumns.length - 1) return 1; // check if sufficient columns are present
+      let colsSatisfied = 0;
       for (const key of Object.keys(row)) {
         const field = schemaColumns.find((obj) => obj.name === key);
         if (field == null) continue; // skip if col is not present in schema
         if (field.type.toLowerCase() === "number" && !/^\d+$/.test(row[key])) return 2; // if invalid number
         if (field.type.toLowerCase() === "email" && !/^\S+@\S+\.\S+$/.test(row[key])) return 2; // if invalid email
+        // No issues, so we mark this schema column as complete
+        colsSatisfied += 1;
+      }
+      // Make sure all schema columns are represented in the row before continuing...
+      if (colsSatisfied !== schemaColumns.length) {
+        return 1;
       }
     }
     return 0;
@@ -106,6 +112,8 @@ function CSVParser({
           severity: "error",
         });
         return;
+      default:
+        break;
     }
 
     // should ask user to confirm before clearing
